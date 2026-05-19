@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOLEM — Stato Progetto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060a14;
+  --bg-card: #0c1426;
+  --bg-card-hi: #131d33;
+  --border: #1f2c47;
+  --navy: #1e3a5f;
+  --navy-hi: #2c5f9d;
+  --navy-bright: #4a7fc4;
+  --gold: #c9a961;
+  --text: #e8edf5;
+  --text-mute: #8a96ad;
+  --text-dim: #5a6680;
+  --ok: #4ab37e;
+  --warn: #d4a04e;
+  --err: #d45e5e;
+  --doing: #4a7fc4;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; line-height: 1.6; min-height: 100vh; }
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--navy-bright); }
+
+/* HEADER */
+.top { padding: 32px 40px; border-bottom: 1px solid var(--border); background: linear-gradient(180deg, #0d1426 0%, var(--bg) 100%); }
+.brand { display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap; }
+.logo { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 48px; letter-spacing: 0.22em; color: var(--text); text-shadow: 0 0 24px rgba(201,169,97,0.15); }
+.tagline { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-mute); }
+.cost-pill { display: inline-block; padding: 6px 14px; border: 1px solid var(--ok); color: var(--ok); border-radius: 20px; font-size: 12px; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; margin-left: auto; }
+
+main { max-width: 1400px; margin: 0 auto; padding: 32px 40px 80px; }
+
+/* PROGRESS */
+.overall { background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--gold); padding: 24px; margin-bottom: 32px; border-radius: 2px; }
+.overall h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-bottom: 16px; color: var(--gold); letter-spacing: 0.05em; }
+.steps-bar { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-bottom: 12px; }
+.step-cell { padding: 14px 10px; background: var(--bg-card-hi); border: 1px solid var(--border); text-align: center; border-radius: 2px; }
+.step-cell.done { border-color: var(--ok); background: rgba(74,179,126,0.08); }
+.step-cell.current { border-color: var(--gold); background: rgba(201,169,97,0.12); animation: pulse 2.5s infinite; }
+.step-cell.pending { opacity: 0.5; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.65; } }
+.step-cell .step-id { font-family: 'Cormorant Garamond', serif; font-size: 26px; color: var(--gold); display: block; }
+.step-cell .step-name { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); margin-top: 6px; }
+.step-cell.done .step-name { color: var(--ok); }
+.step-cell.current .step-name { color: var(--gold); }
+
+/* SECTIONS */
+.section { margin-bottom: 28px; }
+.section h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.section h2 .count { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-mute); margin-left: auto; }
+.section.ok h2 { color: var(--ok); }
+.section.doing h2 { color: var(--gold); }
+.section.todo h2 { color: var(--navy-bright); }
+.section.broken h2 { color: var(--err); }
+
+.grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
+.item { background: var(--bg-card); border: 1px solid var(--border); padding: 14px 16px; border-radius: 2px; border-left: 2px solid var(--navy); }
+.item.ok { border-left-color: var(--ok); }
+.item.doing { border-left-color: var(--gold); }
+.item.broken { border-left-color: var(--err); }
+.item .title { font-weight: 500; font-size: 14px; color: var(--text); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.item .desc { font-size: 12px; color: var(--text-mute); }
+.item .meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 6px; letter-spacing: 0.05em; }
+
+.tag { display: inline-block; padding: 2px 8px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 2px; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+.tag-ok { background: rgba(74,179,126,0.15); color: var(--ok); border: 1px solid var(--ok); }
+.tag-doing { background: rgba(201,169,97,0.15); color: var(--gold); border: 1px solid var(--gold); }
+.tag-todo { background: rgba(74,127,196,0.15); color: var(--navy-bright); border: 1px solid var(--navy-bright); }
+.tag-broken { background: rgba(212,94,94,0.15); color: var(--err); border: 1px solid var(--err); }
+.tag-step { background: var(--bg-card-hi); color: var(--text-mute); border: 1px solid var(--border); }
+
+/* COMMANDS */
+.commands { background: var(--bg-card); border: 1px solid var(--border); padding: 20px; border-radius: 2px; margin-bottom: 24px; }
+.commands h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; margin-bottom: 12px; color: var(--gold); }
+.cmd-row { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; padding: 8px 0; border-bottom: 1px solid var(--border); align-items: center; }
+.cmd-row:last-child { border: 0; }
+.cmd-row .what { color: var(--text-mute); font-size: 12px; }
+.cmd-row .how { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--gold); }
+
+/* FOOTER */
+.bottom { padding: 24px 40px; border-top: 1px solid var(--border); text-align: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); }
+
+/* PROGRESS BAR */
+.progress-bar { height: 8px; background: var(--bg-card-hi); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.progress-bar .fill { height: 100%; background: linear-gradient(90deg, var(--navy) 0%, var(--gold) 100%); transition: width 0.6s ease; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 16px; }
+.stat { background: var(--bg-card-hi); border: 1px solid var(--border); padding: 12px; text-align: center; border-radius: 2px; }
+.stat .num { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--gold); display: block; }
+.stat .label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <h1 class="logo">SOLEM</h1>
+    <span class="tagline">AI-NATIVE OS · STATO PROGETTO</span>
+    <span class="cost-pill">COSTO: 0 €</span>
+    <span id="live-pill" style="margin-left: 12px; padding: 6px 14px; border: 1px solid var(--text-dim); color: var(--text-dim); border-radius: 20px; font-size: 12px; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace;">VM: <span id="live-status">checking…</span></span>
+  </div>
+  <p style="color: var(--text-mute); font-size: 12px; margin-top: 16px;">
+    Aggiornato manualmente — apri questo file con il browser quando vuoi verificare a che punto siamo.<br>
+    Tutto il software qui elencato è 100% gratuito open source self-hostable.
+  </p>
+</header>
+
+<main>
+
+  <!-- OVERALL PROGRESS -->
+  <div class="overall">
+    <h2>Roadmap generale — dove siamo</h2>
+    <div class="steps-bar">
+      <div class="step-cell done">
+        <span class="step-id">0</span>
+        <div class="step-name">Foundation · DONE</div>
+      </div>
+      <div class="step-cell current">
+        <span class="step-id">1</span>
+        <div class="step-name">Bare-metal · IN CORSO</div>
+      </div>
+      <div class="step-cell pending">
+        <span class="step-id">2</span>
+        <div class="step-name">L1-L5 reali</div>
+      </div>
+      <div class="step-cell pending">
+        <span class="step-id">3</span>
+        <div class="step-name">Multi-AI + Jetson</div>
+      </div>
+      <div class="step-cell pending">
+        <span class="step-id">4</span>
+        <div class="step-name">Public release</div>
+      </div>
+      <div class="step-cell pending">
+        <span class="step-id">5</span>
+        <div class="step-name">Mobile + distro</div>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: var(--text-mute); margin-top: 12px;">
+      <strong style="color: var(--gold);">Oggi:</strong> Step 0 chiuso ✅ — Gate M0 chiuso 2026-05-17 — Step 1 Milestone 1.1 (systemd hardening) in corso.
+    </p>
+    <div class="progress-bar"><div class="fill" style="width: 18%;"></div></div>
+    <p style="font-size: 11px; color: var(--text-mute); margin-top: 6px;">~18% verso target Windows/iOS-feel (stima onesta: 12-18 mesi di lavoro).</p>
+
+    <div class="stat-grid">
+      <div class="stat"><span class="num">36</span><div class="label">Moduli NixOS</div></div>
+      <div class="stat"><span class="num">19</span><div class="label">Router Python L1-L7</div></div>
+      <div class="stat"><span class="num">60+</span><div class="label">Endpoint API</div></div>
+      <div class="stat"><span class="num">4</span><div class="label">AI registrate</div></div>
+      <div class="stat"><span class="num">3</span><div class="label">CLI nativi (+panic)</div></div>
+      <div class="stat"><span class="num">9</span><div class="label">ADR (M0+M1.2)</div></div>
+      <div class="stat"><span class="num">20</span><div class="label">Documenti (IT+EN)</div></div>
+      <div class="stat"><span class="num">40+</span><div class="label">Test pytest</div></div>
+    </div>
+  </div>
+
+  <!-- COMMANDS RAPIDE -->
+  <div class="commands">
+    <h3>★ Come "usare SOLEM come un OS" ★</h3>
+    <div class="cmd-row">
+      <span class="what" style="color: var(--gold);">★ ESPERIENZA "OS-LIKE" CONSIGLIATA ★</span>
+      <span class="how">doppio-click su scripts\solem-launch.ps1</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">→ Cosa fa</span>
+      <span class="how" style="color: var(--text-mute);">VM headless + auto-apre Edge/Chrome FULLSCREEN su dashboard navy</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">Esci dal fullscreen browser</span>
+      <span class="how">F11 (toggle) oppure Alt+F4 (chiudi)</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">Spegni VM in background</span>
+      <span class="how">wsl -- pkill -9 -f qemu-kvm</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what" style="color: var(--text-mute);">───── alternative ─────</span>
+      <span class="how">────────────</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">Solo VM (no browser auto)</span>
+      <span class="how">wsl -- bash -lc ". ~/.nix-profile/etc/profile.d/nix.sh && cd /mnt/c/Users/guido/Desktop/solem && nix run .#vm"</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">Apri dashboard manualmente</span>
+      <span class="how">http://localhost:8001</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">SSH dentro VM</span>
+      <span class="how">ssh -p 2222 gavio@localhost  (password: gavio)</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">Diagnostica completa nella VM</span>
+      <span class="how">solem-doctor</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">Stato sistema CLI</span>
+      <span class="how">solem status</span>
+    </div>
+    <div class="cmd-row">
+      <span class="what">TUI navy interattiva</span>
+      <span class="how">solem-shell</span>
+    </div>
+  </div>
+
+  <!-- ✅ FATTO -->
+  <section class="section ok">
+    <h2>Cosa FUNZIONA <span class="count">52 voci</span></h2>
+    <div class="grid">
+      <div class="item ok"><div class="title">OS NixOS base 24.11</div><div class="desc">Flake dichiarativo, riproducibile, atomico rollback</div><div class="meta">flake.nix · configuration.nix</div></div>
+      <div class="item ok"><div class="title">VM QEMU testabile</div><div class="desc">nix run .#vm — boot in 2-5 min (TCG software emulation)</div><div class="meta">nixos/hardware-vm.nix</div></div>
+      <div class="item ok"><div class="title">Login utente gavio</div><div class="desc">hashedPassword SHA-512 + mutableUsers=false → password 'gavio' funziona</div><div class="meta">solem-core.nix</div></div>
+      <div class="item ok"><div class="title">Banner ASCII SOLEM al boot</div><div class="desc">/etc/issue + MOTD dinamica con servizi up/down</div><div class="meta">solem-motd.nix</div></div>
+      <div class="item ok"><div class="title">CLI `solem`</div><div class="desc">status / layers / caps / identity / pair / devices / version + --json</div><div class="meta">solem-cli.nix</div></div>
+      <div class="item ok"><div class="title">CLI `solem-shell` TUI</div><div class="desc">4 pannelli curses palette navy/oro · q=esci · r=refresh</div><div class="meta">solem-shell.nix</div></div>
+      <div class="item ok"><div class="title">CLI `solem-doctor`</div><div class="desc">33+ check sistema/servizi/network/db/security/mesh/hardening</div><div class="meta">solem-doctor.nix</div></div>
+      <div class="item ok"><div class="title">GAVIO come servizio systemd</div><div class="desc">Bootstrap venv automatico via uv · porta 8000 · healthcheck</div><div class="meta">gavio.nix</div></div>
+      <div class="item ok"><div class="title">SOLEM API porta 8001</div><div class="desc">FastAPI con 45+ endpoint · OpenAPI auto-generato</div><div class="meta">backend/solem_api/main.py</div></div>
+      <div class="item ok"><div class="title">Dashboard web navy</div><div class="desc">7 tab · polling 5s · logo SVG · PIN pairing · zero build</div><div class="meta">backend/solem_api/static/</div></div>
+      <div class="item ok"><div class="title">L1 Identity Engine</div><div class="desc">5 sezioni standard versionate + custom_* · SQLite persistente</div><div class="meta">layers/identity.py</div></div>
+      <div class="item ok"><div class="title">L2 Context Engine</div><div class="desc">push/history snapshot + systemd timer 5min</div><div class="meta">layers/context.py</div></div>
+      <div class="item ok"><div class="title">L3 Event Bus</div><div class="desc">pub/sub asyncio + SSE streaming + persistenza SQLite</div><div class="meta">layers/events.py</div></div>
+      <div class="item ok"><div class="title">L4 Capabilities Pool</div><div class="desc">17 cap native + auto-discovery GAVIO via OpenAPI + /invoke proxy</div><div class="meta">layers/capabilities.py</div></div>
+      <div class="item ok"><div class="title">L5 Memory 3 livelli</div><div class="desc">solem_memory + universe + privacy public/work/personal/sacred</div><div class="meta">layers/memory.py</div></div>
+      <div class="item ok"><div class="title">Multi-AI registry</div><div class="desc">GAVIO primary + Coder + Researcher + Writer (Ollama locale)</div><div class="meta">layers/agents.py</div></div>
+      <div class="item ok"><div class="title">Multi-utente + auth</div><div class="desc">users/sessions schema + login/logout token Bearer TTL 7gg</div><div class="meta">layers/users.py</div></div>
+      <div class="item ok"><div class="title">System control runtime</div><div class="desc">/info /generations /profile /rebuild /rollback /update</div><div class="meta">layers/system.py</div></div>
+      <div class="item ok"><div class="title">Backup automatico</div><div class="desc">systemd timer giornaliero zstd · retention 14 · /var/backups/solem/</div><div class="meta">solem-backup.nix</div></div>
+      <div class="item ok"><div class="title">Watchdog solem-keep</div><div class="desc">Monitora gavio/solem-api/ollama/docker + publish event bus L3</div><div class="meta">solem-keep.nix</div></div>
+      <div class="item ok"><div class="title">Kernel hardening sysctl</div><div class="desc">kptr_restrict + dmesg_restrict + ptrace_scope + tcp_syncookies + blacklist FS legacy</div><div class="meta">solem-secure.nix</div></div>
+      <div class="item ok"><div class="title">systemd hardening servizi (M1.1)</div><div class="desc">solem-keep STRICT + solem-api/gavio MEDIUM · ProtectSystem + ProtectKernel + SystemCallFilter</div><div class="meta">M1.1 in corso</div></div>
+      <div class="item ok"><div class="title">Installer bare-metal</div><div class="desc">solem-install.sh con LUKS2 + UEFI/BIOS detection + flake config</div><div class="meta">scripts/solem-install.sh</div></div>
+      <div class="item ok"><div class="title">CI GitHub Actions free</div><div class="desc">flake-check + pytest + ruff + release qcow2 su tag v*</div><div class="meta">.github/workflows/</div></div>
+      <div class="item ok"><div class="title">Documentazione (19 file)</div><div class="desc">README + CHANGELOG + ROADMAP + SECURITY + CONTRIBUTING + INSTALL + HARDENING + 9 ADR + audit</div><div class="meta">docs/ + root</div></div>
+
+      <!-- ✅ M1.2 (oggi) -->
+      <div class="item ok"><div class="title">ADR-009 LanceDB scelto</div><div class="desc">Vector DB embedded Apache 2.0 · zero-server · columnar Arrow · multi-modale · scale lineare</div><div class="meta">docs/adr/ADR-009-vector-db-choice.md</div></div>
+      <div class="item ok"><div class="title">/var/lib/gavio strutturato (M1.2)</div><div class="desc">models/ memory/lance/ cache/{kv,embed}/ audit/ state/granted_caps/ con permessi 0750/0700</div><div class="meta">solem-gavio-storage.nix</div></div>
+      <div class="item ok"><div class="title">Backup Supabase pg_dump (ADR-004)</div><div class="desc">systemd timer settimanale + zstd compress + retention 12 = ~3 mesi · opt-in solem.supabaseBackup.enable</div><div class="meta">solem-supabase-backup.nix</div></div>
+      <div class="item ok"><div class="title">HAL AI skeleton Python (ADR-007)</div><div class="desc">Interface AccelBackend + CPUBackend via Ollama · auto-detect CUDA/ROCm/Vulkan (Step 3+ driver)</div><div class="meta">backend/solem_api/hal/</div></div>
+      <div class="item ok"><div class="title">API /solem/hal/info</div><div class="desc">Espone hardware AI disponibile + scelta backend best · pronto per multi-backend Step 3+</div><div class="meta">layers/hal_api.py</div></div>
+
+      <!-- ✅ M1.2 turno corrente (Plymouth + voice + constitution + panic + mcp + health + UX) -->
+      <div class="item ok"><div class="title">Plymouth custom navy (M1.x)</div><div class="desc">SVG → PNG via librsvg in derivation Nix · logo + sun orb pulsante · sfondo navy</div><div class="meta">nixos/plymouth-theme/ + solem-boot.nix</div></div>
+      <div class="item ok"><div class="title">Pre-pull modelli Ollama</div><div class="desc">systemd job al primo boot scarica llama3.2:3b + qwen2.5-coder:7b + phi3:medium + nomic-embed (~15GB)</div><div class="meta">gavio.nix solem-ollama-prepull</div></div>
+      <div class="item ok"><div class="title">Constitutional layer (ADR-006)</div><div class="desc">/solem/constitution + /check con forbidden_actions regex + require_two_factor/user_confirm + audit DB</div><div class="meta">layers/constitution.py</div></div>
+      <div class="item ok"><div class="title">Kill switch /panic + CLI</div><div class="desc">solem panic ferma agents + revoca sessioni + stop gavio.service + publish event + audit immutabile</div><div class="meta">layers/panic.py + solem-cli.nix</div></div>
+      <div class="item ok"><div class="title">MCP tool registry SOLEM</div><div class="desc">Proxy a GAVIO api/mcp via JSON-RPC tools/list + 5 tool nativi (system_info, memory_search, identity, event_publish, constitution_check)</div><div class="meta">layers/mcp.py</div></div>
+      <div class="item ok"><div class="title">Voice STT/TTS modulo NixOS (opt-in)</div><div class="desc">whisper.cpp (STT) + piper (TTS) locali · NO cloud · download modelli automatico · solem.voice.enable</div><div class="meta">solem-voice.nix + layers/voice.py</div></div>
+      <div class="item ok"><div class="title">Health deep + live + ready</div><div class="desc">/health/deep check 5 componenti (DB+ollama+gavio+disk+memory) · ready/live per k8s probes</div><div class="meta">layers/health.py</div></div>
+      <div class="item ok"><div class="title">STATUS.html dinamico</div><div class="desc">Auto-fetch /health ogni 10s · badge LIVE quando VM up · pill verde/rosso · fallback statico</div><div class="meta">STATUS.html script tag</div></div>
+      <div class="item ok"><div class="title">Settings tab interattiva</div><div class="desc">5 chip profilo (minimal/dev/creator/server/desktop) cliccabili → POST /system/profile · evidenzia attivo</div><div class="meta">static/index.html + app.js</div></div>
+      <div class="item ok"><div class="title">solem-launch.ps1 (headless)</div><div class="desc">VM headless + auto-apre Edge/Chrome kiosk fullscreen su localhost:8001 dopo polling /health</div><div class="meta">scripts/solem-launch.ps1</div></div>
+      <div class="item ok"><div class="title">Documentazione bilingue (IT+EN)</div><div class="desc">README.md (italiano-first) + README.en.md (inglese sintetico)</div><div class="meta">root</div></div>
+      <div class="item ok"><div class="title">cage compositor kiosk (TCG-friendly)</div><div class="desc">Wlroots minimal con WLR_RENDERER=pixman · software rendering · alternativa a Hyprland per TCG</div><div class="meta">solem-desktop.nix</div></div>
+
+      <!-- ✅ 10 nuovi moduli Single Responsibility (Prompt Master v4.0) -->
+      <div class="item ok"><div class="title">solem-double-vpn.nix</div><div class="desc">VPN doppia: mesh interno + tunnel esterno (incapsulamento 2 layer) · opt-in con assertion peer</div><div class="meta">single-responsibility · opt-in</div></div>
+      <div class="item ok"><div class="title">solem-dns-private.nix</div><div class="desc">DoT/DoH stubby+unbound · Cloudflare+Quad9 upstream · qname minimization · no DNS leak</div><div class="meta">single-responsibility · opt-in</div></div>
+      <div class="item ok"><div class="title">solem-kernel-hardening.nix</div><div class="desc">KSPP cmdline: slab_nomerge, init_on_alloc, pti, kaslr, lockdown=integrity · blacklist 25 FS/protocolli legacy · default ON</div><div class="meta">single-responsibility · default ON</div></div>
+      <div class="item ok"><div class="title">solem-memory.nix</div><div class="desc">zram 50% RAM zstd · earlyoom protect gavio/ollama · systemd-oomd user_slices · huge pages opt-in · default ON</div><div class="meta">single-responsibility · default ON</div></div>
+      <div class="item ok"><div class="title">solem-sandbox.nix</div><div class="desc">bubblewrap + firejail + nsjail + landlock LSM (lsm=landlock,lockdown,yama,integrity,apparmor,bpf) · default ON</div><div class="meta">single-responsibility · default ON</div></div>
+      <div class="item ok"><div class="title">solem-tpm.nix</div><div class="desc">TPM2 abrmd + tools (tpm2_pcrread, tpm2_seal, ecc.) · gruppo tss per gavio · per measured boot + LUKS unseal</div><div class="meta">single-responsibility · opt-in</div></div>
+      <div class="item ok"><div class="title">solem-usbguard.nix</div><div class="desc">USB allowlist con D-Bus IPC · present_device_policy=allow (no lockout tastiera) · approvazione runtime device nuovi</div><div class="meta">single-responsibility · opt-in</div></div>
+      <div class="item ok"><div class="title">solem-tor.nix</div><div class="desc">Tor client SOCKS 9050 + opzionale onion service per dashboard (.onion access remoto anonimo)</div><div class="meta">single-responsibility · opt-in</div></div>
+      <div class="item ok"><div class="title">solem-secrets.nix</div><div class="desc">sops-nix scaffold (richiede flake input) · age key + secrets cifrati in repo · decifrati al boot in /run/secrets</div><div class="meta">single-responsibility · opt-in scaffold</div></div>
+      <div class="item ok"><div class="title">solem-secure-boot.nix</div><div class="desc">Lanzaboote scaffold + sbctl CLI · chiavi UEFI utente · verify reproducible boot · Step 1+ bare-metal</div><div class="meta">single-responsibility · opt-in scaffold</div></div>
+    </div>
+  </section>
+
+  <!-- ⏳ IN CORSO -->
+  <section class="section doing">
+    <h2>Cosa è IN CORSO <span class="count">3 voci</span></h2>
+    <div class="grid">
+      <div class="item doing"><div class="title">M1.1 — systemd hardening rebuild VM</div><div class="desc">Verifica che servizi partano con ProtectSystem strict + ReadWritePaths whitelist</div><div class="meta">tag-step Step 1 · 90gg</div></div>
+      <div class="item doing"><div class="title">Bilanciamento AI-freedom vs hardening</div><div class="desc">gavio.service ha sudo libero ma sistema protetto da exploit. Documentato in docs/HARDENING.md</div><div class="meta">M1.1</div></div>
+      <div class="item doing"><div class="title">solem-doctor `[hardening]` check</div><div class="desc">systemd-analyze security per ogni servizio · target ≤2 strict / ≤4 medium / ≤5 medium+AI</div><div class="meta">M1.1</div></div>
+    </div>
+  </section>
+
+  <!-- 📋 DA FARE -->
+  <section class="section todo">
+    <h2>Cosa rimane DA FARE <span class="count">~50 voci principali</span></h2>
+    <div class="grid">
+
+      <!-- M1 — Step 1 (3 mesi) -->
+      <div class="item"><div class="title"><span class="tag tag-step">M1.2</span> /var/lib/gavio strutturato</div><div class="desc">models/ memory/ cache/ audit/ state/ con vector DB embedded (qdrant/lancedb)</div><div class="meta">90 giorni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M1.2</span> Export script pg_dump Supabase</div><div class="desc">Backup settimanale rodato da ORA — ADR-004</div><div class="meta">90 giorni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M1.2</span> HAL AI skeleton</div><div class="desc">Interface astratta + CPUBackend; driver CUDA/ROCm Step 3 — ADR-007</div><div class="meta">90 giorni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M1.2</span> bcachefs test script in VM</div><div class="desc">Verifica behavior prima del rollout Beelink — ADR-003</div><div class="meta">90 giorni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M1.3</span> Capability Nix-declarative</div><div class="desc">gavio.capabilities = {…} + approval-on-first-use</div><div class="meta">90 giorni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M1.3</span> Constitutional triple-defense</div><div class="desc">Nix file + SOLEM gateway /constitution/check + GAVIO enforcer — ADR-006</div><div class="meta">90 giorni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M1.x</span> Bare-metal Beelink install</div><div class="desc">Mini-PC ~250€ una tantum (acquisto tuo); LUKS2 + bcachefs root; mesh attiva</div><div class="meta">Step 1 · estate 2026</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M1.x</span> Migrazione GAVIO portatile → Beelink</div><div class="desc">GAVIO single source of truth — ADR-008</div><div class="meta">Step 1</div></div>
+
+      <!-- M2 — Step 2 (6 mesi) -->
+      <div class="item"><div class="title"><span class="tag tag-step">M2.1</span> IPC nativo shared memory</div><div class="desc">Unix socket + ring buffer per inference streaming · D-Bus per desktop</div><div class="meta">6 mesi</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M2.2</span> Voice STT/TTS locale</div><div class="desc">whisper.cpp + piper · NO edge-tts cloud · CLI gavio --voice</div><div class="meta">6 mesi</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M2.3</span> Semantic UI AT-SPI</div><div class="desc">Daemon AT-SPI tree dump → /solem/ui/observe + /act · PoC Firefox in Step 1</div><div class="meta">6 mesi</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M2.4</span> MCP tool registry centrale</div><div class="desc">Proxy api/mcp.py GAVIO + native SOLEM tools · sandboxing bubblewrap</div><div class="meta">6 mesi</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M2.5</span> Kill switch hotkey</div><div class="desc">Super+Shift+K → ferma GAVIO + tutte le AI istantaneamente</div><div class="meta">6 mesi</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M2.x</span> GUI dichiarativa Nix editor</div><div class="desc">Tab Settings nella dashboard con editor visuale configuration.nix</div><div class="meta">6 mesi</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M2.x</span> Messaging E2E</div><div class="desc">AES-256-GCM Day 1 → tabella messages cifrate</div><div class="meta">6 mesi</div></div>
+
+      <!-- M3 — Step 3 (1 anno) -->
+      <div class="item"><div class="title"><span class="tag tag-step">M3.1</span> Memoria L0-L3 completa</div><div class="desc">vector DB embedded · cosine search · embedding nomic-embed-text via Ollama</div><div class="meta">1 anno</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M3.2</span> Multi-instance CRDT sync</div><div class="desc">automerge/yjs sync stato AI tra device mesh · compute offloading trasparente</div><div class="meta">1 anno</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M3.3</span> Filesystem semantico</div><div class="desc">Indicizzazione background con consenso · solem find "documenti dell'anno scorso"</div><div class="meta">1 anno</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M3.x</span> Jetson Orin Nano (opzionale)</div><div class="desc">~500€ una tantum (acquisto tuo); LLM 8B locale veloce · HAL CUDA driver</div><div class="meta">1 anno</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M3.x</span> Prima AI specialista oltre i 4 base</div><div class="desc">AI legale italiana (Codice Civile/Penale) · invocata da GAVIO via /agents/invoke</div><div class="meta">1 anno</div></div>
+
+      <!-- M4 — Step 4 (1.5 anni) -->
+      <div class="item"><div class="title"><span class="tag tag-step">M4.1</span> Auto-improvement pipeline</div><div class="desc">LoRA/QLoRA via peft/unsloth · A/B testing · rollback automatico</div><div class="meta">1.5 anni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M4.2</span> Federated learning</div><div class="desc">Flower FOSS · sync tra istanze SOLEM personali · zero cloud</div><div class="meta">1.5 anni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M4.3</span> Rust adoption critical-path</div><div class="desc">Nuovi daemon (gaviod IPC) in Rust · esistenti Python restano — ADR-002</div><div class="meta">1.5 anni</div></div>
+
+      <!-- M5 — Step 5 (2 anni) -->
+      <div class="item"><div class="title"><span class="tag tag-step">M5.x</span> Release pubblica beta</div><div class="desc">Documentazione bilingue IT+EN · Forgejo self-host · Matrix community</div><div class="meta">2 anni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M5.x</span> Plymouth tema custom navy</div><div class="desc">SVG renderizzato a PNG via librsvg · logo orb dorato · animazione</div><div class="meta">2 anni</div></div>
+
+      <!-- M6 — Step 6 (3 anni) -->
+      <div class="item"><div class="title"><span class="tag tag-step">M6.x</span> SOLEM Mobile PinePhone Pro</div><div class="desc">Plasma Mobile o Phosh · convergent UI · compute offloading mesh</div><div class="meta">3 anni</div></div>
+      <div class="item"><div class="title"><span class="tag tag-step">M6.x</span> Distro consolidata</div><div class="desc">Boot ISO ufficiale · sito statico Codeberg Pages · grant NLnet/Sovereign Tech Fund</div><div class="meta">3 anni</div></div>
+
+      <!-- Generiche -->
+      <div class="item"><div class="title">Desktop autoLogin Hyprland</div><div class="desc">Boot grafico vero invece di console testuale · Firefox fullscreen dashboard</div><div class="meta">post-M1.1</div></div>
+      <div class="item"><div class="title">Test pytest copertura > 70%</div><div class="desc">Estendere a layers/agents.py, system.py, interop.py, extensions.py, metrics.py, migrations.py</div><div class="meta">Step 1</div></div>
+      <div class="item"><div class="title">L6 Interop reale</div><div class="desc">Email IMAP · Calendar CalDAV · MQTT broker IoT (oggi solo stub + WoL)</div><div class="meta">Step 3</div></div>
+      <div class="item"><div class="title">L7 Extensions Marketplace</div><div class="desc">Plugin sandbox container · manifest dichiarativo · hot-load runtime</div><div class="meta">Step 4</div></div>
+    </div>
+  </section>
+
+  <!-- ⚠️ PROBLEMI NOTI -->
+  <section class="section broken">
+    <h2>Limiti e problemi NOTI <span class="count">6 voci</span></h2>
+    <div class="grid">
+      <div class="item broken"><div class="title">⚠ VM TCG lentissima</div><div class="desc">KVM non disponibile in WSL2 → tutto software emulation. Soluzione: bare-metal Beelink Step 1, oppure Linux nativo con KVM</div></div>
+      <div class="item broken"><div class="title">⚠ Niente GUI grafica al boot</div><div class="desc">Vedi solo console testuale + dashboard separata via browser host. Da fixare: autoLogin Hyprland (rebuild richiesto)</div></div>
+      <div class="item broken"><div class="title">⚠ Build VM occasionalmente fallisce</div><div class="desc">Per problemi rete cache.nixos.org transitori o flake8 strict su Python writer. Fixare: retry automatico + flake8 ignore esteso (fatto)</div></div>
+      <div class="item broken"><div class="title">⚠ Modelli Ollama on-demand</div><div class="desc">Specialist AI (Coder/Researcher/Writer) scaricano modelli al primo invoke (4-8GB cad). Pre-pull manuale necessario</div></div>
+      <div class="item broken"><div class="title">⚠ Plymouth "solar" generico</div><div class="desc">Tema sole built-in NixOS, NON tema custom SOLEM con logo. Custom rimandato Step 2 (richiede asset PNG renderizzati)</div></div>
+      <div class="item broken"><div class="title">⚠ Distanza enorme da "Windows/iOS feel"</div><div class="desc">SOLEM oggi è OS server-like, non desktop polishato. Stima realistica: 12-18 mesi per arrivare a UX competitiva</div></div>
+    </div>
+  </section>
+
+  <!-- 💸 COSTI -->
+  <section class="section ok">
+    <h2>Costi <span class="count">0 € sempre</span></h2>
+    <div class="grid">
+      <div class="item ok"><div class="title">Software</div><div class="desc">100% FOSS · NixOS · Python · Ollama · Caddy · WireGuard · Hyprland · Firefox · tutto</div></div>
+      <div class="item ok"><div class="title">Servizi esterni</div><div class="desc">Supabase free tier (500MB) · Groq free tier (14K req/giorno) · GitHub free · Let's Encrypt · niente carta richiesta</div></div>
+      <div class="item ok"><div class="title">Modelli AI</div><div class="desc">Solo open weight: Llama 3.2/3.3 · Qwen2.5 · Mistral · Phi · Gemma · DeepSeek</div></div>
+      <div class="item ok"><div class="title">Hardware</div><div class="desc">VM su PC esistente = 0€ · Beelink Step 1 = ~250€ una tantum (compri da chi vuoi) · Jetson opzionale</div></div>
+      <div class="item ok"><div class="title">CI/CD + hosting</div><div class="desc">GitHub Actions free · Codeberg Pages free · Forgejo self-host quando arriva Beelink</div></div>
+      <div class="item ok"><div class="title">Niente abbonamenti</div><div class="desc">Mai feature gating · mai tier paid · niente subscription · niente managed services paganti</div></div>
+    </div>
+  </section>
+
+  <!-- 🗺️ PROSSIMI 7 GIORNI -->
+  <section class="section doing">
+    <h2>Prossimi 7 giorni — cosa farò io <span class="count">8 task</span></h2>
+    <div class="grid">
+      <div class="item doing"><div class="title">1 · Chiudere M1.1</div><div class="desc">Verificare che servizi partano con hardening · raccogliere score systemd-analyze</div></div>
+      <div class="item doing"><div class="title">2 · Iniziare M1.2 - /var/lib/gavio strutturato</div><div class="desc">Creare directory models/memory/cache/audit/state + tmpfiles + permessi</div></div>
+      <div class="item doing"><div class="title">3 · Vector DB embedded scelto</div><div class="desc">ADR-009: qdrant vs lancedb vs chroma (criteri: footprint, embedding cache, performance)</div></div>
+      <div class="item doing"><div class="title">4 · Export pg_dump Supabase script</div><div class="desc">Systemd timer settimanale · backup locale zstd · retention 12 settimane</div></div>
+      <div class="item doing"><div class="title">5 · HAL skeleton Python</div><div class="desc">backend/solem_api/hal/ con interface astratta + CPUBackend Ollama-backed</div></div>
+      <div class="item doing"><div class="title">6 · Plymouth retry custom navy</div><div class="desc">Provare nuovamente con asset SVG → PNG via librsvg build-time</div></div>
+      <div class="item doing"><div class="title">7 · Hyprland autoLogin opt-in</div><div class="desc">solem.desktop.autoLogin = true → boot grafico vero · Firefox fullscreen :8001</div></div>
+      <div class="item doing"><div class="title">8 · Aggiornare questa pagina STATUS.html</div><div class="desc">Riflettere progressi · spostare voci da DA FARE a FUNZIONA man mano</div></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="bottom">
+  SOLEM · AI-NATIVE OS · STATUS · Aggiornato 2026-05-17 ·
+  <a href="README.md">README</a> ·
+  <a href="ROADMAP.md">ROADMAP</a> ·
+  <a href="CHANGELOG.md">CHANGELOG</a> ·
+  <a href="docs/COSTS.md">COSTS</a> ·
+  <a href="docs/HARDENING.md">HARDENING</a>
+</footer>
+
+<script>
+// SOLEM STATUS — live fetch (se VM up) con fallback a dati statici
+const API = "http://localhost:8001";
+
+async function checkLive() {
+  const pill = document.getElementById("live-pill");
+  const statusText = document.getElementById("live-status");
+  try {
+    const r = await fetch(API + "/health", { method: "GET", cache: "no-store" });
+    if (r.ok) {
+      const data = await r.json();
+      statusText.textContent = "up · " + (data.version || "?");
+      pill.style.borderColor = "var(--ok)";
+      pill.style.color = "var(--ok)";
+      loadLiveManifest();
+      return;
+    }
+  } catch (e) {}
+  statusText.textContent = "offline (lancia solem-launch.ps1)";
+  pill.style.borderColor = "var(--err)";
+  pill.style.color = "var(--err)";
+}
+
+async function loadLiveManifest() {
+  try {
+    const r = await fetch(API + "/solem/manifest", { cache: "no-store" });
+    if (!r.ok) return;
+    const m = await r.json();
+    // Aggiorna runtime stats con dati live
+    const rt = m.runtime || {};
+    document.querySelectorAll(".stat .num")[1] && updateStatIfPresent("Router Python", rt.active_services?.length);
+    // Aggiunge "live" badge nel header overall
+    const overall = document.querySelector(".overall h2");
+    if (overall && !overall.dataset.liveBadged) {
+      overall.dataset.liveBadged = "1";
+      const live = document.createElement("span");
+      live.style.cssText = "font-size:11px; color:var(--ok); margin-left:auto; font-family:'JetBrains Mono',monospace;";
+      live.textContent = "● LIVE";
+      overall.appendChild(live);
+    }
+  } catch (e) {}
+}
+
+function updateStatIfPresent(label, value) {
+  if (value == null) return;
+  const stats = document.querySelectorAll(".stat");
+  stats.forEach(s => {
+    const l = s.querySelector(".label");
+    if (l && l.textContent.includes(label)) {
+      const n = s.querySelector(".num");
+      if (n) n.textContent = value;
+    }
+  });
+}
+
+checkLive();
+setInterval(checkLive, 10000);
+</script>
+
+</body>
+</html>

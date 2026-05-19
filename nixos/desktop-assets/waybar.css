@@ -1,0 +1,65 @@
+/* SOLEM Waybar — palette navy + oro */
+
+* {
+    font-family: "Inter", "JetBrains Mono", sans-serif;
+    font-size: 12px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #060a14;
+    color: #e8edf5;
+    border-bottom: 1px solid #1f2c47;
+}
+
+#workspaces button {
+    padding: 0 10px;
+    background: transparent;
+    color: #8a96ad;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    color: #c9a961;
+    border-bottom-color: #2c5f9d;
+}
+
+#workspaces button:hover {
+    background: #0c1426;
+    color: #e8edf5;
+}
+
+#mode,
+#clock,
+#battery,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#bluetooth,
+#tray,
+#custom-solem {
+    padding: 0 12px;
+    color: #e8edf5;
+}
+
+#clock {
+    color: #c9a961;
+    font-weight: 500;
+}
+
+#custom-solem {
+    color: #c9a961;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    padding-left: 14px;
+    padding-right: 14px;
+    border-right: 1px solid #1f2c47;
+}
+
+#battery.warning  { color: #d4a04e; }
+#battery.critical { color: #d45e5e; }
+#network.disconnected { color: #d45e5e; }

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOLEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <img src="/static/logo.svg" alt="SOLEM" class="logo-svg">
+  </div>
+  <div class="status" id="topStatus">
+    <span class="dot dot-loading"></span>
+    <span id="topStatusText">connecting…</span>
+  </div>
+</header>
+
+<nav class="navbar">
+  <button type="button" class="nav-item active" data-tab="overview">Overview</button>
+  <button type="button" class="nav-item" data-tab="layers">Layers</button>
+  <button type="button" class="nav-item" data-tab="services">Services</button>
+  <button type="button" class="nav-item" data-tab="capabilities">Capabilities</button>
+  <button type="button" class="nav-item" data-tab="mesh">Mesh</button>
+  <button type="button" class="nav-item" data-tab="identity">Identity</button>
+  <button type="button" class="nav-item" data-tab="settings">Settings</button>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section class="tab active" id="tab-overview">
+    <div class="grid grid-3">
+
+      <div class="card">
+        <h3>Identità sistema</h3>
+        <dl class="dense">
+          <dt>Nome</dt><dd id="ov-name">—</dd>
+          <dt>Versione</dt><dd id="ov-version">—</dd>
+          <dt>Step</dt><dd id="ov-step">—</dd>
+          <dt>AI primaria</dt><dd id="ov-primary-ai">—</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <h3>Runtime</h3>
+        <dl class="dense">
+          <dt>Uptime</dt><dd id="ov-uptime">—</dd>
+          <dt>Memoria</dt><dd id="ov-memory">—</dd>
+          <dt>Disco libero</dt><dd id="ov-disk">—</dd>
+          <dt>Servizi attivi</dt><dd id="ov-services-count">—</dd>
+        </dl>
+      </div>
+
+      <div class="card">
+        <h3>Endpoints</h3>
+        <ul class="endpoints" id="ov-endpoints"></ul>
+      </div>
+
+      <div class="card span-3">
+        <h3>Stato Layer (L1 → L7)</h3>
+        <div class="layer-bar" id="ov-layer-bar"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LAYERS -->
+  <section class="tab" id="tab-layers">
+    <div class="card">
+      <h3>Architettura SOLEM — 7 Layer</h3>
+      <table class="dense">
+        <thead><tr><th>L</th><th>Nome</th><th>Status</th><th>Descrizione</th></tr></thead>
+        <tbody id="layers-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="tab" id="tab-services">
+    <div class="card">
+      <h3>Servizi systemd</h3>
+      <table class="dense">
+        <thead><tr><th>Servizio</th><th>Stato</th></tr></thead>
+        <tbody id="services-table"></tbody>
+      </table>
+      <p class="muted">Auto-refresh ogni 5s</p>
+    </div>
+  </section>
+
+  <!-- CAPABILITIES -->
+  <section class="tab" id="tab-capabilities">
+    <div class="card">
+      <h3>Capabilities discovered</h3>
+      <div class="cap-filter">
+        <button type="button" class="chip active" data-source="all">Tutte (<span id="cap-count-all">0</span>)</button>
+        <button type="button" class="chip" data-source="solem">SOLEM (<span id="cap-count-solem">0</span>)</button>
+        <button type="button" class="chip" data-source="gavio">GAVIO (<span id="cap-count-gavio">0</span>)</button>
+        <button type="button" class="chip" data-source="extension">Extension (<span id="cap-count-extension">0</span>)</button>
+      </div>
+      <table class="dense">
+        <thead><tr><th>ID</th><th>Nome</th><th>Source</th><th>Permessi</th></tr></thead>
+        <tbody id="capabilities-table"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MESH -->
+  <section class="tab" id="tab-mesh">
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Device paired</h3>
+        <table class="dense">
+          <thead><tr><th>Nome</th><th>IP mesh</th><th>Paired at</th></tr></thead>
+          <tbody id="devices-table"></tbody>
+        </table>
+        <p class="muted" id="devices-empty" hidden>Nessun device paired</p>
+      </div>
+
+      <div class="card">
+        <h3>Aggiungi device</h3>
+        <p class="muted">Genera un PIN BBM-style per pair un nuovo device.</p>
+        <button type="button" class="btn-primary" id="btn-gen-pin">Genera PIN</button>
+        <div class="pin-display" id="pin-display" hidden>
+          <div class="pin-code" id="pin-code">--------</div>
+          <div class="pin-meta">
+            <span>scade: <span id="pin-expires">—</span></span>
+          </div>
+          <pre class="pin-instructions" id="pin-instructions"></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- IDENTITY -->
+  <section class="tab" id="tab-identity">
+    <div class="card">
+      <h3>L1 — Identity Engine <span class="tag-stub">stub</span></h3>
+      <dl class="dense" id="identity-dl"></dl>
+      <p class="muted">
+        Step 0: hardcoded single-user. L1 completo (multi-user, ruoli dinamici,
+        sezioni vivo da KAIROS) arriverà Step 2.
+      </p>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="tab" id="tab-settings">
+    <div class="grid grid-2">
+
+      <div class="card">
+        <h3>Profilo attivo</h3>
+        <dl class="dense">
+          <dt>Profilo</dt><dd id="set-profile">—</dd>
+        </dl>
+        <div class="cap-filter" style="margin-top: 12px;">
+          <button type="button" class="chip" data-profile="minimal">minimal</button>
+          <button type="button" class="chip" data-profile="developer">developer</button>
+          <button type="button" class="chip" data-profile="creator">creator</button>
+          <button type="button" class="chip" data-profile="server">server</button>
+          <button type="button" class="chip" data-profile="desktop">desktop</button>
+        </div>
+        <p class="muted">
+          Click su un profilo → POST /solem/system/profile (richiede nixos-rebuild).
+        </p>
+        <div id="profile-result" style="margin-top: 10px; font-family: var(--mono); font-size: 11px;"></div>
+      </div>
+
+      <div class="card">
+        <h3>Moduli runtime</h3>
+        <table class="dense">
+          <thead><tr><th>Modulo</th><th>Stato</th></tr></thead>
+          <tbody id="set-modules"></tbody>
+        </table>
+        <p class="muted">Toggle dichiarativo via <code>solem.&lt;modulo&gt;.enable = true/false</code></p>
+      </div>
+
+      <div class="card span-2">
+        <h3>Personalizzazione</h3>
+        <p>
+          SOLEM è <strong>dichiarativo</strong>: ogni preferenza vive in un file Nix versionabile.
+          Modifica <code>nixos/configuration.nix</code>, esegui <code>sudo nixos-rebuild switch --flake .</code>,
+          il sistema si riconfigura in modo atomico. Se qualcosa va storto:
+          <code>sudo nixos-rebuild --rollback switch</code> torna alla generazione precedente.
+        </p>
+        <p>Cose che puoi personalizzare ora:</p>
+        <ul style="font-size:12px; color:var(--text-mute); margin-left:18px;">
+          <li>Profilo (minimal/developer/creator/server/desktop)</li>
+          <li>Linguaggi installati (Python/Go/Rust/Node/Zig/Deno/Lua/Ruby/Java)</li>
+          <li>Moduli AI (Jupyter, ML libs, modelli Ollama)</li>
+          <li>Mesh WireGuard, Zero-Trust mTLS, AppArmor selettivo</li>
+          <li>Desktop ambiente (Hyprland, Pipewire, Bluetooth)</li>
+          <li>Backup (cosa salvare, ogni quanto, retention)</li>
+          <li>Tema branding (palette navy default, hex configurabili)</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="bottom">
+  <span>SOLEM · <span id="footer-version">—</span></span>
+  <span class="separator">·</span>
+  <a href="/docs" target="_blank" rel="noopener">OpenAPI</a>
+  <span class="separator">·</span>
+  <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

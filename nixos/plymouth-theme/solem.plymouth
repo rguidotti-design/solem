@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=SOLEM
+Description=SOLEM navy boot splash with gold sun orb
+ModuleName=script
+
+[script]
+ImageDir=/etc/plymouth/themes/solem
+ScriptFile=/etc/plymouth/themes/solem/solem.script

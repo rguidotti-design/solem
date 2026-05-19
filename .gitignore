@@ -1,0 +1,49 @@
+result
+result-*
+*.qcow2
+*.vdi
+*.vmdk
+*.iso
+.direnv/
+.envrc
+
+# Secret reali (env file, chiavi)
+secrets/*
+!secrets/.gitkeep
+nixos/secrets/*
+!nixos/secrets/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.db
+*.db-wal
+*.db-shm
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build artifacts
+node_modules/
+dist/
+build/
+
+# Backend venv accidentali
+backend/venv/
+backend/.venv/
+
+# Log
+*.log
+/tmp/
+
+# Flake lock può essere committato MA Nix lo genera spesso
+# Lo committiamo per riproducibilità (commenta se preferisci no)
+# flake.lock

@@ -1,0 +1,45 @@
+// SOLEM Plymouth boot splash — navy + gold sun orb
+// Riferimento: Plymouth scripting language
+
+// Sfondo navy
+Window.SetBackgroundTopColor(0.024, 0.039, 0.078);    // #060a14
+Window.SetBackgroundBottomColor(0.024, 0.039, 0.078); // uniforme
+
+// Logo SOLEM al centro
+logo.image = Image("logo.png");
+logo.sprite = Sprite(logo.image);
+logo.x = Window.GetX() + (Window.GetWidth() - logo.image.GetWidth()) / 2;
+logo.y = Window.GetY() + (Window.GetHeight() - logo.image.GetHeight()) / 2 - 40;
+logo.sprite.SetPosition(logo.x, logo.y, 1);
+
+// Sun orb pulsante (animazione semplice)
+orb.image = Image("orb.png");
+orb.sprite = Sprite(orb.image);
+orb.cx = Window.GetX() + (Window.GetWidth() - orb.image.GetWidth()) / 2;
+orb.cy = logo.y - orb.image.GetHeight() - 20;
+orb.sprite.SetPosition(orb.cx, orb.cy, 0);
+
+orb.opacity = 0.7;
+orb.direction = 0.02;
+
+fun refresh_callback() {
+    orb.opacity += orb.direction;
+    if (orb.opacity > 1.0) { orb.opacity = 1.0; orb.direction = -orb.direction; }
+    if (orb.opacity < 0.4) { orb.opacity = 0.4; orb.direction = -orb.direction; }
+    orb.sprite.SetOpacity(orb.opacity);
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);
+
+// Messaggio status (shown da Plymouth durante boot)
+status.text = "";
+fun display_message_callback(text) {
+    if (status.image) status.image = NULL;
+    status.image = Image.Text(text, 1, 1, 1, 1, "Sans 11");
+    status.sprite = Sprite(status.image);
+    status.x = Window.GetX() + (Window.GetWidth() - status.image.GetWidth()) / 2;
+    status.y = logo.y + logo.image.GetHeight() + 40;
+    status.sprite.SetPosition(status.x, status.y, 2);
+}
+
+Plymouth.SetUpdateStatusFunction(display_message_callback);

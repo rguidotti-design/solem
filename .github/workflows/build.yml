@@ -1,0 +1,73 @@
+name: Build SOLEM
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  flake-check:
+    name: Nix flake check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            substituters = https://cache.nixos.org/
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+
+      - name: Eval NixOS config
+        run: nix eval .#nixosConfigurations.solem-vm.config.system.build.vm.drvPath
+
+      - name: Build VM (no run, only image)
+        run: nix build .#nixosConfigurations.solem-vm.config.system.build.vm --no-link
+
+  python-tests:
+    name: Backend pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install backend deps
+        working-directory: backend
+        run: |
+          pip install --upgrade pip
+          pip install -r solem_api/requirements.txt
+          pip install pytest httpx
+
+      - name: Run pytest
+        working-directory: backend
+        run: pytest -v
+
+  python-lint:
+    name: Backend lint (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Lint
+        working-directory: backend
+        run: ruff check solem_api/ tests/ || true   # warning, no block in Step 0
+
+      - name: Format check
+        working-directory: backend
+        run: ruff format --check solem_api/ tests/ || true

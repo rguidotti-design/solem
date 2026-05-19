@@ -1,0 +1,319 @@
+/* SOLEM Dashboard — stile BlackBerry classico + premium serif + densità info.
+   Palette: blue navy / oro / bianco ghiaccio. Nessuna emoji nell'UI. */
+
+:root {
+  /* Palette BLUE NAVY — accent oro mantenuto come highlight premium */
+  --bg:           #060a14;
+  --bg-card:      #0c1426;
+  --bg-card-hi:   #131d33;
+  --border:       #1f2c47;
+  --border-hi:    #2c4f7d;
+  --navy:         #1e3a5f;
+  --navy-hi:      #2c5f9d;
+  --navy-bright:  #4a7fc4;
+  --gold:         #c9a961;
+  --text:         #e8edf5;
+  --text-mute:    #8a96ad;
+  --text-dim:     #5a6680;
+  --ok:           #4ab37e;
+  --warn:         #d4a04e;
+  --err:          #d45e5e;
+  --serif:        'Cormorant Garamond', Georgia, serif;
+  --sans:         'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --mono:         'JetBrains Mono', Menlo, Consolas, monospace;
+
+  /* alias per compatibilità (vecchio nome "bordeaux" mappato a navy) */
+  --bordeaux:     var(--navy);
+  --bordeaux-hi:  var(--navy-hi);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--bordeaux-hi); }
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #0d0d0d 0%, var(--bg) 100%);
+}
+
+.brand { display: flex; align-items: baseline; gap: 18px; }
+
+.logo-svg {
+  height: 56px;
+  width: auto;
+  display: block;
+}
+
+.status { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-mute); }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot-ok { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+.dot-err { background: var(--err); box-shadow: 0 0 6px var(--err); }
+.dot-loading { background: var(--gold); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ── Navbar ─────────────────────────────────────────────────────── */
+.navbar {
+  display: flex;
+  gap: 0;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  overflow-x: auto;
+}
+
+.nav-item {
+  background: transparent;
+  border: none;
+  color: var(--text-mute);
+  padding: 12px 18px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.nav-item:hover { color: var(--text); }
+.nav-item.active {
+  color: var(--gold);
+  border-bottom-color: var(--bordeaux);
+}
+
+/* ── Main ───────────────────────────────────────────────────────── */
+main {
+  padding: 22px 28px 80px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.tab { display: none; }
+.tab.active { display: block; animation: fadein 0.18s; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.grid { display: grid; gap: 14px; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.span-3 { grid-column: span 3; }
+.span-2 { grid-column: span 2; }
+
+@media (max-width: 900px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .span-3, .span-2 { grid-column: auto; }
+}
+
+/* ── Cards ──────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--bordeaux);
+  padding: 16px 18px;
+  border-radius: 2px;
+}
+
+.card h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Dense definition list (BlackBerry style) ──────────────────── */
+dl.dense {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 16px;
+  font-size: 13px;
+}
+dl.dense dt {
+  color: var(--text-mute);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  align-self: center;
+}
+dl.dense dd {
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  word-break: break-all;
+}
+
+/* ── Tabelle dense ──────────────────────────────────────────────── */
+table.dense {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+table.dense th, table.dense td {
+  padding: 6px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+table.dense th {
+  color: var(--text-mute);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 10px;
+}
+table.dense td { font-family: var(--mono); color: var(--text); }
+table.dense tr:hover td { background: var(--bg-card-hi); }
+
+/* ── Status tags ────────────────────────────────────────────────── */
+.tag, .tag-stub, .tag-partial, .tag-active, .tag-ok, .tag-down {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-weight: 500;
+}
+.tag-stub    { background: rgba(138, 133, 128, 0.15); color: var(--text-mute); border: 1px solid var(--text-dim); }
+.tag-partial { background: rgba(201, 138, 62, 0.15);  color: var(--warn);      border: 1px solid var(--warn); }
+.tag-active  { background: rgba(74, 155, 110, 0.15);  color: var(--ok);        border: 1px solid var(--ok); }
+.tag-ok      { background: rgba(74, 155, 110, 0.15);  color: var(--ok);        border: 1px solid var(--ok); }
+.tag-down    { background: rgba(196, 69, 69, 0.15);   color: var(--err);       border: 1px solid var(--err); }
+
+/* ── Endpoints list ─────────────────────────────────────────────── */
+.endpoints { list-style: none; font-family: var(--mono); font-size: 12px; }
+.endpoints li {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.endpoints li:last-child { border-bottom: none; }
+.endpoints .ep-name { color: var(--text-mute); }
+.endpoints .ep-url { color: var(--gold); }
+
+/* ── Layer bar (overview) ───────────────────────────────────────── */
+.layer-bar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+.layer-cell {
+  padding: 10px;
+  background: var(--bg-card-hi);
+  border: 1px solid var(--border);
+  text-align: center;
+  border-radius: 2px;
+}
+.layer-cell .lb-l {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--gold);
+  display: block;
+}
+.layer-cell .lb-name {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  margin-top: 4px;
+}
+.layer-cell .lb-status { margin-top: 6px; }
+
+/* ── Chips (filter) ─────────────────────────────────────────────── */
+.cap-filter { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+.chip {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-mute);
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: all 0.12s;
+}
+.chip:hover { color: var(--text); border-color: var(--bordeaux); }
+.chip.active { color: var(--gold); border-color: var(--gold); background: rgba(201,169,97,0.08); }
+
+/* ── PIN display (pairing) ──────────────────────────────────────── */
+.btn-primary {
+  background: var(--bordeaux);
+  color: var(--text);
+  border: none;
+  padding: 10px 20px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  font-weight: 500;
+  transition: background 0.12s;
+}
+.btn-primary:hover { background: var(--bordeaux-hi); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.pin-display { margin-top: 16px; padding: 16px; background: var(--bg); border: 1px solid var(--bordeaux); border-radius: 2px; }
+.pin-code {
+  font-family: var(--mono);
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-align: center;
+  text-shadow: 0 0 12px rgba(201,169,97,0.3);
+  padding: 12px 0;
+}
+.pin-meta { text-align: center; color: var(--text-mute); font-size: 11px; margin-bottom: 10px; }
+.pin-instructions {
+  background: var(--bg-card-hi);
+  border: 1px solid var(--border);
+  padding: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-x: auto;
+  border-radius: 2px;
+}
+
+/* ── Misc ───────────────────────────────────────────────────────── */
+.muted { color: var(--text-mute); font-size: 11px; margin-top: 8px; font-style: italic; }
+
+/* ── Footer ─────────────────────────────────────────────────────── */
+.bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 28px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.bottom .separator { color: var(--text-dim); }

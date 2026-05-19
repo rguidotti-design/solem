@@ -1,0 +1,276 @@
+openapi: 3.1.0
+info:
+  title: SOLEM API
+  version: 0.1.0-step0
+  description: |
+    API di sistema di SOLEM — OS AI-native che ospita GAVIO e (futuro) altre AI.
+    Progettata per essere consumata da AI come consumer primario.
+
+    Filosofia: schema strutturato ovunque, errori machine-readable, output
+    deterministici, no stringhe libere non parseable.
+  contact:
+    name: SOLEM
+    email: r.guidotti@theoryholding.com
+
+servers:
+  - url: http://localhost:8001
+    description: VM locale (default)
+  - url: http://solem.local:8001
+    description: mDNS bare-metal (Step 1+)
+
+tags:
+  - name: meta
+    description: Liveness / readiness / versione
+  - name: solem
+    description: Manifest + capabilities discovery
+  - name: identity
+    description: L1 Identity Engine (stub Step 0)
+  - name: pairing
+    description: Onboarding device alla mesh SOLEM
+
+paths:
+  /health:
+    get:
+      tags: [meta]
+      operationId: health
+      summary: Liveness probe
+      responses:
+        '200':
+          description: Servizio attivo
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/HealthStatus' }
+
+  /solem/manifest:
+    get:
+      tags: [solem]
+      operationId: manifest
+      summary: Manifest live di SOLEM
+      description: |
+        Identità di sistema (versione, descrizione, AI primaria) + stato runtime
+        (servizi attivi, risorse, layer status). Endpoint principale per
+        un'AI esterna che vuole capire dove si trova.
+      responses:
+        '200':
+          description: Manifest restituito
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SolemManifest' }
+
+  /solem/capabilities:
+    get:
+      tags: [solem]
+      operationId: capabilities
+      summary: Lista capabilities disponibili
+      description: |
+        Auto-discovery: capabilities native SOLEM + endpoint GAVIO (parsando
+        il suo OpenAPI). Permette a un'AI di scoprire dinamicamente cosa il
+        sistema sa fare senza configurazione esplicita.
+      responses:
+        '200':
+          description: Lista capabilities
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CapabilitiesResponse' }
+
+  /solem/identity/me:
+    get:
+      tags: [identity]
+      operationId: identity_me
+      summary: Identità utente corrente (stub Step 0)
+      description: |
+        Placeholder L1 Identity Engine. Step 0 ritorna single-user hardcoded.
+        Step 2 leggerà da Supabase (tabella identities) con per-user RLS.
+      responses:
+        '200':
+          description: Identity dell'utente
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/IdentityStub' }
+
+  /solem/pairing/start:
+    post:
+      tags: [pairing]
+      operationId: pairing_start
+      summary: Genera PIN BBM-style per pairing nuovo device
+      description: |
+        Crea un PIN di 8 caratteri hex (uppercase) valido per 10 minuti.
+        L'utente passa il PIN al nuovo device (occhio-a-occhio o canale
+        fidato), il device chiama /pairing/confirm entro la scadenza.
+        PIN one-shot: consumato al primo confirm.
+      responses:
+        '200':
+          description: PIN generato
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PairingStart' }
+
+  /solem/pairing/confirm:
+    post:
+      tags: [pairing]
+      operationId: pairing_confirm
+      summary: Completa pairing — il device riceve config mesh + cert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PairingConfirmRequest' }
+      responses:
+        '200':
+          description: Pairing completato — risposta contiene WG config + opzionale cert mTLS
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PairingConfirmResponse' }
+        '404':
+          description: PIN sconosciuto o già consumato
+        '410':
+          description: PIN scaduto
+
+  /solem/pairing/devices:
+    get:
+      tags: [pairing]
+      operationId: pairing_list_devices
+      summary: Lista device paired (Step 0 in-memory)
+      responses:
+        '200':
+          description: Lista device
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total: { type: integer }
+                  devices:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status, version, timestamp]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, down]
+        version: { type: string }
+        timestamp: { type: string, format: date-time }
+
+    LayerStatus:
+      type: object
+      required: [layer, name, status, description]
+      properties:
+        layer:
+          type: string
+          description: ID del layer (es. L1, L2…)
+        name: { type: string }
+        status:
+          type: string
+          enum: [stub, partial, active]
+        description: { type: string }
+
+    SolemManifest:
+      type: object
+      required: [name, version, description, primary_ai, step, layers, services, runtime]
+      properties:
+        name: { type: string, default: SOLEM }
+        version: { type: string }
+        description: { type: string }
+        primary_ai: { type: string }
+        step: { type: integer }
+        layers:
+          type: array
+          items: { $ref: '#/components/schemas/LayerStatus' }
+        services:
+          type: object
+          additionalProperties: { type: string }
+        runtime:
+          type: object
+          properties:
+            uptime_seconds: { type: integer }
+            active_services:
+              type: array
+              items: { type: string }
+            memory_mb: { type: integer }
+            disk_free_gb: { type: integer }
+
+    Capability:
+      type: object
+      required: [id, name, description, permission_required, invokable, source]
+      properties:
+        id:
+          type: string
+          description: ID univoco, formato 'domain.action' (es. solem.identity.read)
+        name: { type: string }
+        description: { type: string }
+        permission_required:
+          type: string
+          default: user
+        invokable: { type: boolean }
+        source:
+          type: string
+          enum: [solem, gavio, extension]
+
+    CapabilitiesResponse:
+      type: object
+      required: [total, capabilities]
+      properties:
+        total: { type: integer }
+        capabilities:
+          type: array
+          items: { $ref: '#/components/schemas/Capability' }
+
+    IdentityStub:
+      type: object
+      required: [user_id, name, email, roles]
+      properties:
+        user_id: { type: string, format: uuid }
+        name: { type: string }
+        email: { type: string, format: email }
+        roles:
+          type: array
+          items: { type: string }
+        note: { type: string }
+
+    PairingStart:
+      type: object
+      required: [pin, expires_at, coordinator_endpoint, instructions]
+      properties:
+        pin:
+          type: string
+          pattern: '^[0-9A-F]{8}$'
+          example: A3F7C912
+        expires_at: { type: string, format: date-time }
+        coordinator_endpoint:
+          type: string
+          example: solem.local:51820
+        instructions: { type: string }
+
+    PairingConfirmRequest:
+      type: object
+      required: [pin, device_name, device_pubkey_wg]
+      properties:
+        pin: { type: string, minLength: 8, maxLength: 8 }
+        device_name: { type: string, minLength: 1, maxLength: 64 }
+        device_pubkey_wg:
+          type: string
+          description: WireGuard public key (base64)
+        device_pubkey_mtls:
+          type: string
+          description: CSR PEM per cert mTLS (opzionale)
+
+    PairingConfirmResponse:
+      type: object
+      required: [device_id, assigned_ip, coordinator_pubkey_wg, mesh_subnet, dns_server]
+      properties:
+        device_id: { type: string }
+        assigned_ip:
+          type: string
+          example: 10.42.0.10/32
+        coordinator_pubkey_wg: { type: string }
+        ca_cert_pem: { type: string, nullable: true }
+        client_cert_pem: { type: string, nullable: true }
+        mesh_subnet: { type: string, default: "10.42.0.0/24" }
+        dns_server: { type: string, default: "10.42.0.1" }
