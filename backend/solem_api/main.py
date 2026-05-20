@@ -80,12 +80,16 @@ from .layers import time_travel as time_travel_mod
 from .layers import hpc as hpc_mod
 from .layers import quantum as quantum_mod
 from .layers import datacenter as datacenter_mod
+from .layers import secrets as secrets_mod
+from .layers import audit_chain as audit_mod
+from .layers import vpn_status as vpn_status_mod
 from .layers.logging_config import setup_logging
 
 # Middleware (single-responsibility ognuno)
 from .middleware.rate_limit import RateLimitMiddleware
 from .middleware.request_id import RequestIDMiddleware
 from .middleware.access_log import AccessLogMiddleware
+from .middleware.rate_limit_login import LoginRateLimitMiddleware
 
 # Init logging strutturato JSON appena importa main (prima di qualsiasi log)
 setup_logging()
@@ -196,6 +200,7 @@ app = FastAPI(
 # 1. RequestID (più esterno: l'ID deve esserci anche se rate limit blocca)
 # 2. AccessLog (logga prima del rate-limit-block per visibilità)
 # 3. RateLimit (più interno: nega prima di hit l'app)
+app.add_middleware(LoginRateLimitMiddleware)
 app.add_middleware(RateLimitMiddleware)
 app.add_middleware(AccessLogMiddleware)
 app.add_middleware(RequestIDMiddleware)
@@ -265,6 +270,9 @@ app.include_router(time_travel_mod.router,  prefix="/solem")
 app.include_router(hpc_mod.router,          prefix="/solem")
 app.include_router(quantum_mod.router,      prefix="/solem")
 app.include_router(datacenter_mod.router,   prefix="/solem")
+app.include_router(secrets_mod.router,      prefix="/solem")
+app.include_router(audit_mod.router,        prefix="/solem")
+app.include_router(vpn_status_mod.router,   prefix="/solem")
 # health_mod ha prefix /health (sub /live /ready /deep), NON sotto /solem
 app.include_router(health_mod.router)
 

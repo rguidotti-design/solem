@@ -26,6 +26,7 @@ Esempio:
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import secrets
 import time
@@ -35,6 +36,7 @@ from typing import Literal
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
+from starlette.responses import StreamingResponse
 
 router = APIRouter(prefix="/handoff", tags=["handoff-continuity"])
 
@@ -179,6 +181,42 @@ async def cancel(handoff_id: str) -> dict:
     del state["items"][handoff_id]
     _save(state)
     return {"cancelled": True, "id": handoff_id}
+
+
+@router.get("/stream")
+async def stream(device_id: str, owner_username: str | None = None, poll_sec: float = 2.0):
+    """Server-Sent Events: push real-time degli handoff disponibili.
+
+    Il client (PWA/desktop overlay) si connette e riceve `data: {json}\\n\\n`
+    per ogni nuovo handoff. Niente polling lato client.
+    """
+    async def event_gen():
+        seen_ids: set[str] = set()
+        while True:
+            state = _gc(_load())
+            _save(state)
+            new_items: list[HandoffItem] = []
+            for v in state["items"].values():
+                if v.get("claimed_at"):
+                    continue
+                if owner_username and v["owner_username"] != owner_username:
+                    continue
+                tgt = v.get("target_device_id")
+                if (tgt is None or tgt == device_id) and v["source_device_id"] != device_id:
+                    if v["id"] not in seen_ids:
+                        seen_ids.add(v["id"])
+                        new_items.append(HandoffItem(**v))
+            for item in new_items:
+                yield f"data: {item.model_dump_json()}\n\n"
+            # Heartbeat ogni poll (così connessioni morte si chiudono)
+            yield f": keepalive {time.time()}\n\n"
+            await asyncio.sleep(max(0.5, poll_sec))
+
+    return StreamingResponse(event_gen(), media_type="text/event-stream", headers={
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+        "X-Accel-Buffering": "no",
+    })
 
 
 @router.get("/all", response_model=list[HandoffItem])
