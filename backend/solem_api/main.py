@@ -72,6 +72,11 @@ from .layers import meeting_notes as meeting_mod
 from .layers import privacy_dash as privacy_mod
 from .layers import focus as focus_mod
 from .layers import cluster as cluster_mod
+from .layers import federation as federation_mod
+from .layers import handoff as handoff_mod
+from .layers import live_activities as live_mod
+from .layers import prefetch as prefetch_mod
+from .layers import time_travel as time_travel_mod
 from .layers.logging_config import setup_logging
 
 # Middleware (single-responsibility ognuno)
@@ -249,6 +254,11 @@ app.include_router(meeting_mod.router,      prefix="/solem")
 app.include_router(privacy_mod.router,      prefix="/solem")
 app.include_router(focus_mod.router,        prefix="/solem")
 app.include_router(cluster_mod.router,      prefix="/solem")
+app.include_router(federation_mod.router,   prefix="/solem")
+app.include_router(handoff_mod.router,      prefix="/solem")
+app.include_router(live_mod.router,         prefix="/solem")
+app.include_router(prefetch_mod.router,     prefix="/solem")
+app.include_router(time_travel_mod.router,  prefix="/solem")
 # health_mod ha prefix /health (sub /live /ready /deep), NON sotto /solem
 app.include_router(health_mod.router)
 

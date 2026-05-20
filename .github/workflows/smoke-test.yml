@@ -1,0 +1,99 @@
+name: Smoke Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  backend-tests:
+    name: Backend unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install backend deps
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install fastapi pydantic httpx pytest python-multipart aiofiles
+
+      - name: Run pytest
+        working-directory: backend
+        env:
+          SOLEM_DB_PATH: ":memory:"
+        run: |
+          python -m pytest tests/ -v --tb=short --no-header
+
+  api-import-smoke:
+    name: API import smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Install
+        working-directory: backend
+        run: |
+          pip install fastapi pydantic httpx python-multipart aiofiles
+      - name: Boot solem-api in background + curl /health
+        working-directory: backend
+        run: |
+          export SOLEM_DB_PATH=":memory:"
+          python -m uvicorn solem_api.main:app --host 127.0.0.1 --port 18001 &
+          PID=$!
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:18001/health >/dev/null 2>&1; then
+              echo "API up after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:18001/health | tee /tmp/health.json
+          curl -fsS http://127.0.0.1:18001/solem/manifest | head -c 500
+          echo
+          curl -fsS http://127.0.0.1:18001/solem/cluster/health
+          echo
+          curl -fsS http://127.0.0.1:18001/solem/federation/health
+          echo
+          curl -fsS http://127.0.0.1:18001/solem/handoff/health
+          echo
+          kill $PID || true
+
+  nix-flake-check:
+    name: Nix flake check (only metadata, no build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: nix flake metadata
+        run: nix --extra-experimental-features 'nix-command flakes' flake metadata
+      - name: nix flake show
+        run: nix --extra-experimental-features 'nix-command flakes' flake show || true
+
+  progress-server-smoke:
+    name: Progress server smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Boot progress server + curl
+        run: |
+          python tools/progress-server/server.py &
+          PID=$!
+          sleep 2
+          curl -fsS http://127.0.0.1:9000/api/stats | head -c 500
+          echo
+          curl -fsS http://127.0.0.1:9000/preview | head -c 200
+          echo
+          curl -fsS http://127.0.0.1:9000/mobile | head -c 200
+          echo
+          kill $PID || true

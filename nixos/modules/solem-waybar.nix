@@ -50,10 +50,13 @@ let
     };
 
     "custom/solem" = {
-      exec = "curl -fsS http://127.0.0.1:8001/health 2>/dev/null | grep -o '\"status\":\"ok\"' >/dev/null && echo 'SOLEM' || echo 'SOLEM⚠'";
-      interval = 15;
-      tooltip = false;
+      # Live activity: chiama /solem/live/badge → label+colore dinamici
+      # (focus countdown, backup ⛁, update ↻, GPU ◢, SOLEM idle)
+      exec = "curl -fsS http://127.0.0.1:8001/solem/live/badge 2>/dev/null | jq -r '.label' || echo 'SOLEM'";
+      interval = 2;
+      tooltip-format = "click → http://localhost:8001/";
       on-click = "xdg-open http://127.0.0.1:8001/";
+      on-click-right = "xdg-open http://127.0.0.1:9000/preview";
     };
 
     cpu = {

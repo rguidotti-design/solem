@@ -249,6 +249,10 @@ def activity() -> dict:
 HTML = (HERE / "index.html").read_text(encoding="utf-8") if (HERE / "index.html").exists() else None
 PREVIEW_HTML = (HERE / "preview.html").read_text(encoding="utf-8") if (HERE / "preview.html").exists() else None
 OVERLAY_HTML = (HERE / "overlay.html").read_text(encoding="utf-8") if (HERE / "overlay.html").exists() else None
+MOBILE_HTML = (HERE / "mobile.html").read_text(encoding="utf-8") if (HERE / "mobile.html").exists() else None
+MANIFEST = (HERE / "manifest.webmanifest").read_text(encoding="utf-8") if (HERE / "manifest.webmanifest").exists() else None
+ICON192 = (HERE / "icon-192.svg").read_text(encoding="utf-8") if (HERE / "icon-192.svg").exists() else None
+ICON512 = (HERE / "icon-512.svg").read_text(encoding="utf-8") if (HERE / "icon-512.svg").exists() else None
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -260,6 +264,14 @@ class Handler(BaseHTTPRequestHandler):
             self._send_preview()
         elif path == "/overlay":
             self._send_overlay()
+        elif path == "/mobile":
+            self._send_static(MOBILE_HTML, "text/html; charset=utf-8")
+        elif path == "/manifest.webmanifest":
+            self._send_static(MANIFEST, "application/manifest+json")
+        elif path == "/icon-192.svg":
+            self._send_static(ICON192, "image/svg+xml")
+        elif path == "/icon-512.svg":
+            self._send_static(ICON512, "image/svg+xml")
         elif path == "/api/stats":
             self._send_json(stats())
         elif path == "/api/modules":
@@ -310,6 +322,18 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _send_static(self, content, content_type):
+        if content is None:
+            self.send_error(404, "asset mancante")
+            return
+        body = content.encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "public, max-age=300")
         self.end_headers()
         self.wfile.write(body)
 
