@@ -1,19 +1,12 @@
-"""RAG — pipeline retrieval-augmented generation locale.
+"""RAG — capability retrieval-augmented generation, generate delega a GAVIO.
 
-Single responsibility: SOLO orchestrare chunk+embed+search+generate. Niente
-storage embedding (delega a vector_store), niente parsing PDF (delega a
-fs_semantic per ora; PDF/Office Step 2 con pdfminer/python-docx).
+Single responsibility: SOLO orchestrare chunk+embed+search e poi mandare
+contesto+domanda a GAVIO. Embedding va tramite vector_store (Ollama
+embedding model, deterministico). Generate è SEMPRE GAVIO.
 
 Pipeline:
-  1. /rag/ingest        → split documenti in chunk + indicizza in vector_store
-  2. /rag/query         → embed query → top-K dal vector_store → genera con LLM
-  3. /rag/collections   → lista collezioni indicizzate
-
-Endpoint:
-  POST /rag/ingest      — testo o file → chunks → vector_store
-  POST /rag/query       — domanda → answer + sources
-  GET  /rag/collections — collezioni esistenti
-  DELETE /rag/collection/{name} — purge collezione
+  1. /rag/ingest  → split documenti in chunk + indicizza in vector_store
+  2. /rag/query   → search top-K → costruisce prompt → GAVIO genera
 """
 from __future__ import annotations
 
@@ -26,10 +19,8 @@ from pydantic import BaseModel, Field
 router = APIRouter(prefix="/rag", tags=["rag"])
 
 SOLEM_URL = os.environ.get("SOLEM_INTERNAL_URL", "http://127.0.0.1:8001")
-OLLAMA_URL = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
-DEFAULT_MODEL = os.environ.get("SOLEM_RAG_MODEL", "llama3.1:8b")
 
-CHUNK_SIZE = 800   # chars per chunk
+CHUNK_SIZE = 800
 CHUNK_OVERLAP = 100
 
 
@@ -44,7 +35,6 @@ class QueryRequest(BaseModel):
     collection: str
     question: str = Field(..., min_length=3)
     top_k: int = Field(5, ge=1, le=20)
-    model: str | None = None
 
 
 class Source(BaseModel):
@@ -56,8 +46,8 @@ class Source(BaseModel):
 
 class QueryResponse(BaseModel):
     answer: str
-    model: str
     sources: list[Source]
+    via: str = "gavio"
 
 
 def _chunk(text: str) -> list[str]:
@@ -92,21 +82,21 @@ async def _search(collection: str, query: str, top_k: int) -> list[dict]:
         return r.json()
 
 
-async def _generate(prompt: str, model: str) -> str:
-    async with httpx.AsyncClient(timeout=120.0) as c:
+async def _generate(prompt: str) -> str:
+    """Delega a GAVIO via SOLEM proxy. GAVIO sceglie il modello."""
+    async with httpx.AsyncClient(timeout=180.0) as c:
         r = await c.post(
-            f"{OLLAMA_URL}/api/generate",
+            f"{SOLEM_URL}/solem/ai/route",
             json={
-                "model": model,
-                "prompt": prompt,
-                "stream": False,
-                "options": {"temperature": 0.2, "num_predict": 600},
+                "messages": [{"role": "user", "content": prompt}],
+                "hint": "rag",
+                "max_tokens": 600,
+                "temperature": 0.2,
             },
         )
-        if r.status_code == 404:
-            raise HTTPException(404, {"code": "model_not_pulled", "hint": f"ollama pull {model}"})
-        r.raise_for_status()
-        return r.json().get("response", "").strip()
+        if r.status_code != 200:
+            raise HTTPException(503, {"code": "gavio_unavailable", "status": r.status_code})
+        return r.json().get("content", "").strip()
 
 
 # ─── Endpoints ────────────────────────────────────────────────────────
@@ -115,9 +105,8 @@ async def _generate(prompt: str, model: str) -> str:
 @router.get("/health", response_model=dict)
 async def rag_health() -> dict:
     return {
-        "solem_url": SOLEM_URL,
-        "ollama_url": OLLAMA_URL,
-        "default_model": DEFAULT_MODEL,
+        "ai_backend": "gavio (via /solem/ai/route)",
+        "embedding_backend": "vector_store (Ollama embedding model)",
         "chunk_size": CHUNK_SIZE,
         "chunk_overlap": CHUNK_OVERLAP,
     }
@@ -168,11 +157,9 @@ async def query(req: QueryRequest) -> QueryResponse:
     if not hits:
         return QueryResponse(
             answer="Non ho trovato informazioni rilevanti nei documenti indicizzati.",
-            model=req.model or DEFAULT_MODEL,
             sources=[],
         )
 
-    # Costruisci contesto
     ctx_parts: list[str] = []
     sources: list[Source] = []
     for i, h in enumerate(hits):
@@ -194,10 +181,8 @@ async def query(req: QueryRequest) -> QueryResponse:
         f"QUESTION: {req.question}\n\n"
         "ANSWER:"
     )
-    use_model = req.model or DEFAULT_MODEL
-    answer = await _generate(prompt, use_model)
-
-    return QueryResponse(answer=answer, model=use_model, sources=sources)
+    answer = await _generate(prompt)
+    return QueryResponse(answer=answer, sources=sources)
 
 
 @router.get("/collections", response_model=list[str])

@@ -1,12 +1,9 @@
-"""SUMMARIZER — riassunto documenti offline via Ollama.
+"""SUMMARIZER — capability: testo → riassunto, delega a GAVIO.
 
-Single responsibility: SOLO trasformare testo lungo in riassunto. Niente
-parsing PDF/Word (delega a moduli esterni, qui solo testo già estratto).
+Single responsibility: SOLO chunking + map-reduce orchestration. L'AI è
+GAVIO: ogni step LLM chiama /solem/ai/route che proxy-a GAVIO.
 
-Strategia: chunking + map-reduce per testi grandi (> 8k tokens):
-  1. split in chunks da ~3000 token con overlap 200
-  2. summary parziale per chunk (map step)
-  3. summary finale combinando parziali (reduce step)
+SOLEM NON sceglie modelli, NON chiama Ollama direttamente. GAVIO decide.
 
 Endpoint:
   POST /summarize/text          — riassunto testo puro
@@ -24,8 +21,7 @@ from pydantic import BaseModel, Field
 
 router = APIRouter(prefix="/summarize", tags=["summarizer"])
 
-OLLAMA_URL = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
-DEFAULT_MODEL = os.environ.get("SOLEM_SUMMARY_MODEL", "llama3.1:8b")
+SOLEM_URL = os.environ.get("SOLEM_INTERNAL_URL", "http://127.0.0.1:8001")
 MAX_INPUT_CHARS = 200_000
 CHUNK_CHARS = 12_000
 CHUNK_OVERLAP = 800
@@ -35,7 +31,6 @@ class SummarizeRequest(BaseModel):
     text: str = Field(..., min_length=10)
     style: str = Field("paragraph", description="paragraph|bullets|tweet|tldr")
     language: str = Field("it", description="it|en|...")
-    model: str | None = None
 
 
 class URLRequest(BaseModel):
@@ -46,9 +41,9 @@ class URLRequest(BaseModel):
 
 class SummaryResponse(BaseModel):
     summary: str
-    model: str
     input_chars: int
     chunks_processed: int
+    via: str = "gavio"
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────
@@ -76,43 +71,37 @@ def _style_prompt(style: str, lang: str) -> str:
     return styles.get(style, styles["paragraph"])
 
 
-async def _call_ollama(prompt: str, model: str) -> str:
-    async with httpx.AsyncClient(timeout=120.0) as c:
+async def _ask_gavio(prompt: str) -> str:
+    """Delega a GAVIO via SOLEM proxy (/solem/ai/route). GAVIO sceglie modello."""
+    async with httpx.AsyncClient(timeout=180.0) as c:
         r = await c.post(
-            f"{OLLAMA_URL}/api/generate",
+            f"{SOLEM_URL}/solem/ai/route",
             json={
-                "model": model,
-                "prompt": prompt,
-                "stream": False,
-                "options": {"temperature": 0.3, "num_predict": 800},
+                "messages": [{"role": "user", "content": prompt}],
+                "hint": "summarize",
+                "max_tokens": 800,
+                "temperature": 0.3,
             },
         )
-        if r.status_code == 404:
-            raise HTTPException(404, {"code": "model_not_pulled", "hint": f"ollama pull {model}"})
-        r.raise_for_status()
-        return r.json().get("response", "").strip()
+        if r.status_code != 200:
+            raise HTTPException(503, {"code": "gavio_unavailable", "status": r.status_code})
+        return r.json().get("content", "").strip()
 
 
-async def _summarize_chunks(chunks: list[str], style: str, lang: str, model: str) -> str:
+async def _summarize_chunks(chunks: list[str], style: str, lang: str) -> str:
     style_prompt = _style_prompt(style, lang)
     if len(chunks) == 1:
-        return await _call_ollama(f"{style_prompt}\n\nTEXT:\n{chunks[0]}", model)
+        return await _ask_gavio(f"{style_prompt}\n\nTEXT:\n{chunks[0]}")
 
-    # Map step: summary parziale per chunk
     partials: list[str] = []
     for chunk in chunks:
-        p = await _call_ollama(
-            f"Briefly summarize the following passage:\n\n{chunk}",
-            model,
-        )
+        p = await _ask_gavio(f"Briefly summarize the following passage:\n\n{chunk}")
         partials.append(p)
 
-    # Reduce step: combina
     combined = "\n\n---\n\n".join(partials)
-    return await _call_ollama(
+    return await _ask_gavio(
         f"{style_prompt}\n\nThese are partial summaries of a longer document. "
-        f"Combine them into a coherent final summary:\n\n{combined}",
-        model,
+        f"Combine them into a coherent final summary:\n\n{combined}"
     )
 
 
@@ -122,8 +111,7 @@ async def _summarize_chunks(chunks: list[str], style: str, lang: str, model: str
 @router.get("/health", response_model=dict)
 async def summary_health() -> dict:
     return {
-        "ollama_url": OLLAMA_URL,
-        "default_model": DEFAULT_MODEL,
+        "ai_backend": "gavio (via /solem/ai/route)",
         "max_input_chars": MAX_INPUT_CHARS,
         "chunk_chars": CHUNK_CHARS,
     }
@@ -133,14 +121,8 @@ async def summary_health() -> dict:
 async def summarize_text(req: SummarizeRequest) -> SummaryResponse:
     text = req.text[:MAX_INPUT_CHARS]
     chunks = _chunk_text(text)
-    use_model = req.model or DEFAULT_MODEL
-    summary = await _summarize_chunks(chunks, req.style, req.language, use_model)
-    return SummaryResponse(
-        summary=summary,
-        model=use_model,
-        input_chars=len(text),
-        chunks_processed=len(chunks),
-    )
+    summary = await _summarize_chunks(chunks, req.style, req.language)
+    return SummaryResponse(summary=summary, input_chars=len(text), chunks_processed=len(chunks))
 
 
 @router.post("/file", response_model=SummaryResponse)
@@ -148,9 +130,8 @@ async def summarize_file(
     file: UploadFile = File(...),
     style: str = "paragraph",
     language: str = "it",
-    model: str | None = None,
 ) -> SummaryResponse:
-    if file.size and file.size > MAX_INPUT_CHARS * 4:  # safety
+    if file.size and file.size > MAX_INPUT_CHARS * 4:
         raise HTTPException(413, {"code": "file_too_large"})
     content = await file.read()
     try:
@@ -159,19 +140,13 @@ async def summarize_file(
         raise HTTPException(400, {"code": "not_utf8_text"})
 
     chunks = _chunk_text(text[:MAX_INPUT_CHARS])
-    use_model = model or DEFAULT_MODEL
-    summary = await _summarize_chunks(chunks, style, language, use_model)
-    return SummaryResponse(
-        summary=summary,
-        model=use_model,
-        input_chars=len(text),
-        chunks_processed=len(chunks),
-    )
+    summary = await _summarize_chunks(chunks, style, language)
+    return SummaryResponse(summary=summary, input_chars=len(text), chunks_processed=len(chunks))
 
 
 @router.post("/url", response_model=SummaryResponse)
 async def summarize_url(req: URLRequest) -> SummaryResponse:
-    """Fetch URL HTML, strip tags, riassumi. No JS rendering."""
+    """Fetch URL HTML, strip tags, riassumi via GAVIO. No JS rendering."""
     try:
         async with httpx.AsyncClient(timeout=15.0, follow_redirects=True) as c:
             r = await c.get(req.url, headers={"User-Agent": "Mozilla/5.0 SOLEM Summarizer"})
@@ -180,7 +155,6 @@ async def summarize_url(req: URLRequest) -> SummaryResponse:
     except httpx.HTTPError as e:
         raise HTTPException(502, {"code": "fetch_failed", "error": str(e)})
 
-    # Strip basic HTML
     text = re.sub(r"<script[^>]*>.*?</script>", " ", html, flags=re.DOTALL | re.IGNORECASE)
     text = re.sub(r"<style[^>]*>.*?</style>", " ", text, flags=re.DOTALL | re.IGNORECASE)
     text = re.sub(r"<[^>]+>", " ", text)
@@ -188,10 +162,5 @@ async def summarize_url(req: URLRequest) -> SummaryResponse:
 
     text = text[:MAX_INPUT_CHARS]
     chunks = _chunk_text(text)
-    summary = await _summarize_chunks(chunks, req.style, req.language, DEFAULT_MODEL)
-    return SummaryResponse(
-        summary=summary,
-        model=DEFAULT_MODEL,
-        input_chars=len(text),
-        chunks_processed=len(chunks),
-    )
+    summary = await _summarize_chunks(chunks, req.style, req.language)
+    return SummaryResponse(summary=summary, input_chars=len(text), chunks_processed=len(chunks))
