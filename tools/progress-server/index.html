@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOLEM — Progress Server</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060a14; --bg-card: #0c1426; --bg-card-hi: #131d33;
+  --border: #1f2c47; --navy: #1e3a5f; --navy-hi: #2c5f9d;
+  --navy-bright: #4a7fc4; --gold: #c9a961;
+  --text: #e8edf5; --text-mute: #8a96ad; --text-dim: #5a6680;
+  --ok: #4ab37e; --warn: #d4a04e; --err: #d45e5e;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono: 'JetBrains Mono', Menlo, monospace;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.6; min-height: 100vh; }
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--navy-bright); }
+.top { padding: 28px 36px; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 28px; flex-wrap: wrap; }
+.logo { font-family: var(--serif); font-weight: 500; font-size: 44px; letter-spacing: 0.2em; }
+.tagline { font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--text-mute); }
+.pill { padding: 6px 14px; border-radius: 20px; font-size: 11px; letter-spacing: 0.1em; font-family: var(--mono); }
+.pill-cost { border: 1px solid var(--ok); color: var(--ok); }
+.pill-live { border: 1px solid var(--gold); color: var(--gold); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+
+main { max-width: 1600px; margin: 0 auto; padding: 28px 36px 80px; }
+
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 32px; }
+.stat { background: var(--bg-card); border: 1px solid var(--border); border-left: 2px solid var(--gold); padding: 16px; border-radius: 2px; text-align: center; }
+.stat .num { font-family: var(--serif); font-size: 36px; color: var(--gold); display: block; line-height: 1.1; }
+.stat .label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); margin-top: 6px; }
+
+.section { margin-bottom: 32px; }
+.section h2 { font-family: var(--serif); font-size: 28px; font-weight: 500; letter-spacing: 0.04em; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 12px; color: var(--gold); }
+.section h2 .count { font-family: var(--mono); font-size: 12px; color: var(--text-mute); margin-left: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+table th, table td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+table th { color: var(--text-mute); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; font-size: 10px; }
+table td { font-family: var(--mono); }
+table tr:hover td { background: var(--bg-card-hi); }
+table td.desc { font-family: var(--sans); color: var(--text-mute); }
+
+.tag { display: inline-block; padding: 2px 8px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 2px; font-family: var(--mono); }
+.tag-on { color: var(--ok); border: 1px solid var(--ok); background: rgba(74,179,126,0.1); }
+.tag-opt { color: var(--gold); border: 1px solid var(--gold); background: rgba(201,169,97,0.1); }
+
+.refresh-info { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
+.bottom { padding: 18px 36px; border-top: 1px solid var(--border); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); text-align: center; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1 class="logo">SOLEM</h1>
+  <span class="tagline">PROGRESS SERVER</span>
+  <span class="pill pill-cost">COSTO 0 €</span>
+  <span class="pill pill-live" id="live-pill">LIVE</span>
+  <span style="margin-left: auto; color: var(--text-mute); font-size: 11px;">
+    Repo: <a href="https://github.com/rguidotti-design/solem" target="_blank" rel="noopener">github.com/rguidotti-design/solem</a> · commit <span id="git-commit" class="mono">…</span>
+  </span>
+</header>
+
+<main>
+
+  <div class="stat-grid" id="stats-grid"></div>
+
+  <section class="section">
+    <h2>Moduli NixOS <span class="count" id="mod-count">…</span></h2>
+    <table>
+      <thead><tr><th>Modulo</th><th>Tipo</th><th>Size KB</th><th class="desc">Descrizione</th></tr></thead>
+      <tbody id="modules-body"></tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>Router Python backend <span class="count" id="lay-count">…</span></h2>
+    <table>
+      <thead><tr><th>Modulo</th><th>Endpoint</th><th>Size KB</th><th class="desc">Descrizione</th></tr></thead>
+      <tbody id="layers-body"></tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>ADR (Architecture Decision Records) <span class="count" id="adr-count">…</span></h2>
+    <table>
+      <thead><tr><th>ID</th><th class="desc">Titolo</th><th>Size KB</th></tr></thead>
+      <tbody id="adr-body"></tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>Test pytest <span class="count" id="test-count">…</span></h2>
+    <table>
+      <thead><tr><th>File</th><th>Tests</th><th>Size KB</th></tr></thead>
+      <tbody id="tests-body"></tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2>Documenti <span class="count" id="doc-count">…</span></h2>
+    <table>
+      <thead><tr><th>File</th><th>KB</th></tr></thead>
+      <tbody id="docs-body"></tbody>
+    </table>
+  </section>
+
+  <p class="refresh-info">Auto-refresh ogni 5s · Sorgente dati: filesystem locale repo · Server: Python stdlib, no deps</p>
+</main>
+
+<footer class="bottom">
+  SOLEM AI-NATIVE OS · 100% FOSS · Self-host · <a href="https://github.com/rguidotti-design/solem" target="_blank" rel="noopener">GitHub</a>
+</footer>
+
+<script>
+const API = "";
+async function fetchJSON(url) {
+  try { const r = await fetch(url, {cache:"no-store"}); if (r.ok) return await r.json(); } catch(e){}
+  return null;
+}
+function el(id) { return document.getElementById(id); }
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+function tag(cls, text) { const s = document.createElement('span'); s.className = 'tag ' + cls; s.textContent = text; return s; }
+
+async function refresh() {
+  const s = await fetchJSON('/api/stats');
+  if (s) {
+    el('git-commit').textContent = s.git_commit;
+    const grid = el('stats-grid');
+    clear(grid);
+    const items = [
+      ['Moduli NixOS', s.nixos_modules],
+      ['Default ON', s.modules_default_on],
+      ['Opt-in', s.modules_opt_in],
+      ['Router Python', s.python_layers],
+      ['Endpoint API', s.total_endpoints],
+      ['Test pytest', s.tests],
+      ['ADR', s.adr],
+      ['Documenti', s.docs],
+      ['CLI', s.cli_tools],
+      ['AI Agents', s.ai_agents],
+    ];
+    for (const [label, num] of items) {
+      const d = document.createElement('div'); d.className = 'stat';
+      d.innerHTML = `<span class="num">${num}</span><div class="label">${label}</div>`;
+      grid.appendChild(d);
+    }
+    el('mod-count').textContent = s.nixos_modules + ' moduli';
+    el('lay-count').textContent = s.python_layers + ' router · ' + s.total_endpoints + ' endpoint';
+    el('adr-count').textContent = s.adr + ' decisioni';
+    el('test-count').textContent = s.tests + ' test in ' + s.test_files + ' file';
+    el('doc-count').textContent = s.docs + ' file';
+  }
+
+  const mods = await fetchJSON('/api/modules') || [];
+  const mb = el('modules-body'); clear(mb);
+  mods.forEach(m => {
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td'); td1.textContent = m.name; tr.appendChild(td1);
+    const td2 = document.createElement('td'); td2.appendChild(m.opt_in ? tag('tag-opt','opt-in') : tag('tag-on','default')); tr.appendChild(td2);
+    const td3 = document.createElement('td'); td3.textContent = m.size_kb; tr.appendChild(td3);
+    const td4 = document.createElement('td'); td4.className = 'desc'; td4.textContent = m.description; tr.appendChild(td4);
+    mb.appendChild(tr);
+  });
+
+  const layers = await fetchJSON('/api/layers') || [];
+  const lb = el('layers-body'); clear(lb);
+  layers.forEach(l => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${l.name}</td><td style="color:var(--gold)">${l.endpoints}</td><td>${l.size_kb}</td><td class="desc">${l.description}</td>`;
+    lb.appendChild(tr);
+  });
+
+  const adr = await fetchJSON('/api/adr') || [];
+  const ab = el('adr-body'); clear(ab);
+  adr.forEach(a => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${a.name}</td><td class="desc">${a.title}</td><td>${a.size_kb}</td>`;
+    ab.appendChild(tr);
+  });
+
+  const tests = await fetchJSON('/api/tests') || [];
+  const tb = el('tests-body'); clear(tb);
+  tests.forEach(t => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${t.name}</td><td style="color:var(--gold)">${t.tests}</td><td>${t.size_kb}</td>`;
+    tb.appendChild(tr);
+  });
+
+  const docs = await fetchJSON('/api/docs') || [];
+  const db = el('docs-body'); clear(db);
+  docs.forEach(d => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${d.name}</td><td>${d.kb}</td>`;
+    db.appendChild(tr);
+  });
+}
+
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>

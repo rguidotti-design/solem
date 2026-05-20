@@ -47,6 +47,20 @@ from .layers import panic as panic_mod
 from .layers import mcp as mcp_mod
 from .layers import voice as voice_mod
 from .layers import health as health_mod
+from .layers import auth_keys as auth_keys_mod
+from .layers import vector_store as vector_store_mod
+from .layers import federated as federated_mod
+from .layers import crdt_sync as crdt_mod
+from .layers import fs_semantic as fs_semantic_mod
+from .layers.logging_config import setup_logging
+
+# Middleware (single-responsibility ognuno)
+from .middleware.rate_limit import RateLimitMiddleware
+from .middleware.request_id import RequestIDMiddleware
+from .middleware.access_log import AccessLogMiddleware
+
+# Init logging strutturato JSON appena importa main (prima di qualsiasi log)
+setup_logging()
 
 # ─── Costanti ─────────────────────────────────────────────────────────────
 SOLEM_VERSION = "0.1.0-step0"
@@ -150,6 +164,14 @@ app = FastAPI(
     ),
 )
 
+# ── Middleware stack (ordine: ultimo aggiunto = primo eseguito) ──
+# 1. RequestID (più esterno: l'ID deve esserci anche se rate limit blocca)
+# 2. AccessLog (logga prima del rate-limit-block per visibilità)
+# 3. RateLimit (più interno: nega prima di hit l'app)
+app.add_middleware(RateLimitMiddleware)
+app.add_middleware(AccessLogMiddleware)
+app.add_middleware(RequestIDMiddleware)
+
 # ─── Static UI ───────────────────────────────────────────────────────
 # Web dashboard SOLEM servita da "/" — distinta dal frontend GAVIO (:8000).
 # File in backend/solem_api/static/.
@@ -182,6 +204,11 @@ app.include_router(constitution_mod.router, prefix="/solem")
 app.include_router(panic_mod.router,        prefix="/solem")
 app.include_router(mcp_mod.router,          prefix="/solem")
 app.include_router(voice_mod.router,        prefix="/solem")
+app.include_router(auth_keys_mod.router,    prefix="/solem")
+app.include_router(vector_store_mod.router, prefix="/solem")
+app.include_router(federated_mod.router,    prefix="/solem")
+app.include_router(crdt_mod.router,         prefix="/solem")
+app.include_router(fs_semantic_mod.router,  prefix="/solem")
 # health_mod ha prefix /health (sub /live /ready /deep), NON sotto /solem
 app.include_router(health_mod.router)
 
