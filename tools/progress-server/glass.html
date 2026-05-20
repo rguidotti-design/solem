@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SOLEM Glass</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+:root {
+  --bg: #000;           /* nero puro = trasparente su display OLED smart glass */
+  --text: #ffffff;
+  --gold: #c9a961;
+  --gold-dim: #7a6740;
+  --serif: 'Cormorant Garamond', serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+html, body { height: 100vh; height: 100dvh; background: var(--bg); color: var(--text); overflow: hidden; }
+
+.glass {
+  display: flex; flex-direction: column; height: 100vh; height: 100dvh;
+  padding: 6vw; gap: 4vw;
+}
+
+/* TOP: ora + status badge live */
+.top {
+  display: flex; align-items: baseline; gap: 4vw;
+  font-family: var(--mono); font-size: 5vw;
+}
+.top .ts { color: var(--gold); letter-spacing: 0.15em; }
+.top .badge { margin-left: auto; padding: 0.5vw 2vw; border: 1px solid var(--gold); border-radius: 1vw; font-size: 3.5vw; color: var(--gold); letter-spacing: 0.1em; }
+
+/* MAIN: testo grande risposta AI */
+.main {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 2vw;
+}
+.main .reply {
+  font-family: var(--serif); font-size: 9vw; line-height: 1.25;
+  font-weight: 500; color: var(--text);
+  max-width: 95%;
+  text-shadow: 0 0 2vw rgba(0,0,0,0.9);  /* leggibile su qualsiasi sfondo */
+}
+.main .reply.idle { font-size: 7vw; color: var(--gold-dim); font-style: italic; font-weight: 300; }
+
+/* BOTTOM: bottone "ascolta" + suggerimenti */
+.bottom { display: flex; flex-direction: column; gap: 3vw; }
+.listen-btn {
+  font-family: var(--serif); font-size: 8vw; padding: 5vw 0;
+  background: var(--gold); color: #000;
+  border: 0; border-radius: 4vw;
+  letter-spacing: 0.12em; cursor: pointer;
+  text-shadow: 0 0 1vw rgba(0,0,0,0.3);
+  transition: transform 0.1s, background 0.2s;
+}
+.listen-btn:active { transform: scale(0.96); }
+.listen-btn.listening { background: #d45e5e; animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { transform: scale(1.03); opacity: 0.85; } }
+.suggs { display: flex; gap: 2vw; justify-content: center; flex-wrap: wrap; }
+.suggs .sg {
+  font-family: var(--mono); font-size: 3vw;
+  padding: 1.5vw 3vw; border: 1px solid var(--gold-dim);
+  border-radius: 3vw; color: var(--gold); cursor: pointer; letter-spacing: 0.06em;
+}
+
+/* Status bar inferiore */
+.foot {
+  font-family: var(--mono); font-size: 2.8vw; color: var(--gold-dim);
+  text-align: center; letter-spacing: 0.1em;
+}
+
+/* Notifica handoff */
+.handoff-toast {
+  position: fixed; bottom: 18vw; left: 4vw; right: 4vw;
+  background: rgba(201,169,97,0.15); border: 2px solid var(--gold);
+  padding: 3vw; border-radius: 3vw; color: var(--text);
+  display: none; animation: slideUp 0.3s ease;
+}
+.handoff-toast.show { display: block; }
+.handoff-toast .from { color: var(--gold); font-size: 2.6vw; letter-spacing: 0.15em; }
+.handoff-toast .title { font-family: var(--serif); font-size: 5vw; margin-top: 1vw; }
+@keyframes slideUp { from { transform: translateY(20vw); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="glass">
+  <div class="top">
+    <span class="ts" id="ts">10:32</span>
+    <span class="badge" id="badge">SOLEM</span>
+  </div>
+
+  <div class="main">
+    <div class="reply idle" id="reply">"Hey GAVIO" o tocca per parlare</div>
+  </div>
+
+  <div class="bottom">
+    <button class="listen-btn" id="listen-btn" onclick="toggleListen()">PARLA</button>
+    <div class="suggs">
+      <div class="sg" onclick="ask('che ora è')">ora</div>
+      <div class="sg" onclick="ask('stato cluster')">cluster</div>
+      <div class="sg" onclick="ask('prossimo evento calendario')">prossimo evento</div>
+      <div class="sg" onclick="ask('tradurre in inglese ciao')">traduci</div>
+    </div>
+    <div class="foot" id="foot">— SOLEM glass · voice-first companion —</div>
+  </div>
+
+  <div class="handoff-toast" id="handoff-toast" onclick="this.classList.remove('show')">
+    <div class="from" id="ht-from">DA LAPTOP</div>
+    <div class="title" id="ht-title">Apri PDF a pagina 17</div>
+  </div>
+</div>
+
+<script>
+// Backend SOLEM: stesso host PWA, porta 8001 (può essere override via ?api=)
+const params = new URLSearchParams(location.search);
+const API = params.get('api') || location.origin.replace(':9000', ':8001');
+const DEVICE_ID = localStorage.getItem('glass-device-id') || ('glass-' + Math.random().toString(36).slice(2,8));
+localStorage.setItem('glass-device-id', DEVICE_ID);
+const USERNAME = localStorage.getItem('glass-username') || 'guest';
+
+// ─── Clock + badge live ───
+function updateTop() {
+  const d = new Date();
+  document.getElementById('ts').textContent =
+    String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+updateTop();
+setInterval(updateTop, 15000);
+
+async function refreshBadge() {
+  try {
+    const r = await fetch(`${API}/solem/live/badge`);
+    if (r.ok) {
+      const j = await r.json();
+      document.getElementById('badge').textContent = j.label || 'SOLEM';
+      document.getElementById('badge').style.color = j.color || '#c9a961';
+    }
+  } catch (e) {}
+}
+refreshBadge();
+setInterval(refreshBadge, 5000);
+
+// ─── Voice input via Web Speech API (browser smart glass) ───
+let recognition = null;
+let listening = false;
+try {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SR) {
+    recognition = new SR();
+    recognition.lang = 'it-IT';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onresult = e => {
+      const text = e.results[0][0].transcript;
+      ask(text);
+      stopListen();
+    };
+    recognition.onerror = () => stopListen();
+    recognition.onend = () => stopListen();
+  }
+} catch (e) {}
+
+function startListen() {
+  if (!recognition) {
+    showReply("Voice input non supportato. Usa i bottoni.", true);
+    return;
+  }
+  listening = true;
+  document.getElementById('listen-btn').classList.add('listening');
+  document.getElementById('listen-btn').textContent = 'ASCOLTO…';
+  showReply('In ascolto…', true);
+  try { recognition.start(); } catch (e) { stopListen(); }
+}
+function stopListen() {
+  listening = false;
+  document.getElementById('listen-btn').classList.remove('listening');
+  document.getElementById('listen-btn').textContent = 'PARLA';
+}
+function toggleListen() {
+  if (listening) {
+    try { recognition.stop(); } catch (e) {}
+    stopListen();
+  } else {
+    startListen();
+  }
+}
+
+// ─── Ask GAVIO ───
+async function ask(text) {
+  showReply('Pensando…', true);
+  try {
+    const r = await fetch(`${API}/solem/ai/route`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        messages: [{role:'user', content: text}],
+        hint: 'auto',
+        max_tokens: 150,        // risposte BREVI per glass
+        temperature: 0.4,
+      }),
+    });
+    if (r.ok) {
+      const j = await r.json();
+      showReply(j.content || '(risposta vuota)', false);
+      speak(j.content);
+    } else {
+      showReply('GAVIO offline', true);
+    }
+  } catch (e) {
+    showReply(`SOLEM API non raggiungibile`, true);
+  }
+}
+
+function showReply(text, idle) {
+  const el = document.getElementById('reply');
+  el.textContent = text;
+  el.classList.toggle('idle', !!idle);
+}
+
+// ─── TTS reply (essenziale per glass) ───
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  // Tronca a 200 char per glass (display piccolo, audio breve)
+  const short = (text || '').slice(0, 200);
+  const u = new SpeechSynthesisUtterance(short);
+  u.lang = 'it-IT';
+  u.rate = 1.0;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+// ─── Handoff push real-time via SSE ───
+function connectHandoffStream() {
+  try {
+    const url = `${API}/solem/handoff/stream?device_id=${DEVICE_ID}&owner_username=${USERNAME}`;
+    const ev = new EventSource(url);
+    ev.onmessage = e => {
+      try {
+        const h = JSON.parse(e.data);
+        document.getElementById('ht-from').textContent = 'DA ' + (h.source_device_id || '?').toUpperCase();
+        document.getElementById('ht-title').textContent = h.title || 'Handoff';
+        const toast = document.getElementById('handoff-toast');
+        toast.classList.add('show');
+        speak(`Nuovo handoff da ${h.source_device_id}: ${h.title}`);
+        // Auto-hide dopo 8s
+        setTimeout(() => toast.classList.remove('show'), 8000);
+      } catch (err) {}
+    };
+    ev.onerror = () => {
+      ev.close();
+      setTimeout(connectHandoffStream, 10000);
+    };
+  } catch (e) {
+    setTimeout(connectHandoffStream, 10000);
+  }
+}
+connectHandoffStream();
+
+// ─── Auto-enroll glass come device cluster ───
+async function enrollGlass() {
+  const body = {
+    device_id: DEVICE_ID,
+    name: 'Smart Glasses',
+    endpoint: `pwa://glass/${DEVICE_ID}`,
+    capabilities: {
+      cpu_cores: navigator.hardwareConcurrency || 2,
+      cpu_model: 'mobile/glass',
+      ram_gb: navigator.deviceMemory || 2,
+      disk_free_gb: 0,
+      gpu: {kind: 'integrated', model: 'glass GPU', vram_gb: 0},
+      arch: 'arm64',
+      os: 'glass',
+      device_class: 'glass-companion',
+    },
+    roles: ['worker'],
+  };
+  try {
+    await fetch(`${API}/solem/cluster/register`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(body),
+    });
+  } catch (e) {}
+}
+enrollGlass();
+</script>
+</body>
+</html>

@@ -51,6 +51,10 @@ class DeviceCapabilities(BaseModel):
     gpu: GPUInfo = Field(default_factory=GPUInfo)
     arch: str = "x86_64"
     os: str = "linux"
+    device_class: str = Field(
+        "workstation",
+        description="workstation|edge-cpu|edge-gpu|iot|glass-companion|mobile",
+    )
 
 
 class DeviceRegister(BaseModel):
@@ -179,6 +183,33 @@ def _score(dev: Device, req: DispatchRequest) -> float:
         score += 50
     if req.task_kind in ("stt", "tts"):
         score += 30  # CPU-bound, ogni device va bene
+
+    # ── Device class awareness (multi-arch) ──
+    dc = getattr(cap, "device_class", "workstation")
+    if dc == "workstation":
+        score += 10  # bias verso workstation per workload pesanti
+    elif dc == "edge-gpu":
+        # Jetson Nano/Orin: bonus per vision/embedding leggeri
+        if req.task_kind in ("vision", "embedding", "llm_inference") and req.size_hint in ("tiny", "small"):
+            score += 50
+        elif req.size_hint in ("large", "xlarge"):
+            score -= 30  # troppo pesante per edge GPU
+    elif dc == "edge-cpu":
+        # Raspberry: penalizza task pesanti, premia STT/TTS/IoT
+        if req.task_kind in ("stt", "tts") and req.size_hint == "tiny":
+            score += 40
+        if req.size_hint in ("medium", "large", "xlarge"):
+            score -= 60  # mai task grandi su Pi
+    elif dc == "iot":
+        # IoT/Pico: solo sensor read e action minimali
+        if req.size_hint != "tiny":
+            score -= 200
+    elif dc == "glass-companion" or dc == "mobile":
+        # PWA mobile/glasses: solo task minimi (STT, comandi brevi)
+        if req.task_kind in ("stt", "tts", "generic_cpu") and req.size_hint == "tiny":
+            score += 20
+        else:
+            score -= 100  # raramente vogliamo dispatchare a un telefono/glass
 
     return score
 
