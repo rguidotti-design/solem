@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-user-select: none; user-select: none; }
 :root {
   --navy-darker: #050912;
   --navy-dark:   #0a1628;
@@ -65,6 +65,7 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
 .lock {
   position: absolute; inset: 0; z-index: 800;
   display: flex; align-items: center; justify-content: center;
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   background: rgba(10,22,40,0.85);
   transition: opacity 0.5s ease;
@@ -104,6 +105,7 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
   display: flex; align-items: center; padding: 0 14px;
   font-family: var(--sans); font-size: 12px;
   z-index: 50;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 .waybar .ws { display: flex; gap: 4px; }
@@ -145,6 +147,7 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
   background: rgba(10,22,40,0.85);
   border: 1px solid var(--navy-light);
   border-radius: 14px;
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   z-index: 40;
 }
@@ -172,6 +175,7 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
   border: 2px solid var(--gold);
   border-radius: 8px;
   box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   z-index: 20;
   display: flex; flex-direction: column;
@@ -246,7 +250,7 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
 /* App drawer */
 .drawer {
   position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(5,9,18,0.92); backdrop-filter: blur(30px);
+  background: rgba(5,9,18,0.92); -webkit-backdrop-filter: blur(30px); backdrop-filter: blur(30px);
   z-index: 60; display: flex; align-items: center; justify-content: center;
   opacity: 0; pointer-events: none; transition: opacity 0.3s;
 }
@@ -282,6 +286,108 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
 .back-link:hover { color: var(--gold); }
 
 .subtle { color: var(--text-dim); font-size: 11px; font-style: italic; }
+
+/* GAVIO Overlay (Super+Space) */
+.gavio-overlay {
+  position: absolute; inset: 0; z-index: 90;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 140px;
+  background: rgba(5,9,18,0.6);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.gavio-overlay.show { opacity: 1; pointer-events: auto; }
+.overlay-box {
+  width: 660px; max-width: 92vw;
+  background: rgba(10,22,40,0.96);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 22px 26px;
+  display: flex; flex-direction: column; gap: 12px;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.7);
+  animation: winIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.overlay-head { display: flex; align-items: baseline; gap: 14px; }
+.overlay-logo { font-family: var(--serif); font-size: 30px; color: var(--gold); letter-spacing: 0.2em; }
+.overlay-tag { font-size: 10px; color: var(--text-mute); letter-spacing: 0.2em; }
+.overlay-input {
+  width: 100%; padding: 14px 18px;
+  background: var(--navy-mid); border: 2px solid var(--navy-light); border-radius: 8px;
+  color: var(--text); font-size: 16px; font-family: var(--serif);
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+}
+.overlay-input:focus { border-color: var(--gold); box-shadow: 0 0 18px rgba(201,169,97,0.25); }
+.overlay-suggs { display: flex; flex-wrap: wrap; gap: 6px; }
+.overlay-suggs .sg {
+  font-size: 11px; padding: 5px 10px; cursor: pointer; color: var(--gold);
+  background: rgba(201,169,97,0.08); border: 1px solid var(--navy-light); border-radius: 14px;
+  transition: all 0.15s;
+}
+.overlay-suggs .sg:hover { border-color: var(--gold); background: rgba(201,169,97,0.18); }
+.overlay-reply {
+  min-height: 60px; padding: 12px 14px;
+  background: rgba(5,9,18,0.5); border-radius: 6px; border-left: 3px solid var(--gold);
+  font-size: 13px; line-height: 1.6;
+}
+
+/* Universal search palette (Cmd+K) */
+.palette {
+  position: absolute; inset: 0; z-index: 95;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 100px;
+  background: rgba(5,9,18,0.7);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.palette.show { opacity: 1; pointer-events: auto; }
+.palette-box {
+  width: 620px; max-width: 92vw;
+  background: rgba(10,22,40,0.98);
+  border: 1px solid var(--navy-light); border-radius: 10px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.8);
+  overflow: hidden;
+}
+.palette-input {
+  width: 100%; padding: 16px 20px;
+  background: transparent; border: 0; border-bottom: 1px solid var(--navy-light);
+  color: var(--text); font-size: 16px; font-family: var(--sans); outline: none;
+}
+.palette-list { max-height: 320px; overflow-y: auto; }
+.palette-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 18px;
+  cursor: pointer; border-bottom: 1px solid var(--navy);
+  transition: background 0.1s;
+}
+.palette-item:hover, .palette-item.sel { background: var(--navy-mid); }
+.palette-item .ico { font-family: var(--serif); color: var(--gold); font-size: 18px; width: 24px; text-align: center; }
+.palette-item .name { flex: 1; font-size: 13px; }
+.palette-item .src { font-size: 10px; color: var(--text-mute); font-family: var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.palette-foot { padding: 8px 18px; font-size: 10px; color: var(--text-dim); font-family: var(--mono); border-top: 1px solid var(--navy); }
+
+/* Cluster view */
+.cluster-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.cluster-stats .cs { background: var(--navy-mid); padding: 10px; border-radius: 4px; text-align: center; border-left: 2px solid var(--gold); }
+.cluster-stats .cs .num { font-family: var(--serif); font-size: 22px; color: var(--gold); display: block; }
+.cluster-stats .cs .lbl { font-size: 9px; letter-spacing: 0.08em; color: var(--text-mute); text-transform: uppercase; }
+.cluster-node {
+  display: flex; align-items: center; gap: 14px; padding: 12px;
+  background: var(--navy-mid); border-radius: 6px; margin-bottom: 8px;
+  border-left: 3px solid var(--ok);
+}
+.cluster-node.offline { border-left-color: var(--text-dim); opacity: 0.6; }
+.cluster-node .icon { font-family: var(--serif); font-size: 26px; color: var(--gold); width: 32px; text-align: center; }
+.cluster-node .info { flex: 1; }
+.cluster-node .info .n { font-size: 13px; font-weight: 600; }
+.cluster-node .info .d { font-size: 11px; color: var(--text-mute); font-family: var(--mono); }
+.cluster-node .load {
+  width: 80px; height: 6px; background: var(--navy-dark); border-radius: 3px; overflow: hidden;
+}
+.cluster-node .load span { display: block; height: 100%; background: var(--gold); transition: width 0.3s; }
+.cluster-node .badge { font-size: 9px; padding: 3px 8px; border-radius: 3px; font-family: var(--mono); letter-spacing: 0.08em; }
+.cluster-node .badge.gpu { background: rgba(201,169,97,0.15); color: var(--gold); border: 1px solid var(--gold); }
+.cluster-node .badge.cpu { background: rgba(74,127,196,0.15); color: var(--navy-light); border: 1px solid var(--navy-light); }
+
+.empty-line { color: var(--text-dim); font-size: 11px; font-style: italic; }
 </style>
 </head>
 <body>
@@ -343,6 +449,7 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
     <!-- Dock -->
     <div class="dock">
       <div class="dock-icon" onclick="openApp('gavio')"><div class="glyph">G</div><div class="name">GAVIO</div></div>
+      <div class="dock-icon" onclick="openApp('cluster')"><div class="glyph">⊞</div><div class="name">CLUSTER</div></div>
       <div class="dock-icon" onclick="openApp('hub')"><div class="glyph">⌂</div><div class="name">HUB</div></div>
       <div class="dock-icon" onclick="openApp('privacy')"><div class="glyph">◉</div><div class="name">PRIVACY</div></div>
       <div class="dock-icon" onclick="openApp('network')"><div class="glyph">≋</div><div class="name">NETWORK</div></div>
@@ -351,6 +458,33 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
       <div class="dock-icon" onclick="openApp('drawer')"><div class="glyph">▦</div><div class="name">APPS</div></div>
       <div class="dock-icon" onclick="openApp('terminal')"><div class="glyph">$</div><div class="name">TERM</div></div>
       <div class="dock-icon" onclick="showLock()"><div class="glyph">⊙</div><div class="name">LOCK</div></div>
+    </div>
+
+    <!-- GAVIO Overlay (Super+Space) -->
+    <div class="gavio-overlay" id="gavio-overlay" onclick="if(event.target===this)closeOverlay()">
+      <div class="overlay-box">
+        <div class="overlay-head">
+          <div class="overlay-logo">GAVIO</div>
+          <div class="overlay-tag">SUPER+SPACE · always-on</div>
+        </div>
+        <input class="overlay-input" id="overlay-input" placeholder='Chiedi a GAVIO ovunque tu sia…' autocomplete="off">
+        <div class="overlay-suggs">
+          <span class="sg" onclick="overlaySend('stato cluster')">stato cluster</span>
+          <span class="sg" onclick="overlaySend('blocca social 25 min')">focus 25 min</span>
+          <span class="sg" onclick="overlaySend('apri immich')">apri immich</span>
+          <span class="sg" onclick="overlaySend('quale device ha GPU libera?')">GPU libera?</span>
+        </div>
+        <div class="overlay-reply" id="overlay-reply"><span class="empty-line">In attesa · Esc per chiudere</span></div>
+      </div>
+    </div>
+
+    <!-- Universal search palette (Cmd+K) -->
+    <div class="palette" id="palette" onclick="if(event.target===this)closePalette()">
+      <div class="palette-box">
+        <input class="palette-input" id="palette-input" placeholder="Cerca app, file, comandi, capabilities…" autocomplete="off">
+        <div class="palette-list" id="palette-list"></div>
+        <div class="palette-foot">↑↓ naviga · ↵ apri · esc chiude · <span style="color:var(--gold)">Cmd+K</span> / <span style="color:var(--gold)">Ctrl+K</span></div>
+      </div>
     </div>
   </div>
 
@@ -421,14 +555,126 @@ APPS.forEach(([name, icon]) => {
 function openDrawer() { document.getElementById('drawer').classList.add('show'); }
 function closeDrawer() { document.getElementById('drawer').classList.remove('show'); }
 
+// ─── Hotkey handlers: Super+Space → overlay, Cmd/Ctrl+K → palette, Esc → chiudi ───
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Meta' || e.key === 'OS' || e.key === 'Super_L' || e.key === ' ') {
+  const isMeta = e.metaKey || e.ctrlKey;
+  // Cmd/Ctrl + K → universal search
+  if (isMeta && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    if (document.getElementById('palette').classList.contains('show')) closePalette();
+    else openPalette();
+    return;
+  }
+  // Super + Space → overlay GAVIO
+  if ((e.metaKey && e.key === ' ') || (e.code === 'Space' && (e.metaKey || e.getModifierState && e.getModifierState('Super')))) {
+    e.preventDefault();
+    if (document.getElementById('gavio-overlay').classList.contains('show')) closeOverlay();
+    else openOverlay();
+    return;
+  }
+  // Super (alone) → app drawer
+  if (e.key === 'Meta' || e.key === 'OS' || e.key === 'Super_L') {
     if (document.getElementById('drawer').classList.contains('show')) closeDrawer();
     else openDrawer();
     e.preventDefault();
+    return;
   }
-  if (e.key === 'Escape') closeDrawer();
+  if (e.key === 'Escape') {
+    closeDrawer(); closePalette(); closeOverlay();
+  }
 });
+
+// ─── Overlay GAVIO ───
+function openOverlay() {
+  document.getElementById('gavio-overlay').classList.add('show');
+  setTimeout(() => document.getElementById('overlay-input').focus(), 50);
+}
+function closeOverlay() { document.getElementById('gavio-overlay').classList.remove('show'); }
+function overlaySend(text) {
+  const inp = document.getElementById('overlay-input');
+  if (text) inp.value = text;
+  const q = inp.value.trim();
+  if (!q) return;
+  document.getElementById('overlay-reply').innerHTML = `<b style="color:var(--gold);font-family:var(--serif);font-size:15px;display:block;margin-bottom:4px;">GAVIO</b>${matchReply(q)}`;
+  inp.value = '';
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const oi = document.getElementById('overlay-input');
+  if (oi) oi.addEventListener('keydown', e => { if (e.key === 'Enter') overlaySend(); });
+  const pi = document.getElementById('palette-input');
+  if (pi) {
+    pi.addEventListener('input', renderPalette);
+    pi.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown') { e.preventDefault(); moveSel(1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); moveSel(-1); }
+      else if (e.key === 'Enter') { e.preventDefault(); openSel(); }
+    });
+  }
+});
+
+// ─── Universal search palette ───
+const PALETTE_ITEMS = [
+  {ico:'G',  name:'GAVIO chat',        src:'app',     action:()=>openApp('gavio')},
+  {ico:'⊞',  name:'Cluster compute',   src:'app',     action:()=>openApp('cluster')},
+  {ico:'⌂',  name:'Services hub',      src:'app',     action:()=>openApp('hub')},
+  {ico:'◉',  name:'Privacy dashboard', src:'app',     action:()=>openApp('privacy')},
+  {ico:'≋',  name:'Network stack',     src:'app',     action:()=>openApp('network')},
+  {ico:'S',  name:'System status',     src:'app',     action:()=>openApp('system')},
+  {ico:'○',  name:'Focus mode',        src:'app',     action:()=>openApp('focus')},
+  {ico:'$',  name:'Terminal',          src:'app',     action:()=>openApp('terminal')},
+  {ico:'⊙',  name:'Lock screen',       src:'cmd',     action:()=>{closePalette();showLock();}},
+  {ico:'⚷',  name:'KeePassXC',         src:'app',     action:()=>openApp('app','KeePassXC')},
+  {ico:'♨',  name:'Firefox',           src:'app',     action:()=>openApp('app','Firefox')},
+  {ico:'▣',  name:'Logseq notes',      src:'app',     action:()=>openApp('app','Logseq')},
+  {ico:'◐',  name:'Immich photos',     src:'app',     action:()=>openApp('app','Immich')},
+  {ico:'♪',  name:'Navidrome music',   src:'app',     action:()=>openApp('app','Navidrome')},
+  {ico:'⎇',  name:'Forgejo git',       src:'app',     action:()=>openApp('app','Forgejo')},
+  {ico:'⚙',  name:'Settings',          src:'setting', action:()=>openApp('app','Settings')},
+  {ico:'≋',  name:'Wi-Fi',             src:'setting', action:()=>openApp('network')},
+  {ico:'◉',  name:'Bluetooth',         src:'setting', action:()=>openApp('app','Bluetooth')},
+  {ico:'♭',  name:'Audio',             src:'setting', action:()=>openApp('app','Audio')},
+  {ico:'⌂',  name:'solem-init wizard', src:'cmd',     action:()=>openApp('app','Solem-init')},
+  {ico:'↻',  name:'solem-migrate',     src:'cmd',     action:()=>openApp('app','Solem-migrate')},
+  {ico:'⛁',  name:'Backup ora',        src:'cmd',     action:()=>{closePalette();openOverlay();document.getElementById('overlay-input').value='fai backup';overlaySend();}},
+  {ico:'○',  name:'Avvia focus 25 min',src:'cmd',     action:()=>{closePalette();openOverlay();document.getElementById('overlay-input').value='blocca social 25 min';overlaySend();}},
+];
+let palSel = 0;
+function openPalette() {
+  document.getElementById('palette').classList.add('show');
+  const pi = document.getElementById('palette-input');
+  pi.value = ''; setTimeout(()=>pi.focus(), 50);
+  renderPalette();
+}
+function closePalette() { document.getElementById('palette').classList.remove('show'); }
+function renderPalette() {
+  const q = (document.getElementById('palette-input').value||'').toLowerCase();
+  const list = PALETTE_ITEMS.filter(it => !q || it.name.toLowerCase().includes(q));
+  palSel = 0;
+  const box = document.getElementById('palette-list');
+  box.innerHTML = '';
+  list.slice(0, 20).forEach((it, i) => {
+    const el = document.createElement('div');
+    el.className = 'palette-item' + (i === palSel ? ' sel' : '');
+    el.innerHTML = `<div class="ico">${it.ico}</div><div class="name">${it.name}</div><div class="src">${it.src}</div>`;
+    el.onclick = () => { closePalette(); it.action(); };
+    box.appendChild(el);
+  });
+  box._items = list;
+}
+function moveSel(delta) {
+  const box = document.getElementById('palette-list');
+  const items = box._items || [];
+  if (!items.length) return;
+  palSel = Math.max(0, Math.min(items.length - 1, palSel + delta));
+  [...box.children].forEach((c, i) => c.classList.toggle('sel', i === palSel));
+  box.children[palSel].scrollIntoView({block: 'nearest'});
+}
+function openSel() {
+  const box = document.getElementById('palette-list');
+  const items = box._items || [];
+  const it = items[palSel];
+  if (it) { closePalette(); it.action(); }
+}
 
 // ─── Windows ───
 let zCounter = 25;
@@ -601,6 +847,50 @@ function renderApp(kind, arg) {
           <div class="row"><span class="k">Network policy</span><span class="v">opensnitch interattivo</span></div>
           <div class="row"><span class="k">Costo licenza</span><span class="v">0 €</span></div>
           <p style="margin-top: 14px;" class="subtle">In SOLEM reale qui parte l'app vera. Questo è solo preview visivo.</p>`
+      };
+    case 'cluster':
+      const NODES = [
+        {name:'beelink (gateway)',    icon:'⌂', cores:8,  ram:32, gpu:'integrated',         vram:0,  role:'gateway + worker', load:18, used_ram:42, online:true},
+        {name:'laptop-lavoro',        icon:'▭', cores:8,  ram:16, gpu:'none',               vram:0,  role:'worker',           load:55, used_ram:68, online:true},
+        {name:'server-nvidia (futuro)', icon:'◢', cores:16, ram:64, gpu:'NVIDIA RTX 4090',    vram:24, role:'gpu-server',       load:8,  used_ram:22, online:true, hasGpu:true},
+        {name:'iphone-ruben (PWA)',   icon:'▤', cores:6,  ram:6,  gpu:'integrated',         vram:0,  role:'worker leggero',   load:12, used_ram:35, online:true},
+        {name:'tablet-vecchio',       icon:'▢', cores:4,  ram:4,  gpu:'none',               vram:0,  role:'worker',           load:0,  used_ram:0,  online:false},
+      ];
+      const totalCores = NODES.filter(n=>n.online).reduce((s,n)=>s+n.cores,0);
+      const totalRam = NODES.filter(n=>n.online).reduce((s,n)=>s+n.ram,0);
+      const totalVram = NODES.filter(n=>n.online).reduce((s,n)=>s+n.vram,0);
+      const onlineN = NODES.filter(n=>n.online).length;
+
+      return {
+        title: 'Cluster — compute distribuito tra i tuoi device',
+        w: 700, h: 540,
+        html: `<h3>Il tuo account SOLEM gestisce ${NODES.length} device</h3>
+          <p>Tutti i dispositivi paired con il tuo account uniscono CPU/RAM/GPU. GAVIO dispatcha
+          ogni task al nodo più adatto via mesh WireGuard. <b>Zero cloud</b>.</p>
+          <div class="cluster-stats">
+            <div class="cs"><span class="num">${onlineN}</span><div class="lbl">device online</div></div>
+            <div class="cs"><span class="num">${totalCores}</span><div class="lbl">core CPU totali</div></div>
+            <div class="cs"><span class="num">${totalRam} GB</span><div class="lbl">RAM aggregata</div></div>
+            <div class="cs"><span class="num">${totalVram} GB</span><div class="lbl">VRAM totale</div></div>
+          </div>
+          <h3 style="margin-top:14px;font-size:18px">Topologia</h3>
+          ${NODES.map(n => `
+            <div class="cluster-node ${n.online?'':'offline'}">
+              <div class="icon">${n.icon}</div>
+              <div class="info">
+                <div class="n">${n.name}</div>
+                <div class="d">${n.cores}c · ${n.ram}GB RAM · ${n.gpu}${n.vram?` (${n.vram}GB VRAM)`:''} · ${n.role}</div>
+              </div>
+              <div class="load"><span style="width:${n.online?n.load:0}%"></span></div>
+              <div class="badge ${n.hasGpu?'gpu':'cpu'}">${n.hasGpu?'GPU':'CPU'}</div>
+            </div>
+          `).join('')}
+          <h3 style="margin-top:14px;font-size:18px">Esempio routing</h3>
+          <div class="row"><span class="k">GAVIO chiede inference llama-70b</span><span class="v">→ server-nvidia (24GB VRAM)</span></div>
+          <div class="row"><span class="k">Embedding nomic-embed</span><span class="v">→ beelink (locale, RAM ok)</span></div>
+          <div class="row"><span class="k">STT whisper (microfono attivo)</span><span class="v">→ laptop-lavoro (low latency)</span></div>
+          <div class="row"><span class="k">Vision Llava (foto smartphone)</span><span class="v">→ server-nvidia (GPU veloce)</span></div>
+          <p class="subtle" style="margin-top:12px">Backend reale: <code>POST /solem/cluster/dispatch</code> · worker daemon <code>solem-cluster-worker</code> su ogni nodo · inference distribuita via <code>llama.cpp RPC</code> (porta 50052).</p>`
       };
     case 'drawer':
       openDrawer();
