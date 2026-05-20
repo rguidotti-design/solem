@@ -62,6 +62,10 @@ from .layers import vision as vision_mod
 from .layers import summarizer as summarizer_mod
 from .layers import rag as rag_mod
 from .layers import autoheal as autoheal_mod
+from .layers import file_organizer as organizer_mod
+from .layers import doc_parser as docparse_mod
+from .layers import ai_shell as ai_shell_mod
+from .layers import ai_calendar as ai_calendar_mod
 from .layers.logging_config import setup_logging
 
 # Middleware (single-responsibility ognuno)
@@ -229,6 +233,10 @@ app.include_router(vision_mod.router,       prefix="/solem")
 app.include_router(summarizer_mod.router,   prefix="/solem")
 app.include_router(rag_mod.router,          prefix="/solem")
 app.include_router(autoheal_mod.router,     prefix="/solem")
+app.include_router(organizer_mod.router,    prefix="/solem")
+app.include_router(docparse_mod.router,     prefix="/solem")
+app.include_router(ai_shell_mod.router,     prefix="/solem")
+app.include_router(ai_calendar_mod.router,  prefix="/solem")
 # health_mod ha prefix /health (sub /live /ready /deep), NON sotto /solem
 app.include_router(health_mod.router)
 
