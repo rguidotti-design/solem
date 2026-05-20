@@ -164,6 +164,88 @@ def stats() -> dict:
     }
 
 
+def recent_commits(n: int = 15) -> list[dict]:
+    """Ultimi N commit con subject + file changed."""
+    import subprocess
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(ROOT), "log", f"-{n}", "--pretty=%h|%cr|%s"],
+            capture_output=True, text=True, timeout=3,
+        )
+        if out.returncode != 0:
+            return []
+    except Exception:
+        return []
+    commits = []
+    for line in out.stdout.strip().splitlines():
+        parts = line.split("|", 2)
+        if len(parts) == 3:
+            commits.append({"sha": parts[0], "when": parts[1], "subject": parts[2]})
+    return commits
+
+
+def recent_files(n: int = 30) -> list[dict]:
+    """File modificati più recenti — scansione mirata directory rilevanti."""
+    SCAN_DIRS = [
+        ROOT / "backend" / "solem_api" / "layers",
+        ROOT / "backend" / "solem_api" / "middleware",
+        ROOT / "nixos" / "modules",
+        ROOT / "scripts",
+        ROOT / "docs",
+        ROOT / "tools" / "progress-server",
+    ]
+    files: list[tuple[float, Path]] = []
+    for d in SCAN_DIRS:
+        if not d.exists():
+            continue
+        for p in d.rglob("*"):
+            try:
+                if not p.is_file():
+                    continue
+            except OSError:
+                continue
+            if "__pycache__" in p.parts:
+                continue
+            try:
+                mtime = p.stat().st_mtime
+            except OSError:
+                continue
+            files.append((mtime, p))
+    # Top-level files repo (CLAUDE.md, README, *.nix root, flake.nix)
+    # NB: salta symlink Nix "result" che genera WinError 1920 su Windows
+    for p in ROOT.glob("*"):
+        try:
+            if p.is_file():
+                files.append((p.stat().st_mtime, p))
+        except OSError:
+            continue
+
+    files.sort(reverse=True)
+    import datetime
+    out = []
+    for mtime, p in files[:n]:
+        try:
+            rel = p.relative_to(ROOT).as_posix()
+        except ValueError:
+            continue
+        when = datetime.datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+        out.append({
+            "path": rel,
+            "mtime": when,
+            "size_kb": round(p.stat().st_size / 1024, 1),
+        })
+    return out
+
+
+def activity() -> dict:
+    return {
+        "commits": recent_commits(15),
+        "files": recent_files(30),
+        "github_url": "https://github.com/rguidotti-design/solem",
+        "github_commits_url": "https://github.com/rguidotti-design/solem/commits/main",
+    }
+
+
 HTML = (HERE / "index.html").read_text(encoding="utf-8") if (HERE / "index.html").exists() else None
 
 
@@ -184,6 +266,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(list_docs())
         elif path == "/api/tests":
             self._send_json(list_tests())
+        elif path == "/api/activity":
+            self._send_json(activity())
         else:
             self.send_error(404)
 

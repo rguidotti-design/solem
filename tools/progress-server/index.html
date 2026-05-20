@@ -73,6 +73,26 @@ table td.desc { font-family: var(--sans); color: var(--text-mute); }
   <div class="stat-grid" id="stats-grid"></div>
 
   <section class="section">
+    <h2>Attività live <span class="count">ultimi commit + file appena toccati</span></h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+      <div>
+        <h3 style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px;">Ultimi commit</h3>
+        <table>
+          <thead><tr><th>SHA</th><th>Quando</th><th class="desc">Messaggio</th></tr></thead>
+          <tbody id="commits-body"></tbody>
+        </table>
+      </div>
+      <div>
+        <h3 style="font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px;">File modificati di recente</h3>
+        <table>
+          <thead><tr><th>File</th><th>Quando</th><th>KB</th></tr></thead>
+          <tbody id="files-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
     <h2>Moduli NixOS <span class="count" id="mod-count">…</span></h2>
     <table>
       <thead><tr><th>Modulo</th><th>Tipo</th><th>Size KB</th><th class="desc">Descrizione</th></tr></thead>
@@ -200,6 +220,21 @@ async function refresh() {
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${d.name}</td><td>${d.kb}</td>`;
     db.appendChild(tr);
+  });
+
+  const act = await fetchJSON('/api/activity') || {commits:[], files:[]};
+  const cb = el('commits-body'); clear(cb);
+  (act.commits || []).forEach(c => {
+    const tr = document.createElement('tr');
+    const sha = `<a href="${act.github_url}/commit/${c.sha}" target="_blank" rel="noopener" style="color:var(--gold)">${c.sha}</a>`;
+    tr.innerHTML = `<td>${sha}</td><td style="color:var(--text-mute)">${c.when}</td><td class="desc">${c.subject}</td>`;
+    cb.appendChild(tr);
+  });
+  const fb = el('files-body'); clear(fb);
+  (act.files || []).forEach(f => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td style="font-size:11px">${f.path}</td><td style="color:var(--text-mute)">${f.mtime}</td><td>${f.size_kb}</td>`;
+    fb.appendChild(tr);
   });
 }
 
