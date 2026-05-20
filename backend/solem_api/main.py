@@ -77,6 +77,9 @@ from .layers import handoff as handoff_mod
 from .layers import live_activities as live_mod
 from .layers import prefetch as prefetch_mod
 from .layers import time_travel as time_travel_mod
+from .layers import hpc as hpc_mod
+from .layers import quantum as quantum_mod
+from .layers import datacenter as datacenter_mod
 from .layers.logging_config import setup_logging
 
 # Middleware (single-responsibility ognuno)
@@ -259,6 +262,9 @@ app.include_router(handoff_mod.router,      prefix="/solem")
 app.include_router(live_mod.router,         prefix="/solem")
 app.include_router(prefetch_mod.router,     prefix="/solem")
 app.include_router(time_travel_mod.router,  prefix="/solem")
+app.include_router(hpc_mod.router,          prefix="/solem")
+app.include_router(quantum_mod.router,      prefix="/solem")
+app.include_router(datacenter_mod.router,   prefix="/solem")
 # health_mod ha prefix /health (sub /live /ready /deep), NON sotto /solem
 app.include_router(health_mod.router)
 

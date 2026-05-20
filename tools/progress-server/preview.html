@@ -388,6 +388,32 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
 .cluster-node .badge.cpu { background: rgba(74,127,196,0.15); color: var(--navy-light); border: 1px solid var(--navy-light); }
 
 .empty-line { color: var(--text-dim); font-size: 11px; font-style: italic; }
+
+/* Utility */
+.h3-spaced { margin-top: 14px; font-size: 18px; }
+.p-spaced  { margin-top: 12px; }
+
+/* Infra (HPC + Quantum + DataCenter) view */
+.infra-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+.infra-card {
+  background: var(--navy-mid); padding: 14px; border-radius: 6px;
+  border: 1px solid var(--navy-light); border-top: 3px solid var(--gold);
+}
+.infra-card .h { font-family: var(--serif); font-size: 16px; color: var(--gold); letter-spacing: 0.08em; margin-bottom: 4px; }
+.infra-card .stat { font-family: var(--serif); font-size: 26px; color: var(--text); }
+.infra-card .lbl { font-size: 10px; color: var(--text-mute); letter-spacing: 0.08em; text-transform: uppercase; }
+.infra-card .desc { font-size: 11px; color: var(--text-mute); margin-top: 6px; line-height: 1.5; }
+.infra-section { margin-top: 12px; }
+.infra-section h4 { font-family: var(--serif); font-size: 15px; color: var(--gold); margin-bottom: 6px; letter-spacing: 0.04em; }
+.qbit-row, .hpc-row, .rack-row {
+  display: flex; align-items: center; padding: 8px 12px;
+  background: var(--navy-mid); border-radius: 4px; margin-bottom: 4px;
+  border-left: 2px solid var(--navy-light); font-size: 12px;
+}
+.qbit-row .name, .hpc-row .name, .rack-row .name { flex: 1; font-weight: 600; }
+.qbit-row .badge { font-family: var(--mono); font-size: 10px; padding: 3px 8px; border-radius: 3px; }
+.qbit-row .badge.sim { background: rgba(74,179,126,0.15); color: var(--ok); border: 1px solid var(--ok); }
+.qbit-row .badge.real { background: rgba(201,169,97,0.15); color: var(--gold); border: 1px solid var(--gold); }
 </style>
 </head>
 <body>
@@ -450,6 +476,7 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
     <div class="dock">
       <div class="dock-icon" onclick="openApp('gavio')"><div class="glyph">G</div><div class="name">GAVIO</div></div>
       <div class="dock-icon" onclick="openApp('cluster')"><div class="glyph">⊞</div><div class="name">CLUSTER</div></div>
+      <div class="dock-icon" onclick="openApp('infra')"><div class="glyph">▦</div><div class="name">INFRA</div></div>
       <div class="dock-icon" onclick="openApp('hub')"><div class="glyph">⌂</div><div class="name">HUB</div></div>
       <div class="dock-icon" onclick="openApp('privacy')"><div class="glyph">◉</div><div class="name">PRIVACY</div></div>
       <div class="dock-icon" onclick="openApp('network')"><div class="glyph">≋</div><div class="name">NETWORK</div></div>
@@ -616,6 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const PALETTE_ITEMS = [
   {ico:'G',  name:'GAVIO chat',        src:'app',     action:()=>openApp('gavio')},
   {ico:'⊞',  name:'Cluster compute',   src:'app',     action:()=>openApp('cluster')},
+  {ico:'▦',  name:'Infrastruttura (HPC+Quantum+DC)', src:'app', action:()=>openApp('infra')},
   {ico:'⌂',  name:'Services hub',      src:'app',     action:()=>openApp('hub')},
   {ico:'◉',  name:'Privacy dashboard', src:'app',     action:()=>openApp('privacy')},
   {ico:'≋',  name:'Network stack',     src:'app',     action:()=>openApp('network')},
@@ -873,7 +901,7 @@ function renderApp(kind, arg) {
             <div class="cs"><span class="num">${totalRam} GB</span><div class="lbl">RAM aggregata</div></div>
             <div class="cs"><span class="num">${totalVram} GB</span><div class="lbl">VRAM totale</div></div>
           </div>
-          <h3 style="margin-top:14px;font-size:18px">Topologia</h3>
+          <h3 class="h3-spaced">Topologia</h3>
           ${NODES.map(n => `
             <div class="cluster-node ${n.online?'':'offline'}">
               <div class="icon">${n.icon}</div>
@@ -885,12 +913,69 @@ function renderApp(kind, arg) {
               <div class="badge ${n.hasGpu?'gpu':'cpu'}">${n.hasGpu?'GPU':'CPU'}</div>
             </div>
           `).join('')}
-          <h3 style="margin-top:14px;font-size:18px">Esempio routing</h3>
+          <h3 class="h3-spaced">Esempio routing</h3>
           <div class="row"><span class="k">GAVIO chiede inference llama-70b</span><span class="v">→ server-nvidia (24GB VRAM)</span></div>
           <div class="row"><span class="k">Embedding nomic-embed</span><span class="v">→ beelink (locale, RAM ok)</span></div>
           <div class="row"><span class="k">STT whisper (microfono attivo)</span><span class="v">→ laptop-lavoro (low latency)</span></div>
           <div class="row"><span class="k">Vision Llava (foto smartphone)</span><span class="v">→ server-nvidia (GPU veloce)</span></div>
-          <p class="subtle" style="margin-top:12px">Backend reale: <code>POST /solem/cluster/dispatch</code> · worker daemon <code>solem-cluster-worker</code> su ogni nodo · inference distribuita via <code>llama.cpp RPC</code> (porta 50052).</p>`
+          <p class="subtle p-spaced">Backend reale: <code>POST /solem/cluster/dispatch</code> · worker daemon <code>solem-cluster-worker</code> su ogni nodo · inference distribuita via <code>llama.cpp RPC</code> (porta 50052).</p>`
+      };
+    case 'infra':
+      return {
+        title: 'Infrastruttura — HPC + Quantum + Data Center',
+        w: 720, h: 580,
+        html: `<h3>SOLEM scala da single-box a control plane</h3>
+          <p>Stessa filosofia, sei domini: super computer, quantum, server, network, data center, IA.
+          Tutto FOSS, free-tier ove disponibile, niente vendor lock-in.</p>
+
+          <div class="infra-grid">
+            <div class="infra-card">
+              <div class="h">HPC</div>
+              <div class="stat">128</div>
+              <div class="lbl">job in queue</div>
+              <div class="desc">Slurm scheduler · 4 partition · MPI ready · sbatch via /solem/hpc/submit</div>
+            </div>
+            <div class="infra-card">
+              <div class="h">Quantum</div>
+              <div class="stat">3</div>
+              <div class="lbl">backend disponibili</div>
+              <div class="desc">Qiskit Aer (locale) · IBM Quantum free-tier · simulator fino a 30 qubit</div>
+            </div>
+            <div class="infra-card">
+              <div class="h">Data Center</div>
+              <div class="stat">42</div>
+              <div class="lbl">nodi inventariati</div>
+              <div class="desc">IPMI · Redfish · power management via /solem/datacenter/nodes/{name}/power</div>
+            </div>
+          </div>
+
+          <div class="infra-section">
+            <h4>HPC — partition Slurm</h4>
+            <div class="hpc-row"><span class="name">default</span><span>16 nodes · idle</span></div>
+            <div class="hpc-row"><span class="name">gpu</span><span>4 nodes · mixed · 2 GPU/nodo</span></div>
+            <div class="hpc-row"><span class="name">long</span><span>8 nodes · alloc · timelimit 7d</span></div>
+            <div class="hpc-row"><span class="name">debug</span><span>2 nodes · idle · 30 min max</span></div>
+          </div>
+
+          <div class="infra-section">
+            <h4>Quantum — backend</h4>
+            <div class="qbit-row"><span class="name">Aer simulator (locale)</span><span class="badge sim">FREE · LOCAL</span></div>
+            <div class="qbit-row"><span class="name">ibm_kyiv (127 qubit)</span><span class="badge real">FREE 7000s/mese</span></div>
+            <div class="qbit-row"><span class="name">ibmq_qasm_simulator</span><span class="badge sim">FREE · CLOUD</span></div>
+          </div>
+
+          <div class="infra-section">
+            <h4>Data Center — rack</h4>
+            <div class="rack-row"><span class="name">rack-A</span><span>16/16 ON · 12 compute, 4 storage</span></div>
+            <div class="rack-row"><span class="name">rack-B</span><span>14/16 ON · 8 GPU · 6 compute</span></div>
+            <div class="rack-row"><span class="name">rack-C</span><span>0/8 OFF · spare · powered down</span></div>
+          </div>
+
+          <p class="subtle p-spaced">Backend API:
+            <code>/solem/hpc/{submit,jobs,partitions}</code> ·
+            <code>/solem/quantum/{submit,providers,jobs}</code> ·
+            <code>/solem/datacenter/{nodes,racks,sensors}</code>.
+            Tutti scaffold Step 0: producono mock se i tool reali (Slurm/Qiskit/ipmitool) non sono installati.</p>`
       };
     case 'drawer':
       openDrawer();

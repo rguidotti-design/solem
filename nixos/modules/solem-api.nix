@@ -8,6 +8,7 @@ let
     httpx
     python-multipart  # richiesto da voice.py per UploadFile/File
     aiofiles          # per FileResponse async
+    cryptography      # Ed25519 vero per federation.py (no HMAC fallback in prod)
   ]);
 in {
   # SOLEM API — primo backend NATIVO di SOLEM (Layer 1-4 stub).
