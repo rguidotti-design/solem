@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOLEM — Preview interattiva dell'OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+:root {
+  --navy-darker: #050912;
+  --navy-dark:   #0a1628;
+  --navy:        #112340;
+  --navy-mid:    #1a2f54;
+  --navy-light:  #2c4a7a;
+  --gold:        #c9a961;
+  --gold-bright: #e0c585;
+  --text:        #e8edf5;
+  --text-mute:   #8a96ad;
+  --text-dim:    #5a6680;
+  --ok:          #4ab37e;
+  --warn:        #d4a04e;
+  --err:         #d45e5e;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --mono:  'JetBrains Mono', Menlo, monospace;
+  --sans:  'Inter', system-ui, sans-serif;
+}
+html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font-family: var(--sans); color: var(--text); font-size: 14px; }
+
+/* ─── Wrapper "schermo" ─── */
+.os-frame {
+  position: relative; width: 100vw; height: 100vh;
+  background: radial-gradient(ellipse at 50% 40%, var(--navy) 0%, var(--navy-dark) 50%, var(--navy-darker) 100%);
+  overflow: hidden;
+}
+
+/* ─── Boot splash ─── */
+.boot {
+  position: absolute; inset: 0; z-index: 999;
+  background: var(--navy-darker);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transition: opacity 1s ease;
+}
+.boot.fade { opacity: 0; pointer-events: none; }
+.boot .logo {
+  font-family: var(--serif); font-weight: 300; font-size: 96px;
+  letter-spacing: 0.35em; color: var(--gold);
+  animation: glow 2s ease-in-out infinite alternate;
+  text-shadow: 0 0 30px rgba(201,169,97,0.4);
+}
+.boot .tag { font-size: 11px; letter-spacing: 0.4em; color: var(--text-mute); margin-top: 16px; }
+.boot .bar { margin-top: 60px; width: 280px; height: 2px; background: var(--navy-mid); border-radius: 1px; overflow: hidden; }
+.boot .bar::after {
+  content: ''; display: block; height: 100%; width: 30%;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  animation: progress 2s ease-in-out infinite;
+}
+.boot .stage { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin-top: 22px; letter-spacing: 0.05em; }
+@keyframes glow { from { text-shadow: 0 0 20px rgba(201,169,97,0.3); } to { text-shadow: 0 0 40px rgba(201,169,97,0.6); } }
+@keyframes progress { 0% { transform: translateX(-100%); } 100% { transform: translateX(400%); } }
+
+/* ─── Lock screen ─── */
+.lock {
+  position: absolute; inset: 0; z-index: 800;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(20px);
+  background: rgba(10,22,40,0.85);
+  transition: opacity 0.5s ease;
+}
+.lock.hidden { opacity: 0; pointer-events: none; }
+.lock .ring {
+  width: 180px; height: 180px; border-radius: 50%;
+  border: 3px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; cursor: pointer;
+  transition: all 0.3s ease;
+}
+.lock .ring:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(201,169,97,0.5); }
+.lock .ring::before {
+  content: ''; position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid var(--gold); opacity: 0.4;
+  animation: pulse 3s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.08); opacity: 0.1; } }
+.lock .ring .S { font-family: var(--serif); font-size: 80px; color: var(--gold); font-weight: 300; }
+.lock .label { position: absolute; bottom: 80px; left: 0; right: 0; text-align: center; font-size: 11px; letter-spacing: 0.3em; color: var(--text-mute); }
+.lock .time {
+  position: absolute; top: 18%; left: 0; right: 0;
+  text-align: center; font-family: var(--serif); font-weight: 300;
+  font-size: 110px; color: var(--text); letter-spacing: 0.05em;
+}
+.lock .date { text-align: center; font-size: 13px; letter-spacing: 0.2em; color: var(--text-mute); margin-top: -20px; }
+
+/* ─── Desktop ─── */
+.desktop { position: absolute; inset: 0; z-index: 1; }
+
+/* Waybar (status bar in alto) */
+.waybar {
+  position: absolute; top: 0; left: 0; right: 0; height: 34px;
+  background: rgba(10,22,40,0.92);
+  border-bottom: 2px solid var(--gold);
+  display: flex; align-items: center; padding: 0 14px;
+  font-family: var(--sans); font-size: 12px;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+}
+.waybar .ws { display: flex; gap: 4px; }
+.waybar .ws span {
+  padding: 2px 10px; color: var(--text-dim); font-family: var(--mono);
+  border-bottom: 2px solid transparent; cursor: pointer; transition: all 0.15s;
+}
+.waybar .ws span.active { color: var(--gold); border-bottom-color: var(--gold); }
+.waybar .ws span:hover { color: var(--text); }
+.waybar .window-title { margin-left: 18px; color: var(--text-mute); font-size: 11px; }
+.waybar .clock {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-family: var(--serif); color: var(--gold); font-size: 14px; letter-spacing: 0.06em;
+}
+.waybar .right { margin-left: auto; display: flex; gap: 14px; align-items: center; }
+.waybar .right span { font-family: var(--mono); font-size: 11px; color: var(--text); }
+.waybar .right .ai {
+  color: var(--gold); font-weight: 600;
+  padding: 2px 10px; border: 1px solid var(--gold); border-radius: 2px;
+  letter-spacing: 0.1em;
+}
+
+/* Wallpaper logo center */
+.wp-logo {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  text-align: center; pointer-events: none;
+}
+.wp-logo .S {
+  font-family: var(--serif); font-weight: 300; font-size: 240px;
+  color: var(--gold); opacity: 0.06; letter-spacing: 0.35em;
+  text-shadow: 0 0 80px rgba(201,169,97,0.1);
+}
+.wp-logo .tag { font-size: 10px; letter-spacing: 0.5em; color: var(--text-dim); opacity: 0.5; margin-top: -10px; }
+
+/* Dock (icone in basso) */
+.dock {
+  position: absolute; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px; padding: 8px;
+  background: rgba(10,22,40,0.85);
+  border: 1px solid var(--navy-light);
+  border-radius: 14px;
+  backdrop-filter: blur(12px);
+  z-index: 40;
+}
+.dock-icon {
+  width: 56px; height: 56px; border-radius: 10px;
+  background: var(--navy-mid);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.2s ease;
+  color: var(--text); font-size: 10px;
+  border: 1px solid transparent;
+}
+.dock-icon:hover {
+  transform: translateY(-8px) scale(1.08);
+  background: var(--navy-light);
+  border-color: var(--gold);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+}
+.dock-icon .glyph { font-family: var(--serif); font-size: 26px; color: var(--gold); line-height: 1; }
+.dock-icon .name { font-size: 9px; letter-spacing: 0.08em; color: var(--text-mute); margin-top: 3px; text-transform: uppercase; }
+
+/* Windows (app finestre fluttuanti) */
+.window {
+  position: absolute;
+  background: rgba(10,22,40,0.96);
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  backdrop-filter: blur(12px);
+  z-index: 20;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  animation: winIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes winIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.window-bar {
+  background: var(--navy);
+  padding: 8px 14px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--navy-light);
+  cursor: move;
+}
+.window-bar .dots { display: flex; gap: 6px; }
+.window-bar .dots span { width: 11px; height: 11px; border-radius: 50%; }
+.window-bar .dots .close { background: var(--err); cursor: pointer; }
+.window-bar .dots .min { background: var(--warn); }
+.window-bar .dots .max { background: var(--ok); }
+.window-bar .title { font-family: var(--serif); font-size: 15px; color: var(--gold); letter-spacing: 0.05em; }
+.window-body { flex: 1; padding: 18px 22px; overflow: auto; }
+.window-body h3 { font-family: var(--serif); font-weight: 500; font-size: 22px; color: var(--gold); margin-bottom: 12px; }
+.window-body p { color: var(--text-mute); margin-bottom: 10px; line-height: 1.6; }
+.window-body .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--navy-mid); font-family: var(--mono); font-size: 12px; }
+.window-body .row .k { color: var(--text-mute); }
+.window-body .row .v { color: var(--text); }
+.window-body code { font-family: var(--mono); background: var(--navy); padding: 1px 6px; border-radius: 3px; font-size: 12px; color: var(--gold); }
+
+/* GAVIO chat */
+.chat { display: flex; flex-direction: column; height: 100%; }
+.chat-msgs { flex: 1; overflow-y: auto; padding-bottom: 12px; }
+.msg { padding: 10px 14px; margin-bottom: 8px; border-radius: 8px; max-width: 80%; line-height: 1.5; font-size: 13px; }
+.msg.user { background: var(--navy-mid); color: var(--text); margin-left: auto; }
+.msg.gavio { background: var(--navy); color: var(--text); border-left: 3px solid var(--gold); }
+.msg.gavio b { color: var(--gold); font-family: var(--serif); font-size: 14px; }
+.chat-input { display: flex; gap: 8px; }
+.chat-input input { flex: 1; padding: 10px 14px; background: var(--navy-mid); border: 1px solid var(--navy-light); color: var(--text); border-radius: 6px; font-family: var(--sans); font-size: 13px; outline: none; }
+.chat-input input:focus { border-color: var(--gold); }
+.chat-input button { padding: 10px 16px; background: var(--gold); color: var(--navy-darker); border: 0; border-radius: 6px; cursor: pointer; font-family: var(--serif); font-size: 14px; font-weight: 500; letter-spacing: 0.05em; }
+
+/* Sensor list */
+.sensor { display: flex; align-items: center; padding: 12px; background: var(--navy-mid); border-radius: 6px; margin-bottom: 8px; border-left: 3px solid var(--ok); }
+.sensor.active { border-left-color: var(--warn); }
+.sensor.danger { border-left-color: var(--err); }
+.sensor .ico { width: 36px; font-family: var(--serif); font-size: 20px; color: var(--gold); }
+.sensor .info { flex: 1; }
+.sensor .info .name { font-weight: 600; color: var(--text); }
+.sensor .info .detail { font-size: 11px; color: var(--text-mute); font-family: var(--mono); }
+.sensor .badge { padding: 3px 10px; font-size: 10px; letter-spacing: 0.1em; border-radius: 3px; font-family: var(--mono); }
+.sensor .badge.idle { background: rgba(74,179,126,0.15); color: var(--ok); }
+.sensor .badge.use { background: rgba(212,160,78,0.15); color: var(--warn); }
+
+/* Service hub grid */
+.hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.hub-card {
+  background: var(--navy-mid); padding: 14px; border-radius: 6px;
+  border: 1px solid var(--navy-light); cursor: pointer; transition: all 0.2s;
+}
+.hub-card:hover { border-color: var(--gold); transform: translateY(-3px); }
+.hub-card .icon { font-family: var(--serif); font-size: 28px; color: var(--gold); }
+.hub-card .name { font-weight: 600; font-size: 13px; margin-top: 4px; }
+.hub-card .url { font-family: var(--mono); font-size: 10px; color: var(--text-mute); margin-top: 2px; }
+.hub-card .desc { font-size: 11px; color: var(--text-mute); margin-top: 6px; line-height: 1.4; }
+
+/* Network monitor */
+.net-row { display: flex; padding: 10px; background: var(--navy-mid); border-radius: 4px; margin-bottom: 6px; align-items: center; gap: 12px; }
+.net-row .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); animation: blink 2s infinite; }
+@keyframes blink { 50% { opacity: 0.3; } }
+.net-row .name { flex: 1; font-family: var(--mono); font-size: 12px; }
+.net-row .ip { font-family: var(--mono); font-size: 11px; color: var(--gold); }
+
+/* App drawer */
+.drawer {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(5,9,18,0.92); backdrop-filter: blur(30px);
+  z-index: 60; display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+.drawer.show { opacity: 1; pointer-events: auto; }
+.drawer-grid { display: grid; grid-template-columns: repeat(6, 96px); gap: 18px; }
+.drawer-app {
+  width: 96px; height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--navy-mid); border-radius: 12px; border: 1px solid var(--navy-light);
+  cursor: pointer; transition: all 0.2s;
+}
+.drawer-app:hover { border-color: var(--gold); transform: scale(1.06); box-shadow: 0 10px 24px rgba(0,0,0,0.5); }
+.drawer-app .icon { font-family: var(--serif); font-size: 34px; color: var(--gold); }
+.drawer-app .label { font-size: 10px; color: var(--text); margin-top: 4px; letter-spacing: 0.05em; }
+
+/* Helper banner */
+.tip {
+  position: absolute; top: 50px; right: 18px;
+  background: rgba(10,22,40,0.95); border-left: 3px solid var(--gold);
+  padding: 10px 14px; font-size: 11px; color: var(--text);
+  border-radius: 4px; z-index: 70;
+  font-family: var(--mono); letter-spacing: 0.04em;
+  animation: tipIn 0.4s ease;
+}
+@keyframes tipIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+.tip kbd { background: var(--gold); color: var(--navy-darker); padding: 1px 6px; border-radius: 3px; font-family: var(--mono); font-size: 10px; }
+
+.back-link {
+  position: fixed; bottom: 10px; right: 14px; z-index: 100;
+  font-size: 10px; color: var(--text-dim); letter-spacing: 0.15em;
+  background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 3px;
+  text-decoration: none; font-family: var(--mono);
+}
+.back-link:hover { color: var(--gold); }
+
+.subtle { color: var(--text-dim); font-size: 11px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<div class="os-frame" id="os">
+
+  <!-- BOOT -->
+  <div class="boot" id="boot">
+    <div class="logo">SOLEM</div>
+    <div class="tag">AI-NATIVE OS</div>
+    <div class="bar"></div>
+    <div class="stage" id="boot-stage">avvio kernel · hardening · ollama · gavio · solem-api</div>
+  </div>
+
+  <!-- LOCK -->
+  <div class="lock hidden" id="lock">
+    <div class="time" id="lock-time">10:32</div>
+    <div class="date" id="lock-date">VENERDÌ · 21 MAGGIO 2026</div>
+    <div class="ring" onclick="hideLock()">
+      <span class="S">S</span>
+    </div>
+    <div class="label">CLICCA PER SBLOCCARE</div>
+  </div>
+
+  <!-- DESKTOP -->
+  <div class="desktop">
+    <!-- Waybar -->
+    <div class="waybar">
+      <div class="ws">
+        <span class="active">I</span><span>II</span><span>III</span><span>IV</span><span>V</span>
+      </div>
+      <div class="window-title" id="active-title">SOLEM desktop · scrivania pulita</div>
+      <div class="clock" id="waybar-clock">venerdì · 10:32</div>
+      <div class="right">
+        <span>CPU 12%</span>
+        <span>RAM 4.2/32 GB</span>
+        <span>WiFi solem-mesh</span>
+        <span>vol 60%</span>
+        <span>87%</span>
+        <span class="ai" id="ai-status" title="GAVIO è attivo">SOLEM</span>
+      </div>
+    </div>
+
+    <!-- Wallpaper logo -->
+    <div class="wp-logo">
+      <div class="S">SOLEM</div>
+      <div class="tag">AI-NATIVE OS</div>
+    </div>
+
+    <!-- Tip -->
+    <div class="tip" id="tip">
+      Premi <kbd>Super</kbd> o clicca le icone in basso<br>
+      <span class="subtle">Tutto è una simulazione visiva — è il vero design dell'OS che sto costruendo</span>
+    </div>
+
+    <!-- Container finestre -->
+    <div id="windows"></div>
+
+    <!-- Dock -->
+    <div class="dock">
+      <div class="dock-icon" onclick="openApp('gavio')"><div class="glyph">G</div><div class="name">GAVIO</div></div>
+      <div class="dock-icon" onclick="openApp('hub')"><div class="glyph">⌂</div><div class="name">HUB</div></div>
+      <div class="dock-icon" onclick="openApp('privacy')"><div class="glyph">◉</div><div class="name">PRIVACY</div></div>
+      <div class="dock-icon" onclick="openApp('network')"><div class="glyph">≋</div><div class="name">NETWORK</div></div>
+      <div class="dock-icon" onclick="openApp('system')"><div class="glyph">S</div><div class="name">SYSTEM</div></div>
+      <div class="dock-icon" onclick="openApp('focus')"><div class="glyph">○</div><div class="name">FOCUS</div></div>
+      <div class="dock-icon" onclick="openApp('drawer')"><div class="glyph">▦</div><div class="name">APPS</div></div>
+      <div class="dock-icon" onclick="openApp('terminal')"><div class="glyph">$</div><div class="name">TERM</div></div>
+      <div class="dock-icon" onclick="showLock()"><div class="glyph">⊙</div><div class="name">LOCK</div></div>
+    </div>
+  </div>
+
+  <!-- APP DRAWER (fullscreen launcher) -->
+  <div class="drawer" id="drawer" onclick="if(event.target===this)closeDrawer()">
+    <div>
+      <h2 style="font-family: var(--serif); font-size: 30px; color: var(--gold); margin-bottom: 24px; text-align: center; letter-spacing: 0.1em;">LAUNCHER</h2>
+      <div class="drawer-grid" id="drawer-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<a href="/" class="back-link">← TORNA AL PROGRESS SERVER</a>
+
+<script>
+// ─── Boot animation ───
+setTimeout(() => {
+  document.getElementById('boot-stage').textContent = '✓ tutto pronto · benvenuto Ruben';
+}, 2200);
+setTimeout(() => {
+  document.getElementById('boot').classList.add('fade');
+  setTimeout(() => document.getElementById('boot').style.display = 'none', 1100);
+}, 3000);
+
+// ─── Clock ───
+function pad(n){return String(n).padStart(2,'0');}
+function updateClock() {
+  const d = new Date();
+  const t = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const giorni = ['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'];
+  const mesi = ['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+  document.getElementById('lock-time').textContent = t;
+  document.getElementById('lock-date').textContent = `${giorni[d.getDay()].toUpperCase()} · ${d.getDate()} ${mesi[d.getMonth()].toUpperCase()} ${d.getFullYear()}`;
+  document.getElementById('waybar-clock').textContent = `${giorni[d.getDay()]} · ${t}`;
+}
+updateClock();
+setInterval(updateClock, 30000);
+
+// ─── Hide tip after 6s ───
+setTimeout(() => {
+  const t = document.getElementById('tip');
+  if (t) { t.style.transition = 'opacity 1s'; t.style.opacity = '0'; setTimeout(()=>t.remove(), 1000); }
+}, 6000);
+
+// ─── Lock toggle ───
+function showLock() { document.getElementById('lock').classList.remove('hidden'); }
+function hideLock() { document.getElementById('lock').classList.add('hidden'); }
+
+// ─── Drawer ───
+const APPS = [
+  ['Firefox','♨'],['LibreWolf','♦'],['Tor','◈'],['Logseq','▣'],['Geary','✉'],
+  ['Thunderbird','✦'],['VSCodium','</>'], ['KeePassXC','⚷'],['Immich','◐'],
+  ['Navidrome','♪'],['Jellyfin','▶'],['Forgejo','⎇'],['Vaultwarden','⛨'],['Nextcloud','☁'],
+  ['Radicale','◷'],['Grafana','📊'],['GIMP','🎨'],['Blender','◢'],
+  ['Kdenlive','▷'],['Audacity','♭'],['Steam','▻'],['Bottles','⌬'],['Distrobox','□'],['Podman','◇'],
+  ['LibreOffice','📄'],['Marktext','✎'],['File Manager','▤'],['Settings','⚙'],
+  ['Solem-init','✦'],['Solem-migrate','↻'],
+];
+const drawerGrid = document.getElementById('drawer-grid');
+APPS.forEach(([name, icon]) => {
+  const el = document.createElement('div');
+  el.className = 'drawer-app';
+  el.onclick = () => { closeDrawer(); openApp('app', name); };
+  el.innerHTML = `<div class="icon">${icon}</div><div class="label">${name}</div>`;
+  drawerGrid.appendChild(el);
+});
+function openDrawer() { document.getElementById('drawer').classList.add('show'); }
+function closeDrawer() { document.getElementById('drawer').classList.remove('show'); }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Meta' || e.key === 'OS' || e.key === 'Super_L' || e.key === ' ') {
+    if (document.getElementById('drawer').classList.contains('show')) closeDrawer();
+    else openDrawer();
+    e.preventDefault();
+  }
+  if (e.key === 'Escape') closeDrawer();
+});
+
+// ─── Windows ───
+let zCounter = 25;
+function openApp(kind, arg) {
+  // posizione casuale
+  const x = 120 + Math.random() * 250;
+  const y = 80 + Math.random() * 80;
+  const w = document.createElement('div');
+  w.className = 'window';
+  w.style.left = x + 'px'; w.style.top = y + 'px';
+  w.style.zIndex = ++zCounter;
+  const body = renderApp(kind, arg);
+  w.innerHTML = `
+    <div class="window-bar" onmousedown="dragWin(event, this.parentElement)">
+      <div class="dots"><span class="close" onclick="this.closest('.window').remove()"></span><span class="min"></span><span class="max"></span></div>
+      <div class="title">${body.title}</div>
+    </div>
+    <div class="window-body" style="width:${body.w||620}px; height:${body.h||420}px;">${body.html}</div>
+  `;
+  document.getElementById('windows').appendChild(w);
+  document.getElementById('active-title').textContent = body.title;
+
+  if (kind === 'gavio') initGavioChat(w);
+}
+
+function renderApp(kind, arg) {
+  switch (kind) {
+    case 'gavio':
+      return {
+        title: 'GAVIO — la tua AI personale',
+        w: 600, h: 480,
+        html: `
+          <div class="chat">
+            <div class="chat-msgs" id="chat-msgs">
+              <div class="msg gavio"><b>GAVIO</b><br>Ciao Ruben. Sono GAVIO, l'unica AI di SOLEM. Cosa facciamo oggi?<br><span class="subtle">Suggerimenti: "scarica Logseq", "fai backup", "blocca social per 25 min", "trova foto del 2024".</span></div>
+            </div>
+            <div class="chat-input">
+              <input id="chat-in" placeholder="Scrivi a GAVIO..." />
+              <button onclick="sendGavio()">INVIA</button>
+            </div>
+          </div>`
+      };
+    case 'hub':
+      const services = [
+        ['Forgejo','git.solem.local','Git server self-host','⎇'],
+        ['Vaultwarden','vault.solem.local','Password manager','⛨'],
+        ['Nextcloud','cloud.solem.local','Cloud privato','☁'],
+        ['Immich','immich.solem.local','Foto AI-tagged','◐'],
+        ['Navidrome','music.solem.local','Music streaming','♪'],
+        ['Jellyfin','jellyfin.solem.local','Media center','▶'],
+        ['Radicale','cal.solem.local','CalDAV/CardDAV','◷'],
+        ['Grafana','grafana.solem.local','Metriche sistema','📊'],
+        ['Headscale','vpn.solem.local','Mesh VPN','≋'],
+      ];
+      return {
+        title: 'Services Hub — i tuoi self-host',
+        w: 660, h: 480,
+        html: `<h3>Hub servizi self-host</h3><p>Tutti i servizi attivi sulla tua rete SOLEM. Nessuno costa nulla.</p>
+          <div class="hub-grid">${services.map(s => `
+            <div class="hub-card">
+              <div class="icon">${s[3]}</div>
+              <div class="name">${s[0]}</div>
+              <div class="url">${s[1]}</div>
+              <div class="desc">${s[2]}</div>
+            </div>`).join('')}
+          </div>`
+      };
+    case 'privacy':
+      return {
+        title: 'Privacy Dashboard — chi accede a cosa',
+        w: 520, h: 420,
+        html: `<h3>Sensori in uso adesso</h3>
+          <div class="sensor"><div class="ico">◉</div><div class="info"><div class="name">Microfono</div><div class="detail">nessun processo</div></div><div class="badge idle">IDLE</div></div>
+          <div class="sensor active"><div class="ico">▣</div><div class="info"><div class="name">Camera /dev/video0</div><div class="detail">firefox · PID 4521 · da 2 min</div></div><div class="badge use">IN USO</div></div>
+          <div class="sensor"><div class="ico">⌖</div><div class="info"><div class="name">Geolocalizzazione</div><div class="detail">nessun client geoclue</div></div><div class="badge idle">IDLE</div></div>
+          <div class="sensor"><div class="ico">▤</div><div class="info"><div class="name">Clipboard</div><div class="detail">cliphist watcher attivo</div></div><div class="badge idle">OK</div></div>
+          <p style="margin-top:14px"><code>solem.privacy.sensors</code> — refresh ogni 5s · click "kill" per terminare processo.</p>`
+      };
+    case 'network':
+      return {
+        title: 'Network Stack — la tua rete propria',
+        w: 600, h: 440,
+        html: `<h3>Rete SOLEM</h3>
+          <p>SOLEM è gateway della tua LAN. DHCP + DNS interno <code>.solem.local</code> + NAT.</p>
+          <div class="row"><span class="k">Dominio interno</span><span class="v">solem.local</span></div>
+          <div class="row"><span class="k">Gateway</span><span class="v">10.99.0.1</span></div>
+          <div class="row"><span class="k">DHCP range</span><span class="v">10.99.0.100 → .200</span></div>
+          <div class="row"><span class="k">Mesh VPN (Headscale)</span><span class="v">100.64.0.0/10</span></div>
+          <div class="row"><span class="k">DNS blocker (blocky)</span><span class="v">attivo · 3 blocklist</span></div>
+          <h3 style="margin-top:18px">Dispositivi nella rete</h3>
+          <div class="net-row"><span class="dot"></span><span class="name">solem.local (questo box)</span><span class="ip">10.99.0.1</span></div>
+          <div class="net-row"><span class="dot"></span><span class="name">iphone-ruben.solem.local</span><span class="ip">10.99.0.103</span></div>
+          <div class="net-row"><span class="dot"></span><span class="name">laptop-lavoro.solem.local</span><span class="ip">10.99.0.115</span></div>
+          <div class="net-row"><span class="dot"></span><span class="name">tv-salone.solem.local</span><span class="ip">10.99.0.121</span></div>`
+      };
+    case 'system':
+      return {
+        title: 'System Manifest — stato live',
+        w: 520, h: 440,
+        html: `<h3>SOLEM v0.1.0-step0</h3>
+          <div class="row"><span class="k">Uptime</span><span class="v">3d 7h 14m</span></div>
+          <div class="row"><span class="k">CPU</span><span class="v">12% (Ollama pinned su core 2-7)</span></div>
+          <div class="row"><span class="k">RAM</span><span class="v">4.2 / 32.0 GB · LLM cached 8.1 GB</span></div>
+          <div class="row"><span class="k">Disco /</span><span class="v">62 GB liberi · 480 GB NVMe</span></div>
+          <div class="row"><span class="k">Profilo</span><span class="v">developer · server-mode ON</span></div>
+          <div class="row"><span class="k">Costo SOLEM</span><span class="v">0 €</span></div>
+          <h3 style="margin-top:14px">Servizi attivi</h3>
+          <div class="row"><span class="k">gavio.service</span><span class="v" style="color:var(--ok)">● active</span></div>
+          <div class="row"><span class="k">solem-api.service</span><span class="v" style="color:var(--ok)">● active</span></div>
+          <div class="row"><span class="k">ollama.service</span><span class="v" style="color:var(--ok)">● active</span></div>
+          <div class="row"><span class="k">dnsmasq.service</span><span class="v" style="color:var(--ok)">● active</span></div>
+          <div class="row"><span class="k">caddy.service</span><span class="v" style="color:var(--ok)">● active</span></div>
+          <div class="row"><span class="k">restic backup</span><span class="v">prossimo: stanotte 03:00</span></div>`
+      };
+    case 'focus':
+      return {
+        title: 'Focus Mode — concentrazione lock',
+        w: 480, h: 380,
+        html: `<h3>Sessione Focus</h3>
+          <p>Blocca distrazioni via <code>/etc/hosts</code> per la durata scelta.</p>
+          <div class="row"><span class="k">Durata</span><span class="v">25 min (pomodoro)</span></div>
+          <div class="row"><span class="k">Blocklist</span><span class="v">social · news</span></div>
+          <div class="row"><span class="k">Override possibile</span><span class="v" style="color:var(--err)">NO (lock)</span></div>
+          <p style="margin-top:14px; font-family: var(--mono); color: var(--text-mute); font-size:11px">Esempio blocklist social:<br>
+          0.0.0.0 facebook.com<br>
+          0.0.0.0 instagram.com<br>
+          0.0.0.0 twitter.com<br>
+          0.0.0.0 tiktok.com<br>
+          0.0.0.0 reddit.com</p>
+          <div style="text-align:center; margin-top: 18px;">
+            <button style="padding:10px 24px; background:var(--gold); color:var(--navy-darker); border:0; border-radius:6px; cursor:pointer; font-family:var(--serif); font-size:15px; letter-spacing:0.1em;">AVVIA 25 MIN</button>
+          </div>`
+      };
+    case 'terminal':
+      return {
+        title: 'foot — terminale Wayland',
+        w: 560, h: 360,
+        html: `<div style="font-family: var(--mono); font-size: 12px; color: var(--text); line-height: 1.6; background:#000; padding:14px; border-radius:4px; height:100%;">
+<span style="color: var(--gold)">ruben@solem</span>:<span style="color: var(--ok)">~</span>$ solem status<br>
+<br>
+  <span style="color: var(--gold); font-family: var(--serif); font-size: 16px;">SOLEM</span>  v0.1.0-step0  ·  step 0
+<br>
+<br>
+  <b>Runtime</b><br>
+  &nbsp;&nbsp;uptime&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3d 7h 14m<br>
+  &nbsp;&nbsp;memoria&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4234 MB<br>
+  &nbsp;&nbsp;disco libero&nbsp;&nbsp;&nbsp;&nbsp;62 GB<br>
+  &nbsp;&nbsp;servizi attivi&nbsp;&nbsp;9 <span style="color: var(--text-mute);">(gavio, ollama, solem-api, dnsmasq, caddy, ...)</span><br>
+<br>
+  <b>Layer</b><br>
+  &nbsp;&nbsp;L1 &nbsp;Identity Engine &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--warn)">partial </span><br>
+  &nbsp;&nbsp;L2 &nbsp;Context Engine &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--warn)">partial </span><br>
+  &nbsp;&nbsp;L3 &nbsp;Orchestration  &nbsp;&nbsp;&nbsp;<span style="color:var(--warn)">partial </span><br>
+  &nbsp;&nbsp;L4 &nbsp;Capabilities   &nbsp;&nbsp;&nbsp;<span style="color:var(--ok)">active &nbsp;</span><br>
+  &nbsp;&nbsp;L5 &nbsp;Memory &amp; Knowledge <span style="color:var(--warn)">partial </span><br>
+  &nbsp;&nbsp;L6 &nbsp;Interop        &nbsp;&nbsp;&nbsp;<span style="color:var(--text-dim)">stub &nbsp;&nbsp;&nbsp;</span><br>
+  &nbsp;&nbsp;L7 &nbsp;Extensions     &nbsp;&nbsp;&nbsp;<span style="color:var(--text-dim)">stub &nbsp;&nbsp;&nbsp;</span><br>
+<br>
+<span style="color: var(--gold)">ruben@solem</span>:<span style="color: var(--ok)">~</span>$ <span style="background:var(--gold); width: 9px; height: 14px; display: inline-block;"></span></div>`
+      };
+    case 'app':
+      return {
+        title: `${arg} — preview (simulazione)`,
+        w: 480, h: 320,
+        html: `<h3>${arg}</h3>
+          <p>Questa è l'app <code>${arg}</code> nel launcher di SOLEM.</p>
+          <p>Lanciata come <code>flatpak</code> o nix package, sandboxed via bubblewrap, in network policy via opensnitch.</p>
+          <div class="row"><span class="k">Pacchetto</span><span class="v">nixpkgs · ${arg.toLowerCase()}</span></div>
+          <div class="row"><span class="k">Sandbox</span><span class="v">bwrap (firefox/chromium) o nessuno</span></div>
+          <div class="row"><span class="k">Network policy</span><span class="v">opensnitch interattivo</span></div>
+          <div class="row"><span class="k">Costo licenza</span><span class="v">0 €</span></div>
+          <p style="margin-top: 14px;" class="subtle">In SOLEM reale qui parte l'app vera. Questo è solo preview visivo.</p>`
+      };
+    case 'drawer':
+      openDrawer();
+      return { title: '', html: '', w: 1, h: 1 };
+  }
+  return { title: 'App', html: '<p>...</p>', w: 320, h: 200 };
+}
+
+// ─── GAVIO chat fake (solo demo) ───
+const GAVIO_REPLIES = {
+  'scarica logseq': 'Lancio <code>flatpak install flathub com.logseq.Logseq</code>. Vuoi che lo apra dopo l\'install? [SÌ] [NO]',
+  'fai backup': 'Trigger <code>systemctl start solem-backup-restic.service</code>. Dura ~3 min. Snapshot encrypted in <code>/var/lib/solem-backups-restic</code>.',
+  'blocca social': 'Avvio focus mode 25 min con preset <b>social</b>. Bloccati: facebook, instagram, twitter, tiktok, reddit. Override: <span style="color:var(--err)">NO</span>.',
+  'trova foto': 'Cerco in Immich e ~/Pictures via embedding. 47 risultati per "2024". Vuoi che li raggruppi per mese?',
+  'apri immich': 'Apro <code>immich.solem.local</code> in LibreWolf. Sandbox: bwrap. Network: locale only.',
+  'spegni pc': '<span style="color:var(--err)">Conferma richiesta:</span> stoppare gavio, ollama, solem-api e poi shutdown? [CONFERMA "SPEGNI"]',
+  'come stai': 'Bene. CPU al 12%, RAM 4.2/32 GB, latency Ollama 380ms. Tu come stai?',
+};
+function initGavioChat(win) {
+  const inp = win.querySelector('#chat-in');
+  inp.addEventListener('keydown', e => { if (e.key==='Enter') sendGavio(); });
+  inp.focus();
+}
+function sendGavio() {
+  const inp = document.getElementById('chat-in');
+  const msgs = document.getElementById('chat-msgs');
+  const txt = (inp.value||'').trim();
+  if (!txt) return;
+  inp.value = '';
+  const u = document.createElement('div'); u.className='msg user'; u.textContent = txt; msgs.appendChild(u);
+  msgs.scrollTop = 1e6;
+  setTimeout(() => {
+    const reply = matchReply(txt);
+    const g = document.createElement('div'); g.className='msg gavio'; g.innerHTML = `<b>GAVIO</b><br>${reply}`;
+    msgs.appendChild(g); msgs.scrollTop = 1e6;
+  }, 600);
+}
+function matchReply(t) {
+  const low = t.toLowerCase();
+  for (const k of Object.keys(GAVIO_REPLIES)) {
+    if (low.includes(k.split(' ')[0]) && k.split(' ').every(w => low.includes(w))) return GAVIO_REPLIES[k];
+  }
+  return `Ho ricevuto: "${t}". <span class="subtle">(questa è una preview UI · il prompt vero passerebbe a GAVIO via /solem/ai/route)</span>`;
+}
+
+// ─── Drag windows ───
+function dragWin(e, el) {
+  e.preventDefault();
+  el.style.zIndex = ++zCounter;
+  const rect = el.getBoundingClientRect();
+  const ox = e.clientX - rect.left, oy = e.clientY - rect.top;
+  function move(ev) { el.style.left = (ev.clientX - ox) + 'px'; el.style.top = (ev.clientY - oy) + 'px'; }
+  function up() { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); }
+  document.addEventListener('mousemove', move); document.addEventListener('mouseup', up);
+}
+</script>
+</body>
+</html>

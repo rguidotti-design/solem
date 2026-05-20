@@ -54,6 +54,23 @@ table td.desc { font-family: var(--sans); color: var(--text-mute); }
 
 .refresh-info { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
 .bottom { padding: 18px 36px; border-top: 1px solid var(--border); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-mute); text-align: center; }
+
+/* Preview banner */
+.preview-banner {
+  display: block; margin: 0 0 28px 0; padding: 22px 28px;
+  background: linear-gradient(135deg, var(--navy), var(--bg-card-hi));
+  border: 2px solid var(--gold); border-radius: 6px;
+  text-decoration: none; color: var(--text);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.preview-banner:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(201,169,97,0.25); color: var(--text); }
+.preview-banner .row { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+.preview-banner .big-s { font-family: var(--serif); font-size: 56px; color: var(--gold); line-height: 1; letter-spacing: 0.15em; }
+.preview-banner .col { flex: 1; min-width: 260px; }
+.preview-banner .title { font-family: var(--serif); font-size: 26px; color: var(--gold); letter-spacing: 0.08em; margin-bottom: 4px; }
+.preview-banner .sub { font-size: 13px; color: var(--text-mute); line-height: 1.6; }
+.preview-banner .sub b { color: var(--text); }
+.preview-banner .cta { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.15em; padding: 8px 16px; border: 1px solid var(--gold); border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -69,6 +86,21 @@ table td.desc { font-family: var(--sans); color: var(--text-mute); }
 </header>
 
 <main>
+
+  <a href="/preview" class="preview-banner">
+    <div class="row">
+      <div class="big-s">S</div>
+      <div class="col">
+        <div class="title">Apri la simulazione dell'OS →</div>
+        <div class="sub">
+          Vedi com'è SOLEM da utente: boot screen, desktop navy + Cormorant, dock, app drawer,
+          chat con GAVIO, privacy dashboard, services hub, network stack, terminale.
+          <b>Tutto cliccabile.</b>
+        </div>
+      </div>
+      <div class="cta">FULLSCREEN PREVIEW →</div>
+    </div>
+  </a>
 
   <div class="stat-grid" id="stats-grid"></div>
 

@@ -247,6 +247,7 @@ def activity() -> dict:
 
 
 HTML = (HERE / "index.html").read_text(encoding="utf-8") if (HERE / "index.html").exists() else None
+PREVIEW_HTML = (HERE / "preview.html").read_text(encoding="utf-8") if (HERE / "preview.html").exists() else None
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -254,6 +255,8 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == "/":
             self._send_html()
+        elif path == "/preview":
+            self._send_preview()
         elif path == "/api/stats":
             self._send_json(stats())
         elif path == "/api/modules":
@@ -276,6 +279,18 @@ class Handler(BaseHTTPRequestHandler):
             self.send_error(500, "index.html mancante")
             return
         body = HTML.encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _send_preview(self):
+        if PREVIEW_HTML is None:
+            self.send_error(500, "preview.html mancante")
+            return
+        body = PREVIEW_HTML.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
