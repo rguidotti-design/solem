@@ -52,6 +52,9 @@ from .layers import vector_store as vector_store_mod
 from .layers import federated as federated_mod
 from .layers import crdt_sync as crdt_mod
 from .layers import fs_semantic as fs_semantic_mod
+from .layers import ai_router as ai_router_mod
+from .layers import updates as updates_mod
+from .layers import crash_reporter as crash_mod
 from .layers.logging_config import setup_logging
 
 # Middleware (single-responsibility ognuno)
@@ -209,6 +212,9 @@ app.include_router(vector_store_mod.router, prefix="/solem")
 app.include_router(federated_mod.router,    prefix="/solem")
 app.include_router(crdt_mod.router,         prefix="/solem")
 app.include_router(fs_semantic_mod.router,  prefix="/solem")
+app.include_router(ai_router_mod.router,    prefix="/solem")
+app.include_router(updates_mod.router,      prefix="/solem")
+app.include_router(crash_mod.router,        prefix="/solem")
 # health_mod ha prefix /health (sub /live /ready /deep), NON sotto /solem
 app.include_router(health_mod.router)
 
