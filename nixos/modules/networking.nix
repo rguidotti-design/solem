@@ -19,12 +19,12 @@
 
   # SSH: indispensabile per accedere alla VM headless via `ssh -p 2222 gavio@localhost`
   services.openssh = {
-    enable = true;
+    enable = lib.mkDefault true;
     settings = {
-      PermitRootLogin = "no";
-      PasswordAuthentication = true;   # OK in VM; disattiva in produzione
-      KbdInteractiveAuthentication = false;
-      X11Forwarding = false;
+      PermitRootLogin = lib.mkDefault "no";
+      PasswordAuthentication = lib.mkDefault true;   # OK in VM; disattiva in produzione
+      KbdInteractiveAuthentication = lib.mkDefault false;
+      X11Forwarding = lib.mkDefault false;
     };
   };
 
