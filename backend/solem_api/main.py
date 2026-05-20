@@ -55,6 +55,8 @@ from .layers import fs_semantic as fs_semantic_mod
 from .layers import ai_router as ai_router_mod
 from .layers import updates as updates_mod
 from .layers import crash_reporter as crash_mod
+from .layers import universal_search as search_mod
+from .layers import marketplace as marketplace_mod
 from .layers.logging_config import setup_logging
 
 # Middleware (single-responsibility ognuno)
@@ -215,6 +217,8 @@ app.include_router(fs_semantic_mod.router,  prefix="/solem")
 app.include_router(ai_router_mod.router,    prefix="/solem")
 app.include_router(updates_mod.router,      prefix="/solem")
 app.include_router(crash_mod.router,        prefix="/solem")
+app.include_router(search_mod.router,       prefix="/solem")
+app.include_router(marketplace_mod.router,  prefix="/solem")
 # health_mod ha prefix /health (sub /live /ready /deep), NON sotto /solem
 app.include_router(health_mod.router)
 
