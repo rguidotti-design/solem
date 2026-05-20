@@ -1,6 +1,16 @@
 # SOLEM — Guida installazione
 
-SOLEM è un OS basato su NixOS. Tre modi per installarlo, dal più semplice al più impegnativo.
+SOLEM gira su 3 form factor con un solo codebase:
+
+| Form factor              | Architettura | Target build               | Tempo build |
+|--------------------------|--------------|----------------------------|-------------|
+| Workstation / Server     | x86_64       | `nix build .#iso`          | 3–8 min     |
+| Raspberry Pi 4/5         | aarch64      | `nix build .#raspberry`    | 10–20 min   |
+| Jetson Nano / Orin       | aarch64      | `nix build .#jetson`       | 10–25 min   |
+| VM (test rapido)         | x86_64       | `nix run .#vm`             | < 5 min     |
+| Smart glasses (companion)| browser PWA  | apri `http://solem.local:8001/glass` su smart glass | — |
+
+Le opzioni di installazione qui sotto, dal più semplice al più impegnativo.
 
 ## Opzione A — VM (test rapido, ~5 min)
 
@@ -102,6 +112,68 @@ sudo systemctl enable --now solem-cluster-worker
 # 4. (Opzionale) Avvia GAVIO
 sudo systemctl enable --now gavio
 ```
+
+## Opzione D — Raspberry Pi 4/5 (edge ARM64)
+
+SOLEM gira su Raspberry Pi come worker cluster, IoT controller o mini-NAS.
+
+### D.1 Build SD image (richiede Linux/WSL2 + binfmt aarch64)
+
+```bash
+# Su NixOS host abilita prima cross-build aarch64:
+#   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+git clone https://github.com/rguidotti-design/solem
+cd solem
+./scripts/build-image.sh raspberry
+# → result/sd-image/*.img (~2 GB, 10-20 min)
+```
+
+### D.2 Scrivi su microSD
+
+```bash
+lsblk  # individua la SD (es. /dev/sdb)
+sudo dd if=result/sd-image/*.img of=/dev/sdX bs=4M status=progress conv=fsync
+```
+
+### D.3 Boot Pi headless
+
+1. Inserisci la SD nel Pi 4/5, collega ethernet (o configura WiFi via `wpa_supplicant.conf`).
+2. Boot → si registra al cluster come worker `edge-cpu` automaticamente.
+3. SSH: `ssh gavio@solem-pi-pi4.local` (password iniziale `gavio`, **cambia subito**).
+
+Il Pi appare come device della mesh con `device_class=edge-cpu`. Il cluster lo userà per task STT/TTS/IoT tiny, mai inference grandi.
+
+## Opzione E — Jetson Nano / Orin (edge GPU CUDA)
+
+```bash
+./scripts/build-image.sh jetson
+# → result/sd-image/*.img
+```
+
+> ⚠️ Lo scaffold attuale **non include il BSP NVIDIA L4T completo**.
+> Per CUDA Tegra funzionante, integra [`jetpack-nixos`](https://github.com/anduril/jetpack-nixos):
+>
+> ```nix
+> inputs.jetpack-nixos.url = "github:anduril/jetpack-nixos";
+> # ...
+> modules = [ jetpack-nixos.nixosModules.default ];
+> hardware.nvidia-jetpack.enable = true;
+> ```
+
+Il Jetson appare nel cluster come `edge-gpu` → riceve task vision/embedding small/medium.
+
+## Opzione F — Smart Glasses (PWA companion)
+
+Smart glasses **non eseguono SOLEM nativamente** (Android/RTOS proprietari). SOLEM fornisce una webapp dedicata:
+
+1. Sul tuo smart glass apri il browser → `http://solem.local:8001/glass` (sostituisci con IP del gateway).
+2. Premi il bottone "PARLA" o usa la voce → richiesta passa a GAVIO via mesh.
+3. TTS risponde nell'auricolare/altoparlante del glass.
+4. Notifiche handoff arrivano via Server-Sent Events.
+
+Supportato su qualunque smart glass con browser moderno (Chromium/WebKit) e Web Speech API: Vuzix Blade, Xreal Air, Brilliant Frame, Meta Ray-Ban con browser, ecc.
+
+Il glass si auto-registra al cluster come `device_class=glass-companion` (riceve solo task voce brevi).
 
 ## Profili
 

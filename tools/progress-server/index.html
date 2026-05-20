@@ -71,6 +71,20 @@ table td.desc { font-family: var(--sans); color: var(--text-mute); }
 .preview-banner .sub { font-size: 13px; color: var(--text-mute); line-height: 1.6; }
 .preview-banner .sub b { color: var(--text); }
 .preview-banner .cta { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.15em; padding: 8px 16px; border: 1px solid var(--gold); border-radius: 3px; }
+
+/* Form factor cards (mobile/glass/overlay) */
+.ff-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 28px; }
+.form-factor {
+  display: block; padding: 18px 20px; background: var(--bg-card);
+  border: 1px solid var(--border); border-top: 2px solid var(--gold);
+  border-radius: 4px; text-decoration: none; color: var(--text);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.form-factor:hover { transform: translateY(-2px); border-color: var(--gold); color: var(--text); }
+.form-factor .ff-icon { font-family: var(--serif); font-size: 32px; color: var(--gold); line-height: 1; margin-bottom: 6px; }
+.form-factor .ff-title { font-family: var(--serif); font-size: 18px; color: var(--gold); letter-spacing: 0.06em; margin-bottom: 4px; }
+.form-factor .ff-sub { font-size: 12px; color: var(--text-mute); margin-bottom: 4px; line-height: 1.4; }
+.form-factor .ff-meta { font-family: var(--mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.06em; }
 </style>
 </head>
 <body>
@@ -94,13 +108,34 @@ table td.desc { font-family: var(--sans); color: var(--text-mute); }
         <div class="title">Apri la simulazione dell'OS →</div>
         <div class="sub">
           Vedi com'è SOLEM da utente: boot screen, desktop navy + Cormorant, dock, app drawer,
-          chat con GAVIO, privacy dashboard, services hub, network stack, terminale.
-          <b>Tutto cliccabile.</b>
+          chat con GAVIO, privacy dashboard, services hub, network stack, infrastruttura,
+          cluster multi-arch, terminale. <b>Tutto cliccabile.</b>
         </div>
       </div>
       <div class="cta">FULLSCREEN PREVIEW →</div>
     </div>
   </a>
+
+  <div class="ff-grid">
+    <a href="/mobile" class="form-factor">
+      <div class="ff-icon">▭</div>
+      <div class="ff-title">PWA Mobile</div>
+      <div class="ff-sub">Apri su smartphone · 5 tab + GAVIO chat</div>
+      <div class="ff-meta">x86 + ARM · installabile come app</div>
+    </a>
+    <a href="/glass" class="form-factor">
+      <div class="ff-icon">◇</div>
+      <div class="ff-title">Smart Glasses</div>
+      <div class="ff-sub">Voice-first · Web Speech API + TTS reply</div>
+      <div class="ff-meta">XR HUD · risposte brevi · SSE handoff</div>
+    </a>
+    <a href="/overlay" class="form-factor">
+      <div class="ff-icon">⌘</div>
+      <div class="ff-title">GAVIO Overlay</div>
+      <div class="ff-sub">Always-on · Super+Space su desktop</div>
+      <div class="ff-meta">Floating · stato cluster live</div>
+    </a>
+  </div>
 
   <div class="stat-grid" id="stats-grid"></div>
 
