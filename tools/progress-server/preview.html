@@ -402,6 +402,35 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
 .dc-tag.dc-iot             { background: rgba(74,179,126,0.12); color: var(--ok); border: 1px solid var(--ok); }
 .arch-tag { color: var(--text-dim); border-color: var(--navy-light); background: transparent; }
 
+/* Time travel snapshot list */
+.tt-row {
+  display: flex; align-items: center; gap: 14px; padding: 12px 14px;
+  background: var(--navy-mid); border-radius: 6px; margin-bottom: 6px;
+  border-left: 3px solid var(--navy-light);
+}
+.tt-row:hover { background: var(--navy); }
+.tt-ts {
+  font-family: var(--mono); font-size: 11px; color: var(--text-mute);
+  width: 130px;
+}
+.tt-info { flex: 1; }
+.tt-info .tt-name { font-size: 13px; font-weight: 600; }
+.tt-info .tt-meta { font-size: 10px; color: var(--text-mute); font-family: var(--mono); margin-top: 2px; }
+.tt-actions { display: flex; align-items: center; gap: 8px; }
+.tt-badge {
+  font-family: var(--mono); font-size: 9px; padding: 3px 8px; border-radius: 2px;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.tt-badge.tt-healthy   { background: rgba(74,179,126,0.12); color: var(--ok); border: 1px solid var(--ok); }
+.tt-badge.tt-pre-update{ background: rgba(212,160,78,0.12); color: var(--warn); border: 1px solid var(--warn); }
+.tt-badge.tt-manual    { background: rgba(201,169,97,0.12); color: var(--gold); border: 1px solid var(--gold); }
+.tt-btn {
+  background: var(--gold); color: var(--navy-darker); border: 0;
+  padding: 5px 12px; border-radius: 4px; cursor: pointer;
+  font-family: var(--serif); font-size: 12px; letter-spacing: 0.05em;
+}
+.tt-btn:hover { background: var(--gold-bright, #e0c585); }
+
 .empty-line { color: var(--text-dim); font-size: 11px; font-style: italic; }
 
 /* Utility */
@@ -497,6 +526,7 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
       <div class="dock-icon" onclick="openApp('network')"><div class="glyph">≋</div><div class="name">NETWORK</div></div>
       <div class="dock-icon" onclick="openApp('system')"><div class="glyph">S</div><div class="name">SYSTEM</div></div>
       <div class="dock-icon" onclick="openApp('focus')"><div class="glyph">○</div><div class="name">FOCUS</div></div>
+      <div class="dock-icon" onclick="openApp('timetravel')"><div class="glyph">↺</div><div class="name">TIME</div></div>
       <div class="dock-icon" onclick="openApp('drawer')"><div class="glyph">▦</div><div class="name">APPS</div></div>
       <div class="dock-icon" onclick="openApp('terminal')"><div class="glyph">$</div><div class="name">TERM</div></div>
       <div class="dock-icon" onclick="showLock()"><div class="glyph">⊙</div><div class="name">LOCK</div></div>
@@ -944,6 +974,38 @@ function renderApp(kind, arg) {
           <div class="row"><span class="k">Comando vocale breve</span><span class="v">→ vuzix-blade (glass-companion locale)</span></div>
           <div class="row"><span class="k">Embedding nomic-embed</span><span class="v">→ beelink (RAM 32GB ok)</span></div>
           <p class="subtle p-spaced">Backend reale: <code>POST /solem/cluster/dispatch</code> · worker daemon <code>solem-cluster-worker</code> su ogni nodo · inference distribuita via <code>llama.cpp RPC</code>. Scoring penalizza edge per xlarge, premia edge-cpu per STT.</p>`
+      };
+    case 'timetravel':
+      const SNAPSHOTS = [
+        {ts:'2026-05-23 02:00', label:'Snapshot notturno', auto:true,  state:'healthy', gen:42},
+        {ts:'2026-05-22 14:30', label:'Pre-update solem-api', auto:false, state:'pre-update', gen:41},
+        {ts:'2026-05-22 02:00', label:'Snapshot notturno', auto:true,  state:'healthy', gen:40},
+        {ts:'2026-05-21 18:00', label:'Pre-rebuild kernel', auto:false, state:'pre-update', gen:39},
+        {ts:'2026-05-21 02:00', label:'Snapshot notturno', auto:true,  state:'healthy', gen:38},
+        {ts:'2026-05-20 09:15', label:'Snapshot manuale', auto:false, state:'manual',  gen:37},
+        {ts:'2026-05-20 02:00', label:'Snapshot notturno', auto:true,  state:'healthy', gen:36},
+      ];
+      return {
+        title: 'Time Travel — torna a uno stato precedente',
+        w: 660, h: 520,
+        html: `<h3>Il tuo sistema è atomico</h3>
+          <p>Ogni rebuild crea una <b>generation</b>. ZFS/btrfs snapshot ogni notte + prima di ogni update.
+          Puoi tornare indietro in qualunque momento, senza perdere dati.</p>
+          <h3 class="h3-spaced">Snapshot disponibili</h3>
+          ${SNAPSHOTS.map(s => `
+            <div class="tt-row" data-gen="${s.gen}">
+              <div class="tt-ts">${s.ts}</div>
+              <div class="tt-info">
+                <div class="tt-name">gen ${s.gen} · ${s.label}</div>
+                <div class="tt-meta">${s.auto ? 'automatico' : 'manuale'} · ${s.state}</div>
+              </div>
+              <div class="tt-actions">
+                <span class="tt-badge tt-${s.state}">${s.state}</span>
+                <button class="tt-btn" onclick="alert('Demo: rollback a generation ${s.gen}\\n\\nIn produzione esegue:\\n  sudo nixos-rebuild switch --rollback\\n  oppure scegli da GRUB al boot')">↺ rollback</button>
+              </div>
+            </div>
+          `).join('')}
+          <p class="subtle p-spaced">Backend reale: <code>GET /solem/time-travel/snapshots</code> lista, <code>POST /solem/time-travel/rollback/{gen}</code> esegue rollback. Su ZFS usa <code>sanoid</code>, su btrfs <code>snapper</code>. Snapshot conservati per 7d/4w/12m/3y.</p>`
       };
     case 'infra':
       return {
