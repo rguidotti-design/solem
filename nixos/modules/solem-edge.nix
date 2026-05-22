@@ -80,6 +80,10 @@ in {
     # ─── Banner che indica device class ───
     environment.etc."solem/edge-class".text = cfg.deviceClass;
 
+    # ─── Override esplicito per worker daemon cluster ───
+    # Il worker legge /etc/solem/device-class per popolare capabilities.
+    environment.etc."solem/device-class".text = cfg.deviceClass;
+
     # ─── Tag aggiuntivo: env per heartbeat cluster ───
     environment.sessionVariables = {
       SOLEM_DEVICE_CLASS = cfg.deviceClass;

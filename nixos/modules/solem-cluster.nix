@@ -143,8 +143,34 @@ let
         with urllib.request.urlopen(req, timeout=5) as r:
             return json.loads(r.read())
 
+    def detect_device_class(arch, ram, gpu):
+        """Auto-detect device_class da heuristics hardware.
+
+        Override via /etc/solem/device-class (file scritto da solem-edge.nix).
+        """
+        try:
+            override = open("/etc/solem/device-class").read().strip()
+            if override in ("workstation","edge-cpu","edge-gpu","iot","glass-companion","mobile"):
+                return override
+        except Exception:
+            pass
+        # Heuristic: ARM low-RAM → edge-cpu / edge-gpu
+        if arch in ("aarch64", "arm64", "armv7l"):
+            if gpu["kind"] in ("nvidia", "amd"):
+                return "edge-gpu"  # Jetson o simili
+            if ram <= 4:
+                return "iot"
+            return "edge-cpu"
+        # x86_64
+        if ram >= 16:
+            return "workstation"
+        return "workstation"  # default safe
+
     def register():
         gpu = detect_gpu()
+        arch = os.uname().machine
+        ram = ram_gb()
+        device_class = detect_device_class(arch, ram, gpu)
         payload = {
             "device_id": DEVICE_ID,
             "name": DEVICE_NAME,
@@ -152,11 +178,12 @@ let
             "capabilities": {
                 "cpu_cores": cpu_cores(),
                 "cpu_model": cpu_model(),
-                "ram_gb": ram_gb(),
+                "ram_gb": ram,
                 "disk_free_gb": disk_free_gb(),
                 "gpu": gpu,
-                "arch": os.uname().machine,
+                "arch": arch,
                 "os": "linux",
+                "device_class": device_class,
             },
             "roles": (["worker", "gpu-server"] if gpu["kind"] != "none" else ["worker"]),
         }
