@@ -52,18 +52,18 @@ in {
 
     # ── SSH server ──
     services.openssh = {
-      enable = true;
+      enable = lib.mkDefault true;
       ports = [ cfg.sshPort ];
       openFirewall = true;
       settings = {
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
-        PermitRootLogin = "no";
-        X11Forwarding = false;
-        AllowUsers = [ "gavio" ];
-        MaxAuthTries = 3;
-        ClientAliveInterval = 30;
-        ClientAliveCountMax = 3;
+        PasswordAuthentication = lib.mkDefault false;
+        KbdInteractiveAuthentication = lib.mkDefault false;
+        PermitRootLogin = lib.mkDefault "no";
+        X11Forwarding = lib.mkDefault false;
+        AllowUsers = lib.mkDefault [ "gavio" ];
+        MaxAuthTries = lib.mkDefault 3;
+        ClientAliveInterval = lib.mkDefault 30;
+        ClientAliveCountMax = lib.mkDefault 3;
       };
     };
 
@@ -92,12 +92,12 @@ in {
     powerManagement.enable = false;
 
     # ── No disk spindown (latency-sensitive per Ollama) ──
-    services.fstrim.enable = true;  # SSD trim weekly
+    services.fstrim.enable = lib.mkDefault true;  # SSD trim weekly (override su edge)
 
     # ── Watchdog hardware ──
     systemd.watchdog = lib.mkIf cfg.enableWatchdog {
-      runtimeTime = "30s";
-      rebootTime = "10min";
+      runtimeTime = lib.mkDefault "30s";
+      rebootTime = lib.mkDefault "10min";
     };
 
     # ── mDNS solem.local ──

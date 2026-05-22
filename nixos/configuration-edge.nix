@@ -21,7 +21,7 @@
 
   # Boot leggero: niente plymouth, console-only
   boot.loader.timeout = lib.mkDefault 1;
-  boot.consoleLogLevel = lib.mkDefault 3;
+  boot.consoleLogLevel = lib.mkForce 3;  # override default 7 di sd-image
 
   # ─── User edge ───
   users.users.gavio = {
