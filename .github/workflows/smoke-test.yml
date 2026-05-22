@@ -96,4 +96,31 @@ jobs:
           echo
           curl -fsS http://127.0.0.1:9000/mobile | head -c 200
           echo
+          curl -fsS http://127.0.0.1:9000/glass | head -c 200
+          echo
+          curl -fsS http://127.0.0.1:9000/overlay | head -c 200
+          echo
           kill $PID || true
+
+  nix-eval-all-arches:
+    name: Eval flake aarch64 + x86_64 (no build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+      - name: Eval x86_64 iso
+        run: |
+          nix --extra-experimental-features 'nix-command flakes' eval \
+            .#nixosConfigurations.solem-iso.config.system.build.isoImage.drvPath
+      - name: Eval x86_64 vm
+        run: |
+          nix --extra-experimental-features 'nix-command flakes' eval \
+            .#nixosConfigurations.solem-vm.config.system.build.vm.drvPath
+      - name: Eval aarch64 raspberry sd-image
+        run: |
+          nix --extra-experimental-features 'nix-command flakes' eval \
+            .#nixosConfigurations.solem-raspberry.config.system.build.sdImage.drvPath
+      - name: Eval aarch64 jetson sd-image
+        run: |
+          nix --extra-experimental-features 'nix-command flakes' eval \
+            .#nixosConfigurations.solem-jetson.config.system.build.sdImage.drvPath
