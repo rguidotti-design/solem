@@ -307,6 +307,7 @@ PREVIEW_HTML = (HERE / "preview.html").read_text(encoding="utf-8") if (HERE / "p
 OVERLAY_HTML = (HERE / "overlay.html").read_text(encoding="utf-8") if (HERE / "overlay.html").exists() else None
 MOBILE_HTML = (HERE / "mobile.html").read_text(encoding="utf-8") if (HERE / "mobile.html").exists() else None
 GLASS_HTML = (HERE / "glass.html").read_text(encoding="utf-8") if (HERE / "glass.html").exists() else None
+TOUR_HTML = (HERE / "tour.html").read_text(encoding="utf-8") if (HERE / "tour.html").exists() else None
 MANIFEST = (HERE / "manifest.webmanifest").read_text(encoding="utf-8") if (HERE / "manifest.webmanifest").exists() else None
 ICON192 = (HERE / "icon-192.svg").read_text(encoding="utf-8") if (HERE / "icon-192.svg").exists() else None
 ICON512 = (HERE / "icon-512.svg").read_text(encoding="utf-8") if (HERE / "icon-512.svg").exists() else None
@@ -325,6 +326,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send_static(MOBILE_HTML, "text/html; charset=utf-8")
         elif path == "/glass":
             self._send_static(GLASS_HTML, "text/html; charset=utf-8")
+        elif path == "/tour":
+            self._send_static(TOUR_HTML, "text/html; charset=utf-8")
         elif path == "/manifest.webmanifest":
             self._send_static(MANIFEST, "application/manifest+json")
         elif path == "/icon-192.svg":

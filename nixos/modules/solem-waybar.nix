@@ -18,6 +18,7 @@ let
     modules-left = [ "hyprland/workspaces" "hyprland/window" ];
     modules-center = [ "clock" ];
     modules-right = [
+      "custom/solem-update"
       "custom/solem"
       "cpu"
       "memory"
@@ -57,6 +58,17 @@ let
       tooltip-format = "click → http://localhost:8001/";
       on-click = "xdg-open http://127.0.0.1:8001/";
       on-click-right = "xdg-open http://127.0.0.1:9000/preview";
+    };
+
+    "custom/solem-update" = {
+      # Pulse ↻ visibile solo se ci sono update disponibili.
+      # click sinistro → solem update apply (chiede conferma in terminal)
+      # click destro → mostra dettagli updates
+      exec = "curl -fsS http://127.0.0.1:8001/solem/updates/status 2>/dev/null | jq -r 'if .pending_updates then \"↻ update\" else \"\" end' || echo ''";
+      interval = 300;       # check ogni 5 min
+      tooltip-format = "Aggiornamenti disponibili — click per applicare";
+      on-click = "foot -e bash -c 'sudo nixos-rebuild switch --flake /etc/nixos#solem-vm; read -p \"Premi enter per chiudere...\"'";
+      on-click-right = "xdg-open http://127.0.0.1:8001/solem/updates/status";
     };
 
     cpu = {
@@ -155,6 +167,17 @@ let
       border-left: 2px solid #c9a961;
       border-right: 2px solid #c9a961;
       padding: 0 14px;
+    }
+
+    #custom-solem-update {
+      color: #d4a04e;
+      padding: 0 10px;
+      border-right: 1px solid #d4a04e;
+      animation: updatepulse 2s ease-in-out infinite;
+    }
+    @keyframes updatepulse {
+      0%, 100% { opacity: 1; }
+      50%      { opacity: 0.55; }
     }
 
     #battery.critical {
