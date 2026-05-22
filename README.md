@@ -16,11 +16,35 @@ preinstallate e libertà operativa totale.
 - **Versione:** 0.1.0-step0
 - **Roadmap:** vedi [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (sezione Layer)
 - **Target hardware finale:** Beelink mini-PC (Step 1, estate 2026)
-- **Target attuale:** VM testabile senza intaccare l'host
+- **Form factor supportati:** x86_64 workstation/server · ARM64 Raspberry Pi 4/5 · ARM64 Jetson Nano/Orin · PWA smart glasses (browser)
+- **Cost:** 0 € (100% FOSS, niente cloud paid services)
+
+### Artifacts buildati (al 2026-05-21, commit `a9cdcfd`)
+- ✅ **ISO x86_64** bootable (5.5 GB) — `nix build .#iso`
+- ✅ **Eval verde** per Raspberry, Jetson, VM, ISO
+- ⏳ SD-image ARM64 da buildare on-demand (`nix build .#raspberry` / `.#jetson`)
+
+### Stats
+- 89 moduli NixOS opt-in
+- 56 layer Python (FastAPI single-responsibility, GAVIO è l'unica AI)
+- 240+ endpoint API
+- 98 test in 18 file
+- 10 ADR architetturali
 
 ---
 
 ## Quick start
+
+Tre modi:
+
+| Cosa | Comando | Per chi |
+|---|---|---|
+| VM rapida (test) | `nix run .#vm` | Sviluppatori, esplorare |
+| ISO USB installabile | `nix build .#iso` → `dd` su USB | Install permanente |
+| Preview browser cliccabile | `python tools/progress-server/server.py` → `http://localhost:9000/preview` | Vedere com'è SOLEM senza installarlo |
+| PWA mobile/glass | `http://solem.local:8001/mobile` o `/glass` | Smartphone, smart glass |
+
+Guida completa: **[INSTALL.md](INSTALL.md)**
 
 ### Opzione A — Con WSL2 + Nix (raccomandato, più rapido)
 
