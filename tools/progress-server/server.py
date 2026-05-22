@@ -246,6 +246,62 @@ def activity() -> dict:
     }
 
 
+def build_status() -> dict:
+    """Stato build artifacts: ISO presente? SD-image? (robusto su Windows: il symlink WSL può non risolvere)."""
+    iso_files = []
+    sd_files = []
+    has_iso = False
+    has_sd = False
+
+    try:
+        iso_path = ROOT / "result" / "iso"
+        if iso_path.exists():
+            for f in iso_path.glob("*.iso"):
+                try:
+                    iso_files.append({
+                        "name": f.name,
+                        "size_gb": round(f.stat().st_size / (1024**3), 2),
+                    })
+                    has_iso = True
+                except OSError:
+                    continue
+    except OSError:
+        pass
+
+    try:
+        sd_path = ROOT / "result" / "sd-image"
+        if sd_path.exists():
+            for f in sd_path.glob("*.img"):
+                try:
+                    sd_files.append({
+                        "name": f.name,
+                        "size_gb": round(f.stat().st_size / (1024**3), 2),
+                    })
+                    has_sd = True
+                except OSError:
+                    continue
+    except OSError:
+        pass
+
+    return {
+        "iso_built": has_iso,
+        "iso_files": iso_files,
+        "sd_image_built": has_sd,
+        "sd_image_files": sd_files,
+        "build_status_doc": "docs/BUILD-STATUS.md",
+        "build_commands": {
+            "iso": "nix build .#iso",
+            "vm": "nix run .#vm",
+            "raspberry": "nix build .#raspberry",
+            "jetson": "nix build .#jetson",
+        },
+        "note": (
+            "Su Windows host il symlink WSL 'result/' può non risolvere. "
+            "Per verifica diretta: `wsl ls -lh /mnt/c/Users/guido/Desktop/solem/result/iso/`"
+        ),
+    }
+
+
 HTML = (HERE / "index.html").read_text(encoding="utf-8") if (HERE / "index.html").exists() else None
 PREVIEW_HTML = (HERE / "preview.html").read_text(encoding="utf-8") if (HERE / "preview.html").exists() else None
 OVERLAY_HTML = (HERE / "overlay.html").read_text(encoding="utf-8") if (HERE / "overlay.html").exists() else None
@@ -289,6 +345,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(list_tests())
         elif path == "/api/activity":
             self._send_json(activity())
+        elif path == "/api/build-status":
+            self._send_json(build_status())
         else:
             self.send_error(404)
 
