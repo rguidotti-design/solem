@@ -386,6 +386,21 @@ html, body { height: 100%; width: 100%; overflow: hidden; background: #000; font
 .cluster-node .badge { font-size: 9px; padding: 3px 8px; border-radius: 3px; font-family: var(--mono); letter-spacing: 0.08em; }
 .cluster-node .badge.gpu { background: rgba(201,169,97,0.15); color: var(--gold); border: 1px solid var(--gold); }
 .cluster-node .badge.cpu { background: rgba(74,127,196,0.15); color: var(--navy-light); border: 1px solid var(--navy-light); }
+.cluster-node .load-bar { display: block; height: 100%; background: var(--gold); transition: width 0.3s; width: 0%; }
+
+/* Device class + arch tags */
+.dc-tag, .arch-tag {
+  display: inline-block; padding: 1px 6px; font-size: 9px; font-family: var(--mono);
+  letter-spacing: 0.08em; text-transform: uppercase; border-radius: 2px;
+  margin-left: 6px; vertical-align: middle;
+}
+.dc-tag.dc-workstation     { background: rgba(201,169,97,0.12); color: var(--gold); border: 1px solid var(--gold); }
+.dc-tag.dc-edge-cpu        { background: rgba(74,127,196,0.12); color: #6b8fc0; border: 1px solid #6b8fc0; }
+.dc-tag.dc-edge-gpu        { background: rgba(212,160,78,0.15); color: var(--warn); border: 1px solid var(--warn); }
+.dc-tag.dc-mobile          { background: rgba(138,150,173,0.12); color: var(--text-mute); border: 1px solid var(--text-mute); }
+.dc-tag.dc-glass-companion { background: rgba(170,140,200,0.12); color: #b89bc8; border: 1px solid #b89bc8; }
+.dc-tag.dc-iot             { background: rgba(74,179,126,0.12); color: var(--ok); border: 1px solid var(--ok); }
+.arch-tag { color: var(--text-dim); border-color: var(--navy-light); background: transparent; }
 
 .empty-line { color: var(--text-dim); font-size: 11px; font-style: italic; }
 
@@ -725,6 +740,12 @@ function openApp(kind, arg) {
   document.getElementById('windows').appendChild(w);
   document.getElementById('active-title').textContent = body.title;
 
+  // Imposta width load-bar dal data-load (evita inline style)
+  w.querySelectorAll('.cluster-node[data-load] .load-bar').forEach(bar => {
+    const node = bar.closest('.cluster-node');
+    bar.style.width = (node.dataset.load || 0) + '%';
+  });
+
   if (kind === 'gavio') initGavioChat(w);
 }
 
@@ -878,11 +899,14 @@ function renderApp(kind, arg) {
       };
     case 'cluster':
       const NODES = [
-        {name:'beelink (gateway)',    icon:'⌂', cores:8,  ram:32, gpu:'integrated',         vram:0,  role:'gateway + worker', load:18, used_ram:42, online:true},
-        {name:'laptop-lavoro',        icon:'▭', cores:8,  ram:16, gpu:'none',               vram:0,  role:'worker',           load:55, used_ram:68, online:true},
-        {name:'server-nvidia (futuro)', icon:'◢', cores:16, ram:64, gpu:'NVIDIA RTX 4090',    vram:24, role:'gpu-server',       load:8,  used_ram:22, online:true, hasGpu:true},
-        {name:'iphone-ruben (PWA)',   icon:'▤', cores:6,  ram:6,  gpu:'integrated',         vram:0,  role:'worker leggero',   load:12, used_ram:35, online:true},
-        {name:'tablet-vecchio',       icon:'▢', cores:4,  ram:4,  gpu:'none',               vram:0,  role:'worker',           load:0,  used_ram:0,  online:false},
+        {name:'beelink (gateway)',    icon:'⌂', cores:8,  ram:32, gpu:'integrated',         vram:0,  role:'gateway + worker', load:18, used_ram:42, online:true, dc:'workstation', arch:'x86_64'},
+        {name:'laptop-lavoro',        icon:'▭', cores:8,  ram:16, gpu:'none',               vram:0,  role:'worker',           load:55, used_ram:68, online:true, dc:'workstation', arch:'x86_64'},
+        {name:'server-nvidia (futuro)', icon:'◢', cores:16, ram:64, gpu:'NVIDIA RTX 4090',    vram:24, role:'gpu-server',       load:8,  used_ram:22, online:true, hasGpu:true, dc:'workstation', arch:'x86_64'},
+        {name:'raspberry-pi-5',       icon:'⊡', cores:4,  ram:8,  gpu:'VideoCore',          vram:0,  role:'edge IoT',         load:24, used_ram:38, online:true, dc:'edge-cpu',  arch:'aarch64'},
+        {name:'jetson-orin-nano',     icon:'◈', cores:6,  ram:8,  gpu:'NVIDIA Tegra Ampere',vram:8,  role:'edge AI camera',   load:31, used_ram:55, online:true, hasGpu:true, dc:'edge-gpu', arch:'aarch64'},
+        {name:'iphone-ruben (PWA)',   icon:'▤', cores:6,  ram:6,  gpu:'integrated',         vram:0,  role:'worker leggero',   load:12, used_ram:35, online:true, dc:'mobile',   arch:'arm64'},
+        {name:'vuzix-blade (glass)',  icon:'◇', cores:4,  ram:2,  gpu:'mobile',             vram:0,  role:'voice companion',  load:5,  used_ram:62, online:true, dc:'glass-companion', arch:'arm64'},
+        {name:'tablet-vecchio',       icon:'▢', cores:4,  ram:4,  gpu:'none',               vram:0,  role:'worker',           load:0,  used_ram:0,  online:false, dc:'mobile', arch:'arm64'},
       ];
       const totalCores = NODES.filter(n=>n.online).reduce((s,n)=>s+n.cores,0);
       const totalRam = NODES.filter(n=>n.online).reduce((s,n)=>s+n.ram,0);
@@ -903,22 +927,23 @@ function renderApp(kind, arg) {
           </div>
           <h3 class="h3-spaced">Topologia</h3>
           ${NODES.map(n => `
-            <div class="cluster-node ${n.online?'':'offline'}">
+            <div class="cluster-node ${n.online?'':'offline'}" data-load="${n.online?n.load:0}">
               <div class="icon">${n.icon}</div>
               <div class="info">
-                <div class="n">${n.name}</div>
+                <div class="n">${n.name} <span class="dc-tag dc-${n.dc}">${n.dc}</span> <span class="arch-tag">${n.arch}</span></div>
                 <div class="d">${n.cores}c · ${n.ram}GB RAM · ${n.gpu}${n.vram?` (${n.vram}GB VRAM)`:''} · ${n.role}</div>
               </div>
-              <div class="load"><span style="width:${n.online?n.load:0}%"></span></div>
+              <div class="load"><span class="load-bar"></span></div>
               <div class="badge ${n.hasGpu?'gpu':'cpu'}">${n.hasGpu?'GPU':'CPU'}</div>
             </div>
           `).join('')}
-          <h3 class="h3-spaced">Esempio routing</h3>
-          <div class="row"><span class="k">GAVIO chiede inference llama-70b</span><span class="v">→ server-nvidia (24GB VRAM)</span></div>
-          <div class="row"><span class="k">Embedding nomic-embed</span><span class="v">→ beelink (locale, RAM ok)</span></div>
-          <div class="row"><span class="k">STT whisper (microfono attivo)</span><span class="v">→ laptop-lavoro (low latency)</span></div>
-          <div class="row"><span class="k">Vision Llava (foto smartphone)</span><span class="v">→ server-nvidia (GPU veloce)</span></div>
-          <p class="subtle p-spaced">Backend reale: <code>POST /solem/cluster/dispatch</code> · worker daemon <code>solem-cluster-worker</code> su ogni nodo · inference distribuita via <code>llama.cpp RPC</code> (porta 50052).</p>`
+          <h3 class="h3-spaced">Esempio routing (device-class aware)</h3>
+          <div class="row"><span class="k">LLM inference xlarge (70b)</span><span class="v">→ server-nvidia (24GB VRAM, workstation)</span></div>
+          <div class="row"><span class="k">Vision small (foto camera)</span><span class="v">→ jetson-orin-nano (edge-gpu +50)</span></div>
+          <div class="row"><span class="k">STT whisper tiny (microfono)</span><span class="v">→ raspberry-pi-5 (edge-cpu +40 low latency)</span></div>
+          <div class="row"><span class="k">Comando vocale breve</span><span class="v">→ vuzix-blade (glass-companion locale)</span></div>
+          <div class="row"><span class="k">Embedding nomic-embed</span><span class="v">→ beelink (RAM 32GB ok)</span></div>
+          <p class="subtle p-spaced">Backend reale: <code>POST /solem/cluster/dispatch</code> · worker daemon <code>solem-cluster-worker</code> su ogni nodo · inference distribuita via <code>llama.cpp RPC</code>. Scoring penalizza edge per xlarge, premia edge-cpu per STT.</p>`
       };
     case 'infra':
       return {
