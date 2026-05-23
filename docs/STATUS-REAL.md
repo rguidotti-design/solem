@@ -93,13 +93,23 @@ Se uno qualunque di questi fallisce, il messaggio Nix dice **esattamente** quale
 
 ---
 
-## Setup Cachix (free, opzionale ma raccomandato)
+## Setup Cachix — già configurato ✅
 
-1. Vai su https://cachix.org → crea cache "solem" (free, 10 GB)
-2. Ottieni `CACHIX_AUTH_TOKEN`
-3. Aggiungilo in `Settings → Secrets and variables → Actions` del repo
-4. Sostituisci `PLACEHOLDER_KEY_DA_AGGIUNGERE` in `.github/workflows/build.yml` con la public key del tuo cache
-5. Da quel momento ogni build CI **sale a cache**, e build successive sono ~ 10x più veloci
+- Cache: `solem.cachix.org` (free tier 10 GB)
+- Public key trusted ovunque (CI, sistema installato, dev shell):
+  ```
+  solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
+  ```
+- È una chiave **pubblica** di firma: serve a verificare l'integrità dei binari
+  scaricati dal cache. Non è un secret.
+- Per **pubblicare** sul cache (CI push), serve `CACHIX_AUTH_TOKEN` come secret
+  GitHub (l'utente lo configura via Settings → Secrets → Actions).
+- Anche senza token, ogni client può **leggere** dal cache → build 10× più veloci.
+
+Substituters configurati di default in [solem-core.nix](../nixos/modules/solem-core.nix):
+- `cache.nixos.org` (ufficiale)
+- `solem.cachix.org` (build SOLEM)
+- `nix-community.cachix.org` (home-manager e community)
 
 ---
 

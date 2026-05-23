@@ -56,7 +56,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             substituters = https://cache.nixos.org/ https://solem.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:PLACEHOLDER_KEY_DA_AGGIUNGERE=
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
 
       - name: Setup Cachix cache (free tier 10 GB)
         uses: cachix/cachix-action@v15
@@ -92,7 +92,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             substituters = https://cache.nixos.org/ https://solem.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
 
       - uses: cachix/cachix-action@v15
         continue-on-error: true
@@ -138,7 +138,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             substituters = https://cache.nixos.org/ https://solem.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
 
       - uses: cachix/cachix-action@v15
         continue-on-error: true
