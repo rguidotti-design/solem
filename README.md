@@ -24,12 +24,18 @@ preinstallate e libertà operativa totale.
 - ✅ **Eval verde** per Raspberry, Jetson, VM, ISO
 - ⏳ SD-image ARM64 da buildare on-demand (`nix build .#raspberry` / `.#jetson`)
 
-### Stats
-- 89 moduli NixOS opt-in
-- 56 layer Python (FastAPI single-responsibility, GAVIO è l'unica AI)
-- 240+ endpoint API
-- 98 test in 18 file
-- 10 ADR architetturali
+### Stats (verificato eseguendo `pytest tests/ -q`)
+- **92 moduli NixOS** opt-in
+- **60 layer Python** (FastAPI single-responsibility)
+- **262 endpoint API**
+- **141 test passati / 0 falliti / 1 skipped** (su WSL, in-memory SQLite)
+- **10 ADR** architetturali
+- **23 docs** (INSTALL.md, USER-GUIDE.md, BUILD-STATUS.md, AI-BACKEND.md, …)
+
+### Architettura AI
+SOLEM è un **OS**, non un'AI. Pre-integra **GAVIO** (l'AI personale dell'autore) ma è
+agnostico: sostituibile con qualsiasi backend chat-compatible (Ollama, LM Studio, llama.cpp,
+Claude API) cambiando una sola env var (`GAVIO_API_URL`). Vedi [docs/AI-BACKEND.md](docs/AI-BACKEND.md).
 
 ---
 

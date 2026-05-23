@@ -46,7 +46,7 @@ TASK_TIMEOUT_SEC = 1800      # 30 min max per task
 
 
 class TaskRegister(BaseModel):
-    task_id: str = Field(..., min_length=4)
+    task_id: str = Field(..., min_length=1, max_length=128)
     task_kind: Literal["llm_inference", "embedding", "stt", "tts", "vision",
                        "generic_cpu", "generic_gpu"] = "generic_cpu"
     device_id: str

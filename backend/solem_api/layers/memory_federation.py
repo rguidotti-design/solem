@@ -123,10 +123,29 @@ def _save(c: sqlite3.Connection, m: Memory) -> None:
 # ─── Vector clock helpers ─────────────────────────────────────────────
 
 
-def _bump_vc(vc: dict[str, int]) -> dict[str, int]:
-    """Incrementa il vector clock per QUESTO device."""
+def _max_local_counter(c: sqlite3.Connection) -> int:
+    """Trova il counter più alto per DEVICE_ID corrente in tutte le memorie."""
+    max_n = 0
+    for row in c.execute("SELECT vector_clock FROM memories"):
+        try:
+            vc = json.loads(row["vector_clock"])
+            max_n = max(max_n, vc.get(DEVICE_ID, 0))
+        except (json.JSONDecodeError, TypeError):
+            continue
+    return max_n
+
+
+def _bump_vc(vc: dict[str, int], c: sqlite3.Connection | None = None) -> dict[str, int]:
+    """Incrementa il vector clock per QUESTO device.
+
+    Se c è passato, usa il max counter globale dal DB. Altrimenti incrementa
+    dal vc dato (utile per update di una memoria esistente).
+    """
     new = dict(vc)
-    new[DEVICE_ID] = new.get(DEVICE_ID, 0) + 1
+    if c is not None:
+        new[DEVICE_ID] = max(new.get(DEVICE_ID, 0), _max_local_counter(c)) + 1
+    else:
+        new[DEVICE_ID] = new.get(DEVICE_ID, 0) + 1
     return new
 
 
@@ -181,9 +200,9 @@ async def add(m: Memory) -> Memory:
     m.device_origin = DEVICE_ID
     m.created_at = m.created_at or datetime.now(timezone.utc).isoformat()
     m.updated_at = datetime.now(timezone.utc).isoformat()
-    m.vector_clock = _bump_vc(m.vector_clock)
     c = _db()
     try:
+        m.vector_clock = _bump_vc(m.vector_clock, c)
         _save(c, m)
         return m
     finally:
@@ -214,7 +233,7 @@ async def update(mem_id: str, patch: Memory) -> Memory:
         cur.kind = patch.kind or cur.kind
         cur.tags = patch.tags or cur.tags
         cur.updated_at = datetime.now(timezone.utc).isoformat()
-        cur.vector_clock = _bump_vc(cur.vector_clock)
+        cur.vector_clock = _bump_vc(cur.vector_clock, c)
         _save(c, cur)
         return cur
     finally:
@@ -231,7 +250,7 @@ async def remove(mem_id: str) -> dict:
         cur = _to_memory(row)
         cur.tombstoned = True
         cur.updated_at = datetime.now(timezone.utc).isoformat()
-        cur.vector_clock = _bump_vc(cur.vector_clock)
+        cur.vector_clock = _bump_vc(cur.vector_clock, c)
         _save(c, cur)
         return {"tombstoned": True, "id": mem_id}
     finally:
