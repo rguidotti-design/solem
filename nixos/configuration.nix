@@ -52,6 +52,16 @@
     ./modules/solem-paperless.nix          # Paperless-ngx OCR archive (opt-in)
     ./modules/solem-data-engineering.nix   # DuckDB + Visidata + Arrow + MinIO/ClickHouse
     ./modules/solem-backup-gui.nix         # Pika + Vorta + Déjà Dup + Syncthing tray
+
+    # ── COMPETITIVE PARITY P0 (chiude gap vs macOS/Windows) ──────────
+    ./modules/solem-spotlight.nix          # global search Super+Space (anyrun + GAVIO plugin)
+    ./modules/solem-quick-settings.nix     # eww popover WiFi/BT/VPN/Focus toggle
+    ./modules/solem-airdrop.nix            # LocalSend + Warpinator file-share LAN
+    ./modules/solem-battery-pro.nix        # TLP + charge limit 80% + `solem-battery`
+    ./modules/solem-multi-monitor.nix      # kanshi auto-profile + `solem-monitor`
+    ./modules/solem-touchpad-pro.nix       # libinput tuning + fusuma 3/4-finger
+    ./modules/solem-fingerprint.nix        # fprintd + PAM login/sudo/lock
+    ./modules/solem-cloud-personal.nix     # Nextcloud+Joplin+Vaultwarden+Radicale+Syncthing
   ];
 
   # ── PROFILO COMPLETO — "creator" ────────────────────────────────────
@@ -78,6 +88,17 @@
   solem.typography.enable     = true;   # Typst + Pandoc + Quarto + `solem-doc`
   solem.chatClients.enable    = true;   # Element + SimpleX + Jami + Delta Chat
   solem.backupGui.enable      = true;   # Pika + Vorta + Syncthing tray + Grsync
+
+  # Competitive parity P0 (default attivi)
+  solem.spotlight.enable      = true;   # Super+Space global search
+  solem.quickSettings.enable  = true;   # eww popover toggle
+  solem.airdrop.enable        = true;   # LocalSend + Warpinator
+  solem.multiMonitor.enable   = true;   # kanshi profili
+  solem.touchpadPro.enable    = true;   # libinput + fusuma gesture
+  # opt-in granulare (hardware/scenario specifico):
+  # solem.batteryPro.enable    = true;  # laptop only
+  # solem.fingerprint.enable   = true;  # solo se hardware lettore presente
+  # solem.cloudPersonal.enable = true;  # solo nodo "server" Beelink
   # opt-in granulari (off di default per peso/hardware-specifico):
   # solem.makers.printing3d   = true;   # CAD/3D-print (~ 2 GB)
   # solem.radioSdr.enable     = true;   # SDR (richiede dongle USB)
