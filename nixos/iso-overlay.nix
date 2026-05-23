@@ -2,11 +2,11 @@
 
 # SOLEM ISO OVERLAY — modificazioni per la live ISO.
 #
-# Single responsibility: SOLO le differenze rispetto alla config standard:
-# - disabilita servizi che richiedono /etc/solem persistente
+# Single responsibility: SOLO le differenze rispetto a configuration-vm-minimal:
 # - utente live "gavio" con password "gavio"
 # - banner di benvenuto getty
 # - Calamares installer pre-installato (FOSS, GPL-3.0)
+# - branding navy/gold per Calamares
 
 let
   welcomeBanner = ''
@@ -23,20 +23,12 @@ let
     ╚════════════════════════════════════════════════════╝
   '';
 in {
-  # === Disable servizi che non hanno senso in live ===
-  systemd.services.gavio.enable = lib.mkForce false;
-  services.xserver.enable = lib.mkForce false;
-  services.nextcloud.enable = lib.mkForce false;
-  services.immich.enable = lib.mkForce false;
-  services.postgresql.enable = lib.mkForce false;
-  services.vaultwarden.enable = lib.mkForce false;
-  services.joplin-server.enable = lib.mkForce false;
-  services.radicale.enable = lib.mkForce false;
-  services.paperless.enable = lib.mkForce false;
-  services.opensnitch.enable = lib.mkForce false;
-
   # === User live ===
   users.users.gavio.initialPassword = lib.mkForce "gavio";
+  users.users.gavio.isSystemUser = lib.mkForce false;
+  users.users.gavio.isNormalUser = lib.mkForce true;
+
+  # Network: NetworkManager su live
   networking.wireless.enable = lib.mkForce false;
   networking.networkmanager.enable = lib.mkForce true;
   services.getty.greetingLine = welcomeBanner;
@@ -46,18 +38,6 @@ in {
     calamares-nixos
     calamares-nixos-extensions
   ];
-
-  # Helper "solem-install" che richiama Calamares con branding SOLEM
-  environment.etc."solem/install.sh" = {
-    mode = "0755";
-    text = ''
-      #!/usr/bin/env bash
-      echo "── SOLEM Installer ──"
-      echo "Calamares partirà tra 3 secondi..."
-      sleep 3
-      exec sudo -E calamares
-    '';
-  };
 
   # === Branding SOLEM per Calamares (navy + gold) ===
   environment.etc."calamares/branding/solem/branding.desc" = {
@@ -84,11 +64,23 @@ in {
     '';
   };
 
-  # Nessun firmware proprietario di default nella ISO (FOSS-only)
+  # Helper "solem-install" lancia Calamares
+  environment.etc."solem/install.sh" = {
+    mode = "0755";
+    text = ''
+      #!/usr/bin/env bash
+      echo "── SOLEM Installer ──"
+      echo "Calamares partirà tra 3 secondi..."
+      sleep 3
+      exec sudo -E calamares
+    '';
+  };
+
+  # Firmware redistribuibile incluso (Wi-Fi/Intel/Realtek FOSS)
   hardware.enableRedistributableFirmware = lib.mkDefault true;
   hardware.enableAllFirmware = lib.mkDefault false;
 
-  # ISO compression (più piccola)
+  # ISO settings
   isoImage.squashfsCompression = "zstd -Xcompression-level 6";
   isoImage.isoName = lib.mkForce "solem-${config.system.nixos.release}-x86_64.iso";
   isoImage.volumeID = lib.mkForce "SOLEM_2411";

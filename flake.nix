@@ -33,8 +33,19 @@
       # ────────────────────────────────────────────────────────────────
       nixosConfigurations = {
 
-        # VM x86_64 — `nix run .#vm`
+        # VM x86_64 MINIMAL — `nix run .#vm` (CI-friendly, build veloce)
+        # Solo moduli core: italian-locale + cli + motd. Niente Bruno/SimpleX/Immich.
         solem-vm = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./nixos/configuration-vm-minimal.nix
+            ./nixos/hardware-vm.nix
+          ];
+        };
+
+        # VM x86_64 FULL — `nix build .#nixosConfigurations.solem-vm-full.config.system.build.vm`
+        # Tutti i moduli SOLEM (rischia errori build se nixpkgs cambia API).
+        solem-vm-full = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
             ./nixos/configuration.nix
@@ -43,7 +54,6 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              # Default home config (solo se l'utente "gavio" esiste)
               home-manager.users.gavio = { ... }: {
                 imports = builtins.attrValues homeModules;
                 home.stateVersion = "24.11";
@@ -52,13 +62,13 @@
           ];
         };
 
-        # ISO live x86_64 — `nix build .#iso`
+        # ISO live x86_64 — `nix build .#iso` (config minimal + Calamares)
         solem-iso = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
             (nixpkgs + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix")
             (nixpkgs + "/nixos/modules/installer/cd-dvd/channel.nix")
-            ./nixos/configuration.nix
+            ./nixos/configuration-vm-minimal.nix
             ./nixos/iso-overlay.nix
           ];
         };

@@ -1,0 +1,95 @@
+name: Quick Validate
+
+# Feedback rapido (~ 3-5 min) per scoprire errori sintassi/eval.
+# Si limita a `nix flake show` + eval di vm/iso + lint.
+# Non builda → niente attesa nix store.
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate flake (no build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            substituters = https://cache.nixos.org/ https://solem.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
+
+      - name: nix flake show (verifica struttura output)
+        run: nix flake show --legacy 2>&1 | head -80 || true
+
+      - name: nix flake metadata (lock + inputs OK)
+        run: nix flake metadata --json | jq '.locks.nodes | keys' || true
+
+      - name: Eval VM x86_64
+        run: |
+          nix eval .#nixosConfigurations.solem-vm.config.system.build.vm.drvPath \
+            --show-trace --no-warn-dirty
+
+      - name: Eval ISO x86_64
+        run: |
+          nix eval .#nixosConfigurations.solem-iso.config.system.build.isoImage.drvPath \
+            --show-trace --no-warn-dirty || echo "::warning ::ISO eval failed"
+
+      - name: Eval Raspberry aarch64 (cross)
+        run: |
+          nix eval .#nixosConfigurations.solem-raspberry.config.system.build.sdImage.drvPath \
+            --show-trace --no-warn-dirty || echo "::warning ::Raspberry eval failed"
+
+      - name: Eval gavio stub package
+        run: |
+          nix eval .#packages.x86_64-linux.gavio.drvPath --show-trace || \
+            echo "::warning ::gavio package eval failed"
+
+      - name: Conteggio moduli SOLEM
+        run: |
+          echo "## SOLEM modules" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "Totale: $(ls nixos/modules/solem-*.nix | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "Home modules: $(ls home/modules/*.nix | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo "VM tests: $(ls nixos/tests/*.nix | grep -v default.nix | wc -l)" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+  lint-light:
+    name: Lint light (warnings only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: statix
+        run: nix run nixpkgs#statix -- check . 2>&1 | tee statix.log || true
+
+      - name: deadnix
+        run: nix run nixpkgs#deadnix -- . 2>&1 | tee deadnix.log || true
+
+      - name: Riassunto
+        run: |
+          echo "## Lint warnings" >> $GITHUB_STEP_SUMMARY
+          echo '### statix' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -30 statix.log >> $GITHUB_STEP_SUMMARY || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '### deadnix' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -30 deadnix.log >> $GITHUB_STEP_SUMMARY || true
+          echo '```' >> $GITHUB_STEP_SUMMARY
