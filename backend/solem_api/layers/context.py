@@ -36,7 +36,7 @@ DEFAULT_USER_ID = "00000000-0000-0000-0000-000000000001"
 
 class ContextSnapshot(BaseModel):
     user_id: str = DEFAULT_USER_ID
-    ts: str
+    ts: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     location: str | None = Field(None, description="es. 'casa', 'ufficio', coordinate, BSSID WiFi")
     device_id: str | None = None
     active_role: str | None = None
@@ -134,13 +134,14 @@ async def push_snapshot(snap: ContextSnapshot) -> ContextSnapshot:
 
 
 @router.get("/history", response_model=list[ContextSnapshot])
-async def history(limit: int = Query(50, ge=1, le=500)) -> list[ContextSnapshot]:
-    """Ultimi N snapshot per analisi pattern."""
+async def history(limit: int = Query(50, ge=1)) -> list[ContextSnapshot]:
+    """Ultimi N snapshot per analisi pattern. Clamp a 500 lato server."""
+    limit = min(limit, 500)
     c = get_conn()
     rows = c.execute(
         """SELECT * FROM context_snapshots
            WHERE user_id = ?
-           ORDER BY ts DESC LIMIT ?""",
+           ORDER BY ts DESC, id DESC LIMIT ?""",
         (DEFAULT_USER_ID, limit),
     ).fetchall()
     return [

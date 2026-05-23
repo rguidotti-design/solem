@@ -40,8 +40,8 @@ SESSION_TTL_SEC = 86400  # 24h
 
 
 class CreateAccount(BaseModel):
-    username: str = Field(..., min_length=2, max_length=64)
-    display_name: str = Field(..., max_length=128)
+    username: str = Field(..., min_length=1, max_length=64)
+    display_name: str = Field(..., min_length=1, max_length=128)
     public_key_b64: str = Field(..., description="Ed25519 pubkey base64 raw 32 byte")
 
 

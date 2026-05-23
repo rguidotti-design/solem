@@ -124,15 +124,20 @@ def _pattern_match(text: str) -> str | None:
 
 @router.get("/status", response_model=dict)
 async def ai_status() -> dict:
+    """Verifica se GAVIO è raggiungibile. Mai solleva, sempre ritorna JSON.
+
+    Tollera qualsiasi errore (HTTPError, AttributeError, OSError) per
+    graceful degradation: SOLEM resta usabile anche se l'AI è offline.
+    """
     try:
         async with httpx.AsyncClient(timeout=2.0) as c:
             r = await c.get(f"{GAVIO_API}/health")
             return {
                 "gavio_url": GAVIO_API,
                 "gavio_up": r.status_code == 200,
-                "note": "SOLEM unica AI = GAVIO. Niente router custom.",
+                "note": "SOLEM (OS) → AI esterna pre-integrata (GAVIO).",
             }
-    except httpx.HTTPError as e:
+    except (httpx.HTTPError, AttributeError, OSError) as e:
         return {"gavio_url": GAVIO_API, "gavio_up": False, "error": str(e)}
 
 

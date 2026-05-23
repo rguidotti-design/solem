@@ -38,7 +38,7 @@ HEARTBEAT_TTL_SEC = 90  # device offline se nessun beat per 90s
 
 
 class GPUInfo(BaseModel):
-    kind: Literal["none", "nvidia", "amd", "intel"] = "none"
+    kind: Literal["none", "nvidia", "amd", "intel", "integrated", "mobile"] = "none"
     model: str | None = None
     vram_gb: float = 0.0
 
@@ -58,7 +58,7 @@ class DeviceCapabilities(BaseModel):
 
 
 class DeviceRegister(BaseModel):
-    device_id: str = Field(..., min_length=4)
+    device_id: str = Field(..., min_length=1, max_length=64)
     name: str = Field(..., min_length=1)
     endpoint: str = Field(..., description="es. http://10.42.0.10:8001 (mesh-only)")
     capabilities: DeviceCapabilities
@@ -187,17 +187,22 @@ def _score(dev: Device, req: DispatchRequest) -> float:
     # ── Device class awareness (multi-arch) ──
     dc = getattr(cap, "device_class", "workstation")
     if dc == "workstation":
-        score += 10  # bias verso workstation per workload pesanti
+        # Bias generico, ma neutro per task che hanno destination edge ottimale
+        if not (req.task_kind in ("stt", "tts") and req.size_hint == "tiny"):
+            score += 10
     elif dc == "edge-gpu":
-        # Jetson Nano/Orin: bonus per vision/embedding leggeri
+        # Jetson Nano/Orin: bonus forte per vision/embedding leggeri
+        # (deve battere il workstation bias +10 anche con meno CPU/RAM)
         if req.task_kind in ("vision", "embedding", "llm_inference") and req.size_hint in ("tiny", "small"):
-            score += 50
+            score += 100
         elif req.size_hint in ("large", "xlarge"):
             score -= 30  # troppo pesante per edge GPU
     elif dc == "edge-cpu":
         # Raspberry: penalizza task pesanti, premia STT/TTS/IoT
+        # Bonus alto per stt/tts tiny: edge è preferibile per latency
+        # (microfono fisicamente sul device) anche se workstation ha più RAM.
         if req.task_kind in ("stt", "tts") and req.size_hint == "tiny":
-            score += 40
+            score += 120
         if req.size_hint in ("medium", "large", "xlarge"):
             score -= 60  # mai task grandi su Pi
     elif dc == "iot":

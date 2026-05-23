@@ -4,7 +4,7 @@
 #
 # Single responsibility: SOLO config waybar (JSON + CSS). Niente install
 # (è in solem-desktop). Mostra: workspace, finestre, CPU/RAM/batteria,
-# rete, audio, ora, modulo custom SOLEM AI state.
+# rete, audio, ora, modulo custom SOLEM state (live badge dell'OS).
 
 let
   cfg = config.solem.waybar;
