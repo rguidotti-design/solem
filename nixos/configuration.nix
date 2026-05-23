@@ -37,6 +37,15 @@
     ./modules/solem-doctor.nix       # `solem-doctor` diagnostica completa (30+ check)
     ./modules/solem-keep.nix         # watchdog servizi core + event bus integration
     ./modules/solem-layers.nix
+
+    # ── FOSS USER TOOLKIT (opt-in granulare, 100% gratuito) ──────────
+    ./modules/solem-system-tools.nix       # filelight/cpu-x/stress-ng + `solem-clean`
+    ./modules/solem-privacy-tools.nix      # GPG/2FA/wipe/YubiKey + `solem-priv`
+    ./modules/solem-developer-extras.nix   # Bruno/Hugo/tea/DBeaver/podman
+    ./modules/solem-multimedia-tools.nix   # yt-dlp/ffmpeg/GIMP/Kdenlive + `solem-media`
+    ./modules/solem-readers.nix            # Newsboat/Calibre/Logseq/Anki (+FreshRSS opt)
+    ./modules/solem-makers.nix             # 3D-print/CAD/GIS/Education/Electronics
+    ./modules/solem-italian-locale.nix     # it_IT.UTF-8 + hunspell + LanguageTool
   ];
 
   # ── PROFILO COMPLETO — "creator" ────────────────────────────────────
@@ -52,6 +61,16 @@
   solem.desktop.kiosk = false;          # No kiosk (browser host = UI)
   solem.update.enable = true;           # Auto-update OTA settimanale + boot rollback
   solem.secure.kernelHardening.enable = true;  # sysctl strict, ASLR, ptrace restrict
+
+  # ── FOSS USER TOOLKIT — attivati di default (tutto gratuito) ────────
+  solem.systemTools.enable    = true;   # filelight + `solem-clean` GC/cache
+  solem.privacyTools.enable   = true;   # GPG + 2FA + pwgen + `solem-priv`
+  solem.developerExtras.enable = true;  # Bruno + Hugo + tea + podman
+  solem.multimediaTools.enable = true;  # yt-dlp + GIMP + Kdenlive + `solem-media`
+  solem.readers.enable        = true;   # Newsboat + Calibre + Logseq + Anki
+  solem.italianLocale.enable  = true;   # hunspell-it + LanguageTool + font IT
+  # makers (3D/CAD/GIS/Education) opt-in granulare (off di default — pesanti):
+  # solem.makers.printing3d = true;
 
   # Stato base — NON cambiare dopo prima install. Lega la release NixOS che
   # ha generato il sistema per garantire compatibilità su upgrade.
