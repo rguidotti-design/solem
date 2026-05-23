@@ -25,9 +25,13 @@
     ./modules/solem-memory.nix
     ./modules/solem-sandbox.nix
 
-    # Italian locale (FOSS-solid)
+    # Italian locale (FOSS-solid, 24.11 verified)
     ./modules/solem-italian-locale.nix
   ];
+
+  # Memory minimal: niente protezione gavio (gavio non importato in minimal).
+  # Senza questo, solem-memory creerebbe un gavio.service vuoto che fallirebbe.
+  solem.memory.protectGavio = false;
 
   # Identità
   networking.hostName = "solem-vm";
@@ -35,12 +39,9 @@
   system.stateVersion = "24.11";
   nixpkgs.config.allowUnfree = true;
 
-  # Locale Italia (anche se solem-italian-locale lo gestisce, qui sovrascriviamo
-  # con mkForce per essere sicuri)
-  time.timeZone = "Europe/Rome";
-  i18n.defaultLocale = lib.mkForce "it_IT.UTF-8";
-  console.keyMap = "it";
+  # Italian locale: già gestito da solem-italian-locale; qui solo abilitazione.
   solem.italianLocale.enable = true;
+  time.timeZone = "Europe/Rome";
 
   # Utente default
   users.users.gavio = {

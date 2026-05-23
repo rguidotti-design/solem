@@ -18,6 +18,13 @@ preinstallate e libertà operativa totale.
 - **Target hardware finale:** Beelink mini-PC (Step 1, estate 2026)
 - **Form factor supportati:** x86_64 workstation/server · ARM64 Raspberry Pi 4/5 · ARM64 Jetson Nano/Orin · PWA smart glasses (browser)
 - **Cost:** 0 € (100% FOSS, niente cloud paid services)
+- **CI:** [![SOLEM CI](https://github.com/rguidotti-design/solem/actions/workflows/build.yml/badge.svg)](https://github.com/rguidotti-design/solem/actions/workflows/build.yml) [![Quick Validate](https://github.com/rguidotti-design/solem/actions/workflows/quick-validate.yml/badge.svg)](https://github.com/rguidotti-design/solem/actions/workflows/quick-validate.yml)
+- **Cache binari:** [`solem.cachix.org`](https://app.cachix.org/cache/solem) (free 10 GB)
+
+> ⚠️ **Reality check 2026-05-24**: lavoro in corso. Il codice esiste e la
+> struttura è solida, ma il **build end-to-end CI** è ancora in fase di
+> stabilizzazione. Stato dettagliato: [docs/STATUS-REAL.md](docs/STATUS-REAL.md).
+> Lista operatività: [docs/OPERATIVE.md](docs/OPERATIVE.md).
 
 ### Artifacts buildati (al 2026-05-21, commit `a9cdcfd`)
 - ✅ **ISO x86_64** bootable (5.5 GB) — `nix build .#iso`

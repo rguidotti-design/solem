@@ -74,8 +74,11 @@ in {
       "vm.nr_hugepages" = cfg.hugePages;
     };
 
-    # MemoryHigh per gavio.service: hint allocazione (no kill)
-    systemd.services.gavio.serviceConfig = {
+    # MemoryHigh per gavio.service: hint allocazione (no kill).
+    # Applicato SOLO se il servizio gavio esiste (cfg.protectGavio + import).
+    # Senza questo guard, configuration-vm-minimal creerebbe un gavio.service
+    # vuoto che fallirebbe al boot.
+    systemd.services.gavio.serviceConfig = lib.mkIf cfg.protectGavio {
       MemoryHigh = "3G";
       MemoryMax = lib.mkForce "4G";
       MemorySwapMax = "1G";
