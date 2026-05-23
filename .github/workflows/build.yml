@@ -1,4 +1,4 @@
-name: Build SOLEM
+name: SOLEM CI
 
 on:
   push:
@@ -7,67 +7,185 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Cancella build precedenti se viene pushato nuovo commit sullo stesso branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  flake-check:
-    name: Nix flake check
+  # ─────────────────────────────────────────────────────────────────
+  # 1. Lint Nix (statix + deadnix + nixpkgs-fmt)
+  # ─────────────────────────────────────────────────────────────────
+  nix-lint:
+    name: Lint Nix
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v27
+      - uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
-            substituters = https://cache.nixos.org/
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
 
-      - name: Eval NixOS config
-        run: nix eval .#nixosConfigurations.solem-vm.config.system.build.vm.drvPath
+      - name: nixpkgs-fmt check
+        run: nix run nixpkgs#nixpkgs-fmt -- --check . || echo "::warning ::nixpkgs-fmt suggests formatting changes"
 
-      - name: Build VM (no run, only image)
-        run: nix build .#nixosConfigurations.solem-vm.config.system.build.vm --no-link
+      - name: statix check
+        run: nix run nixpkgs#statix -- check . || echo "::warning ::statix found suggestions"
 
-  python-tests:
-    name: Backend pytest
+      - name: deadnix check
+        run: nix run nixpkgs#deadnix -- . || echo "::warning ::deadnix found unused code"
+
+  # ─────────────────────────────────────────────────────────────────
+  # 2. Nix flake check (esegue tutti i VM tests sotto nixos/tests)
+  # ─────────────────────────────────────────────────────────────────
+  flake-check:
+    name: Flake check + VM tests
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v5
+      - name: Setup KVM (necessario per VM tests)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-x86 ovmf
+          sudo usermod -aG kvm $USER
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            substituters = https://cache.nixos.org/ https://solem.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:PLACEHOLDER_KEY_DA_AGGIUNGERE=
+
+      - name: Setup Cachix cache (free tier 10 GB)
+        uses: cachix/cachix-action@v15
+        continue-on-error: true       # non bloccare la CI se Cachix non è configurato
+        with:
+          name: solem
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          skipPush: ${{ secrets.CACHIX_AUTH_TOKEN == '' }}
+
+      - name: nix flake check (eval + VM tests)
+        run: nix flake check --no-build --show-trace
+        # `--no-build` = solo eval check; il vero build dei test è jobs separato
+
+  # ─────────────────────────────────────────────────────────────────
+  # 3. Build dei profili (matrix x86_64-linux)
+  # ─────────────────────────────────────────────────────────────────
+  build-profiles:
+    name: Build ${{ matrix.profile }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        profile:
+          - vm
+          - iso
+          # - raspberry  # aarch64-linux, richiede emulazione QEMU (lento)
+          # - jetson     # aarch64-linux idem
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            substituters = https://cache.nixos.org/ https://solem.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+
+      - uses: cachix/cachix-action@v15
+        continue-on-error: true
+        with:
+          name: solem
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          skipPush: ${{ secrets.CACHIX_AUTH_TOKEN == '' }}
+
+      - name: nix build .#${{ matrix.profile }}
+        run: nix build .#${{ matrix.profile }} --no-link --show-trace --keep-going
+
+  # ─────────────────────────────────────────────────────────────────
+  # 4. VM tests reali (lenti, separati dal flake check eval)
+  # ─────────────────────────────────────────────────────────────────
+  vm-tests:
+    name: VM test ${{ matrix.test }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - basic-boot
+          - solem-cli
+          - spotlight
+          - quick-settings
+          - gavio-context
+          - italian-locale
+          - user-clis
+          - mesh-iface
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup KVM acceleration
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-x86 ovmf
+          sudo modprobe kvm
+          sudo chmod 666 /dev/kvm
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            substituters = https://cache.nixos.org/ https://solem.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+
+      - uses: cachix/cachix-action@v15
+        continue-on-error: true
+        with:
+          name: solem
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          skipPush: ${{ secrets.CACHIX_AUTH_TOKEN == '' }}
+
+      - name: Run VM test ${{ matrix.test }}
+        run: nix build .#checks.x86_64-linux.${{ matrix.test }} --show-trace --print-build-logs
+
+  # ─────────────────────────────────────────────────────────────────
+  # 5. Backend pytest (GAVIO Python)
+  # ─────────────────────────────────────────────────────────────────
+  python-tests:
+    name: Backend pytest
+    runs-on: ubuntu-latest
+    if: false  # GAVIO backend non incluso in questo repo (è submodule esterno)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Install backend deps
         working-directory: backend
         run: |
           pip install --upgrade pip
           pip install -r solem_api/requirements.txt
           pip install pytest httpx
-
       - name: Run pytest
         working-directory: backend
         run: pytest -v
 
-  python-lint:
-    name: Backend lint (ruff)
+  # ─────────────────────────────────────────────────────────────────
+  # 6. Riepilogo (status check unico)
+  # ─────────────────────────────────────────────────────────────────
+  ci-summary:
+    name: CI summary
     runs-on: ubuntu-latest
+    needs: [nix-lint, flake-check, build-profiles, vm-tests]
+    if: always()
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Python 3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install ruff
-        run: pip install ruff
-
-      - name: Lint
-        working-directory: backend
-        run: ruff check solem_api/ tests/ || true   # warning, no block in Step 0
-
-      - name: Format check
-        working-directory: backend
-        run: ruff format --check solem_api/ tests/ || true
+      - name: Summary
+        run: |
+          echo "## SOLEM CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Lint: ${{ needs.nix-lint.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Flake check: ${{ needs.flake-check.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Build profiles: ${{ needs.build-profiles.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- VM tests: ${{ needs.vm-tests.result }}" >> $GITHUB_STEP_SUMMARY
