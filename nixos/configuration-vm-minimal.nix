@@ -27,7 +27,15 @@
 
     # Italian locale (FOSS-solid, 24.11 verified)
     ./modules/solem-italian-locale.nix
+
+    # ── Tool low-risk (Python stdlib + pacchetti stabili) ──────────
+    ./modules/solem-shell.nix              # TUI Python (zero deps esterni)
+    ./modules/solem-clipboard.nix          # wl-clipboard + cliphist (solidi)
   ];
+
+  # Abilita i moduli verificati
+  solem.shell.enable          = true;
+  solem.clipboard.enable      = true;
 
   # Memory minimal: niente protezione gavio (gavio non importato in minimal).
   # Senza questo, solem-memory creerebbe un gavio.service vuoto che fallirebbe.

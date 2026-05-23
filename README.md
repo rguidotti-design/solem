@@ -23,8 +23,13 @@ preinstallate e libertà operativa totale.
 
 > ⚠️ **Reality check 2026-05-24**: lavoro in corso. Il codice esiste e la
 > struttura è solida, ma il **build end-to-end CI** è ancora in fase di
-> stabilizzazione. Stato dettagliato: [docs/STATUS-REAL.md](docs/STATUS-REAL.md).
-> Lista operatività: [docs/OPERATIVE.md](docs/OPERATIVE.md).
+> stabilizzazione. Documenti di onestà:
+>
+> - [docs/STATUS-REAL.md](docs/STATUS-REAL.md) — % reale per categoria
+> - [docs/OPERATIVE.md](docs/OPERATIVE.md) — 29 item per essere operativo
+> - [docs/WEAKNESSES.md](docs/WEAKNESSES.md) — **dove SOLEM è scarso** (brutale)
+> - [docs/COMPETITIVE-GAP.md](docs/COMPETITIVE-GAP.md) — confronto colossi
+> - [docs/INSTALL-BEELINK.md](docs/INSTALL-BEELINK.md) — guida install Beelink
 
 ### Artifacts buildati (al 2026-05-21, commit `a9cdcfd`)
 - ✅ **ISO x86_64** bootable (5.5 GB) — `nix build .#iso`
