@@ -62,6 +62,15 @@
     ./modules/solem-touchpad-pro.nix       # libinput tuning + fusuma 3/4-finger
     ./modules/solem-fingerprint.nix        # fprintd + PAM login/sudo/lock
     ./modules/solem-cloud-personal.nix     # Nextcloud+Joplin+Vaultwarden+Radicale+Syncthing
+
+    # ── COMPETITIVE PARITY P0 batch 2 (UX/AI parity) ─────────────────
+    ./modules/solem-onboarding-wizard.nix  # primo-boot tour `solem-welcome` (gum TUI)
+    ./modules/solem-permissions-panel.nix  # camera/mic/location runtime + opensnitch
+    ./modules/solem-notification-center.nix # mako theme navy/gold + history
+    ./modules/solem-keychain.nix           # GNOME Keyring + Secret Service + pass
+    ./modules/solem-family-sharing.nix     # multi-utente + DNS family-safe + shared dirs
+    ./modules/solem-photo-memories.nix     # Immich + ML + monthly memories cron
+    ./modules/solem-gavio-context.nix      # GAVIO clipboard/selezione/OCR/app-active
   ];
 
   # ── PROFILO COMPLETO — "creator" ────────────────────────────────────
@@ -99,6 +108,16 @@
   # solem.batteryPro.enable    = true;  # laptop only
   # solem.fingerprint.enable   = true;  # solo se hardware lettore presente
   # solem.cloudPersonal.enable = true;  # solo nodo "server" Beelink
+
+  # Competitive parity P0 batch 2 (default attivi)
+  solem.onboarding.enable          = true;  # `solem-welcome` primo-boot
+  solem.permissionsPanel.enable    = true;  # camera/mic/loc + opensnitch
+  solem.notificationCenter.enable  = true;  # mako theme + history
+  solem.keychain.enable            = true;  # GNOME Keyring SSO
+  solem.gavioContext.enable        = true;  # GAVIO context-aware Super+G
+  # opt-in granulare:
+  # solem.familySharing.enable     = true;  # solo se multi-utente
+  # solem.photoMemories.enable     = true;  # solo nodo Beelink con storage
   # opt-in granulari (off di default per peso/hardware-specifico):
   # solem.makers.printing3d   = true;   # CAD/3D-print (~ 2 GB)
   # solem.radioSdr.enable     = true;   # SDR (richiede dongle USB)
