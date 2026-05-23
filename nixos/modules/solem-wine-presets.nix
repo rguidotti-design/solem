@@ -1,93 +1,71 @@
 { config, pkgs, lib, ... }:
 
-# SOLEM WINE PRESETS — preset per app Windows comuni via Wine/Bottles.
+# SOLEM WINE PRESETS — preset per app Windows OPEN-SOURCE/FREEWARE.
 #
-# Single responsibility: SOLO installazione Wine + Bottles + helper script
-# `solem-wine` che semplifica install delle 50 app Windows più richieste
-# (Office legacy, Photoshop CS6, AutoCAD older, Notepad++, Foobar2000,
-# ecc.).
+# Single responsibility: SOLO installazione Wine + Bottles + helper
+# `solem-wine` per le app Windows FOSS più richieste.
 #
-# Le LICENZE delle app Windows installate sono dell'utente. SOLEM fornisce
-# solo il runtime Wine + preset CONFIG (winetricks scripts, dxvk, vkd3d).
+# Filosofia FOSS-only: SOLEM NON pre-configura prefix per software
+# proprietario o a pagamento (Office, Photoshop, AutoCAD ecc.).
+# L'utente che ne possiede licenza legale può creare prefix manualmente
+# con `wineboot --init && winetricks <deps>`.
 #
-# 100% FOSS (Wine LGPL, Bottles GPLv3, dxvk-async opzionale).
+# Preset inclusi: solo software con licenza FOSS o freeware-libero.
+# Costo: 0 €.
 
 let
   cfg = config.solem.winePresets;
 
-  # Lista preset (id → nome leggibile + winetricks deps)
+  # Preset solo FOSS / freeware noti
   presetsConfig = pkgs.writeText "wine-presets.json" (builtins.toJSON {
-    "office-2010" = {
-      name = "Microsoft Office 2010";
-      winetricks = [ "dotnet40" "msxml6" "riched20" "vcrun2010" ];
-      arch = "win32";
-      note = "Office 2010 funziona meglio di 2013+. Per 365 usa browser.";
-    };
-    "office-2016" = {
-      name = "Microsoft Office 2016";
-      winetricks = [ "dotnet472" "msxml6" "vcrun2015" "corefonts" ];
-      arch = "win64";
-      note = "Office 2016 32-bit installer raccomandato.";
-    };
-    "photoshop-cs6" = {
-      name = "Photoshop CS6";
-      winetricks = [ "msxml3" "msxml6" "atmlib" "fontsmooth=rgb" "vcrun2008" ];
-      arch = "win32";
-      note = "CS6 ultimo supportato bene da Wine. CC è critico.";
-    };
     "notepad-plus-plus" = {
       name = "Notepad++";
+      license = "GPL-3.0";
       winetricks = [ ];
       arch = "win64";
-      note = "Funziona out-of-the-box, considera VSCodium nativo.";
-    };
-    "irfanview" = {
-      name = "IrfanView";
-      winetricks = [ "vcrun2010" ];
-      arch = "win32";
-      note = "Image viewer ultra-leggero.";
-    };
-    "foobar2000" = {
-      name = "foobar2000";
-      winetricks = [ "vcrun2019" ];
-      arch = "win64";
-      note = "Audio player. Considera Amberol/strawberry nativo.";
-    };
-    "autocad-2018" = {
-      name = "AutoCAD 2018";
-      winetricks = [ "dotnet48" "msxml6" "corefonts" "vcrun2017" ];
-      arch = "win64";
-      note = "DWG opener. Considera LibreCAD/QCAD nativi.";
-    };
-    "winrar" = {
-      name = "WinRAR";
-      winetricks = [ ];
-      arch = "win64";
-      note = "Considera 'unar' o 'p7zip' nativi.";
+      note = "Editor di testo GPL. Considera VSCodium nativo Linux.";
     };
     "directx-runtime" = {
       name = "DirectX Runtime (per giochi)";
+      license = "Microsoft EULA (redistribuibile gratuito)";
       winetricks = [ "directx9" "vcrun2019" "d3dcompiler_47" "d3dx9" ];
       arch = "win64";
-      note = "Base per giochi DX9-11. Usa Bottles+DXVK per DX12.";
+      note = "Base per giochi DX9-11. Usa DXVK per DX10/11.";
     };
     "msvc-runtimes-pack" = {
-      name = "Microsoft Visual C++ Runtimes (tutti)";
+      name = "Microsoft Visual C++ Runtimes (redistribuibile)";
+      license = "Microsoft EULA (free redistributable)";
       winetricks = [ "vcrun2005" "vcrun2008" "vcrun2010" "vcrun2013" "vcrun2015" "vcrun2017" "vcrun2019" ];
       arch = "win64";
-      note = "Base per molte app legacy.";
+      note = "Runtime gratuito redistribuibile (per app legacy che lo richiedono).";
     };
-    "skype-legacy" = {
-      name = "Skype legacy 7.x";
-      winetricks = [ "vcrun2008" "ie7" ];
-      arch = "win32";
-      note = "Skype moderno: usa client web o Element.";
+    "dotnet-pack" = {
+      name = "Microsoft .NET Framework (redistribuibile)";
+      license = "Microsoft EULA (free redistributable)";
+      winetricks = [ "dotnet472" "dotnet48" ];
+      arch = "win64";
+      note = "Runtime .NET gratuito per app FOSS .NET.";
     };
-    "kingdom-classic" = {
-      name = "Kingdom (Steam game offline)";
-      winetricks = [ "directx9" ];
-      arch = "win32";
-      note = "Esempio gioco indie. Usa Steam Proton invece se possibile.";
+    "vlc-windows" = {
+      name = "VLC Media Player (per testare Windows build)";
+      license = "GPL-2.0";
+      winetricks = [ ];
+      arch = "win64";
+      note = "VLC è FOSS. Su SOLEM hai già VLC nativo. Questo preset serve solo se devi testare il build Windows.";
+    };
+    "audacity-windows" = {
+      name = "Audacity (Windows build)";
+      license = "GPL-2.0";
+      winetricks = [ ];
+      arch = "win64";
+      note = "Audacity FOSS. Preferisci nativo Linux.";
+    };
+    "blender-windows" = {
+      name = "Blender (Windows build)";
+      license = "GPL-3.0";
+      winetricks = [ ];
+      arch = "win64";
+      note = "Blender FOSS. Preferisci nativo Linux.";
     };
   });
 
@@ -100,16 +78,15 @@ let
 
       case "$ACTION" in
         list|ls)
-          echo "  SOLEM Wine Presets — Windows app via Wine/Bottles"
+          echo "  SOLEM Wine Presets — solo FOSS / freeware redistribuibile"
           echo
-          jq -r 'to_entries[] | "  \(.key|.[0:24])  →  \(.value.name)  [\(.value.arch)]"' "$PRESETS"
+          jq -r 'to_entries[] | "  \(.key|.[0:24])  →  \(.value.name)  [\(.value.license)]"' "$PRESETS"
           echo
           echo "Per applicare un preset:  solem-wine apply <preset-id>"
-          echo "Per info dettaglio:       solem-wine info <preset-id>"
           ;;
         info)
           [ -z "''${2:-}" ] && { echo "Usage: solem-wine info <preset-id>"; exit 1; }
-          jq -r --arg p "$2" '.[$p] | "Name: \(.name)\nArch: \(.arch)\nWinetricks: \(.winetricks | join(\", \"))\nNote: \(.note)"' "$PRESETS"
+          jq -r --arg p "$2" '.[$p] | "Name: \(.name)\nLicense: \(.license)\nArch: \(.arch)\nWinetricks: \(.winetricks | join(\", \"))\nNote: \(.note)"' "$PRESETS"
           ;;
         apply|init)
           [ -z "''${2:-}" ] && { echo "Usage: solem-wine apply <preset-id>"; exit 1; }
@@ -135,8 +112,7 @@ let
 
           echo
           echo "✓ Preset $PRESET pronto in $WINEPREFIX"
-          echo "  Lancia l'installer Windows con:"
-          echo "    WINEPREFIX=$WINEPREFIX wine /path/to/installer.exe"
+          echo "  Per installer: WINEPREFIX=$WINEPREFIX wine /path/to/installer.exe"
           ;;
         bottles)
           echo "Lancio Bottles GUI (gestione visiva Wine prefix):"
@@ -149,25 +125,29 @@ let
           fi
           ;;
         *)
-          echo "solem-wine — runtime app Windows via Wine"
+          echo "solem-wine — runtime app Windows FOSS via Wine"
           echo
           echo "Comandi:"
-          echo "  solem-wine list             → preset disponibili"
+          echo "  solem-wine list             → preset FOSS disponibili"
           echo "  solem-wine info <id>        → dettagli un preset"
           echo "  solem-wine apply <id>       → crea prefix + winetricks deps"
           echo "  solem-wine bottles          → lancia Bottles GUI"
+          echo
+          echo "Per software PROPRIETARIO (Office, Photoshop, AutoCAD, ecc.):"
+          echo "  SOLEM NON pre-configura. Se hai la licenza, crea prefix"
+          echo "  manualmente: WINEPREFIX=~/.wine-xxx wineboot --init"
           ;;
       esac
     '';
   };
 in {
   options.solem.winePresets = {
-    enable = lib.mkEnableOption "Wine + Bottles + preset 50 app Windows comuni";
+    enable = lib.mkEnableOption "Wine + Bottles + preset app Windows FOSS (no proprietario)";
 
     installBottles = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Installa anche Bottles GUI per gestione prefix visuale";
+      description = "Installa Bottles GUI per gestione prefix";
     };
   };
 
@@ -180,7 +160,6 @@ in {
 
     environment.etc."solem/wine-presets.json".source = presetsConfig;
 
-    # 32-bit support per win32 prefix
     hardware.graphics = {
       enable = true;
       enable32Bit = true;

@@ -1,37 +1,43 @@
 { config, pkgs, lib, ... }:
 
-# SOLEM HANDHELD — profilo Steam Deck / Steam-Deck-like handheld.
+# SOLEM HANDHELD — profilo handheld FOSS-first (compatibile Steam Deck hw).
 #
-# Single responsibility: SOLO config "gaming handheld":
-#   - Gamescope session (compositor minimal per giochi fullscreen)
-#   - Steam embedded autostart
+# Single responsibility: SOLO config "gaming handheld" 100% FOSS:
+#   - Gamescope session (Valve, BSD-licensed)
+#   - Lutris + Bottles + RetroArch + dolphin-emu come default launcher
+#   - Steam closed-source SOLO se l'utente lo abilita esplicitamente
 #   - Controller mapping (xbox/playstation)
-#   - On-screen keyboard touch-friendly (squeekboard)
-#   - Bluetooth + audio low-latency
+#   - Audio low-latency PipeWire FOSS
 #   - 32-bit gaming libs
+#
+# 100% FOSS di default. Costo: 0 €.
 
 let
   cfg = config.solem.handheld;
 in {
   options.solem.handheld = {
-    enable = lib.mkEnableOption "Profilo handheld gaming (Steam Deck-like)";
+    enable = lib.mkEnableOption "Profilo handheld gaming (FOSS-first)";
 
-    autostartSteam = lib.mkOption {
+    enableSteam = lib.mkOption {
       type = lib.types.bool;
-      default = true;
-      description = "Avvia Steam Big Picture al boot (Gamescope session)";
+      default = false;
+      description = ''
+        Abilita Steam (CLOSED-SOURCE proprietario Valve).
+        Disabilitato di default per coerenza FOSS-only di SOLEM.
+        Quando true: autostart Steam Big Picture in Gamescope session.
+      '';
     };
 
     enableEmulators = lib.mkOption {
       type = lib.types.bool;
-      default = false;
-      description = "Emulatori retro (RetroArch + cores comuni)";
+      default = true;        # default true per handheld (no closed-source)
+      description = "Emulatori FOSS retro (RetroArch + dolphin-emu + pcsx2 + rpcs3)";
     };
   };
 
   config = lib.mkIf cfg.enable {
-    # ── Steam + Gamescope ──
-    programs.steam = {
+    # ── Steam SOLO opt-in esplicito ──
+    programs.steam = lib.mkIf cfg.enableSteam {
       enable = true;
       gamescopeSession.enable = true;
       remotePlay.openFirewall = false;
@@ -45,15 +51,16 @@ in {
       enable32Bit = true;
     };
 
-    # ── Gaming tools ──
+    # ── Gaming tools FOSS ──
     environment.systemPackages = with pkgs; [
-      gamescope mangohud goverlay protontricks
-      lutris bottles heroic
+      gamescope mangohud goverlay
+      lutris bottles
+      retroarch-full
     ] ++ lib.optionals cfg.enableEmulators [
-      retroarch-full pcsx2 dolphin-emu rpcs3
-    ];
+      pcsx2 dolphin-emu rpcs3
+    ] ++ lib.optional cfg.enableSteam protontricks;
 
-    # ── Gamemode (CPU/GPU boost on demand) ──
+    # ── Gamemode FOSS ──
     programs.gamemode = {
       enable = true;
       settings = {
@@ -62,17 +69,11 @@ in {
       };
     };
 
-    # ── Controller permissions ──
-    services.udev.packages = with pkgs; [ steam-devices ];
-    hardware.steam-hardware.enable = true;
+    # ── Controller permissions (FOSS udev rules) ──
+    services.udev.packages = with pkgs; lib.optional cfg.enableSteam steam-devices;
+    hardware.steam-hardware.enable = lib.mkIf cfg.enableSteam true;
 
-    # ── Touch keyboard + accessibility ──
-    services.xserver.desktopManager.gnome.extraGSettingsOverrides = ''
-      [org.gnome.desktop.a11y.applications]
-      screen-keyboard-enabled=true
-    '';
-
-    # ── Audio low-latency (PipeWire) ──
+    # ── Audio low-latency (PipeWire FOSS) ──
     services.pipewire = {
       enable = true;
       audio.enable = true;
@@ -89,8 +90,8 @@ in {
       };
     };
 
-    # ── Autostart Steam in Gamescope (kiosk-style) ──
-    services.greetd = lib.mkIf cfg.autostartSteam {
+    # ── Autostart Steam in Gamescope SOLO se enableSteam ──
+    services.greetd = lib.mkIf cfg.enableSteam {
       enable = true;
       settings = {
         default_session = {
@@ -104,9 +105,7 @@ in {
       };
     };
 
-    # ── Edge profile ──
-    solem.edge.deviceClass = lib.mkDefault "workstation";  # handheld ha potenza desktop
-
+    solem.edge.deviceClass = lib.mkDefault "workstation";
     networking.hostName = lib.mkDefault "solem-handheld";
   };
 }

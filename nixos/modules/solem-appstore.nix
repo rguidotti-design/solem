@@ -45,23 +45,24 @@ let
       { id = "org.mpv.Mpv"; name = "mpv"; desc = "Video player minimal"; }
       { id = "io.bassi.Amberol"; name = "Amberol"; desc = "Music player GTK"; }
       { id = "com.feaneron.Boatswain"; name = "Boatswain"; desc = "Stream Deck controller"; }
-      { id = "com.spotify.Client"; name = "Spotify"; desc = "Music streaming (freemium)"; }
       { id = "com.github.iwalton3.jellyfin-media-player"; name = "Jellyfin"; desc = "Self-host media"; }
+      { id = "io.github.quodlibet.QuodLibet"; name = "Quod Libet"; desc = "Music player Python FOSS"; }
+      { id = "org.strawberrymusicplayer.strawberry"; name = "Strawberry"; desc = "Audio player Qt FOSS"; }
     ];
     communication = [
-      { id = "im.riot.Riot"; name = "Element (Matrix)"; desc = "Chat E2E federata"; }
-      { id = "org.signal.Signal"; name = "Signal"; desc = "Messaging privato"; }
-      { id = "im.dino.Dino"; name = "Dino (XMPP)"; desc = "Chat federata"; }
-      { id = "io.github.Soundux"; name = "Soundux"; desc = "Soundboard meetings"; }
-      { id = "com.discordapp.Discord"; name = "Discord"; desc = "Community chat"; }
-      { id = "us.zoom.Zoom"; name = "Zoom"; desc = "Videoconf"; }
+      { id = "im.riot.Riot"; name = "Element (Matrix)"; desc = "Chat E2E federata FOSS"; }
+      { id = "org.signal.Signal"; name = "Signal"; desc = "Messaging privato FOSS"; }
+      { id = "im.dino.Dino"; name = "Dino (XMPP)"; desc = "Chat federata FOSS"; }
+      { id = "io.github.Soundux"; name = "Soundux"; desc = "Soundboard meetings FOSS"; }
+      { id = "info.mumble.Mumble"; name = "Mumble"; desc = "VoIP gaming low-latency FOSS"; }
+      { id = "org.jitsi.jitsi-meet"; name = "Jitsi Meet"; desc = "Videoconf FOSS browser-based"; }
     ];
     gaming = [
-      { id = "com.valvesoftware.Steam"; name = "Steam"; desc = "Game launcher"; }
-      { id = "com.usebottles.bottles"; name = "Bottles"; desc = "Wine launcher (Windows apps)"; }
-      { id = "net.lutris.Lutris"; name = "Lutris"; desc = "Game manager universale"; }
-      { id = "info.cemu.Cemu"; name = "Cemu"; desc = "Wii U emulator"; }
-      { id = "com.heroicgameslauncher.hgl"; name = "Heroic Games"; desc = "Epic + GOG launcher"; }
+      { id = "com.usebottles.bottles"; name = "Bottles"; desc = "Wine launcher FOSS"; }
+      { id = "net.lutris.Lutris"; name = "Lutris"; desc = "Game manager FOSS"; }
+      { id = "info.cemu.Cemu"; name = "Cemu"; desc = "Wii U emulator FOSS"; }
+      { id = "io.mrarm.mcpelauncher"; name = "Minecraft Bedrock launcher"; desc = "FOSS launcher (gioco proprietario)"; }
+      { id = "org.libretro.RetroArch"; name = "RetroArch"; desc = "Multi-emulator FOSS"; }
     ];
     utilities = [
       { id = "org.kde.kdeconnect"; name = "KDE Connect"; desc = "Sync smartphone"; }

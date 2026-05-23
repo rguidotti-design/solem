@@ -225,7 +225,7 @@ solem-doc           # questa guida (offline)
 
 Quando ti senti a tuo agio:
 
-1. **Aggiungi servizi self-host** che sostituiscono Spotify/Photo/Cloud (gratis): `solem-app install com.spotify.Client` oppure abilita Navidrome+Immich dal modulo `solem.selfhost.*`.
+1. **Aggiungi servizi self-host FOSS** che sostituiscono i SaaS paid: abilita Navidrome (musica, Spotify-alt), Immich (foto, Google Photos-alt), Jellyfin (video, Netflix-alt), Nextcloud (cloud, Drive-alt) dal modulo `solem.selfhost.*` o `solem.photoMusic.*`. **0 €/mese**.
 2. **Compra un Raspberry Pi** e usalo come worker AI in casa: `nix build .#raspberry` + flash SD.
 3. **Vai sul GitHub** del progetto per partecipare: https://github.com/rguidotti-design/solem
 

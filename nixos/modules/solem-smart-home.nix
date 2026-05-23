@@ -56,7 +56,9 @@ in {
         };
         extraComponents = [
           "esphome" "mqtt" "zha" "zwave_js"
-          "spotify" "philips_hue" "shelly" "tuya"
+          "philips_hue" "shelly" "tuya"
+          # Niente integrazioni servizi a pagamento (Spotify/Netflix/Sonos) di
+          # default. L'utente le aggiunge a runtime se ha un account.
         ];
       };
     })

@@ -77,25 +77,25 @@ Environment=GAVIO_API_URL=http://127.0.0.1:8080
 Environment=GAVIO_CHAT_ENDPOINT=/v1/chat/completions
 ```
 
-### Opzione D — Claude API (paid, NON default)
-
-Non rispetta `feedback_solem_only_free.md`. Ma se l'utente vuole:
+### Opzione D — text-generation-webui (oobabooga, FOSS)
 
 ```ini
-Environment=GAVIO_API_URL=https://api.anthropic.com/v1
-Environment=GAVIO_CHAT_ENDPOINT=/messages
-Environment=GAVIO_API_KEY=sk-ant-...
-```
-
-(richiede patch a `ai_router.py` per gestire l'header `x-api-key`, non incluso di default).
-
-### Opzione E — OpenAI compat (paid, NON default)
-
-```ini
-Environment=GAVIO_API_URL=https://api.openai.com
+Environment=GAVIO_API_URL=http://127.0.0.1:5000
 Environment=GAVIO_CHAT_ENDPOINT=/v1/chat/completions
-Environment=GAVIO_API_KEY=sk-...
 ```
+
+### Opzione E — vLLM server (Apache 2.0, FOSS)
+
+```ini
+Environment=GAVIO_API_URL=http://127.0.0.1:8000
+Environment=GAVIO_CHAT_ENDPOINT=/v1/chat/completions
+```
+
+### NOTA: niente backend a pagamento
+
+SOLEM è FOSS-only. NON documentiamo come puntare a Claude API/OpenAI/
+Cohere/altri servizi a pagamento. Chi vuole farlo lo fa a proprio rischio
+modificando `ai_router.py` — ma fuori dallo scope di SOLEM.
 
 ## Disabilitare AI completamente
 
