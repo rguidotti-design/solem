@@ -46,6 +46,12 @@
     ./modules/solem-readers.nix            # Newsboat/Calibre/Logseq/Anki (+FreshRSS opt)
     ./modules/solem-makers.nix             # 3D-print/CAD/GIS/Education/Electronics
     ./modules/solem-italian-locale.nix     # it_IT.UTF-8 + hunspell + LanguageTool
+    ./modules/solem-typography.nix         # Typst + Pandoc + Quarto + Marp + `solem-doc`
+    ./modules/solem-radio-sdr.nix          # RTL-SDR + GQRX + GNU Radio + Ham radio
+    ./modules/solem-chat-clients.nix       # Element + SimpleX + Jami + Delta + XMPP
+    ./modules/solem-paperless.nix          # Paperless-ngx OCR archive (opt-in)
+    ./modules/solem-data-engineering.nix   # DuckDB + Visidata + Arrow + MinIO/ClickHouse
+    ./modules/solem-backup-gui.nix         # Pika + Vorta + Déjà Dup + Syncthing tray
   ];
 
   # ── PROFILO COMPLETO — "creator" ────────────────────────────────────
@@ -69,8 +75,14 @@
   solem.multimediaTools.enable = true;  # yt-dlp + GIMP + Kdenlive + `solem-media`
   solem.readers.enable        = true;   # Newsboat + Calibre + Logseq + Anki
   solem.italianLocale.enable  = true;   # hunspell-it + LanguageTool + font IT
-  # makers (3D/CAD/GIS/Education) opt-in granulare (off di default — pesanti):
-  # solem.makers.printing3d = true;
+  solem.typography.enable     = true;   # Typst + Pandoc + Quarto + `solem-doc`
+  solem.chatClients.enable    = true;   # Element + SimpleX + Jami + Delta Chat
+  solem.backupGui.enable      = true;   # Pika + Vorta + Syncthing tray + Grsync
+  # opt-in granulari (off di default per peso/hardware-specifico):
+  # solem.makers.printing3d   = true;   # CAD/3D-print (~ 2 GB)
+  # solem.radioSdr.enable     = true;   # SDR (richiede dongle USB)
+  # solem.paperless.enable    = true;   # OCR archive self-host (~ 1 GB)
+  # solem.dataEngineering.enable = true; # data analytics (DuckDB già FOSS)
 
   # Stato base — NON cambiare dopo prima install. Lega la release NixOS che
   # ha generato il sistema per garantire compatibilità su upgrade.
