@@ -88,6 +88,8 @@ from .layers import ai_heal as ai_heal_mod
 from .layers import cluster_migration as cluster_mig_mod
 from .layers import context_actions as ctx_actions_mod
 from .layers import hardware_detect as hw_detect_mod
+from .layers import dotfiles_sync as dotfiles_mod
+from .layers import italian_validators as it_validators_mod
 from .layers.logging_config import setup_logging
 
 # Middleware (single-responsibility ognuno)
@@ -283,6 +285,8 @@ app.include_router(ai_heal_mod.router,      prefix="/solem")
 app.include_router(cluster_mig_mod.router,  prefix="/solem")
 app.include_router(ctx_actions_mod.router,  prefix="/solem")
 app.include_router(hw_detect_mod.router,    prefix="/solem")
+app.include_router(dotfiles_mod.router,     prefix="/solem")
+app.include_router(it_validators_mod.router, prefix="/solem")
 # health_mod ha prefix /health (sub /live /ready /deep), NON sotto /solem
 app.include_router(health_mod.router)
 
