@@ -182,5 +182,104 @@ async def validate_pec(payload: dict) -> ValidationResult:
 async def health() -> dict:
     return {
         "validators": ["codice-fiscale", "iban", "partita-iva", "pec"],
-        "note": "Validazione algoritmica locale, niente API esterne.",
+        "calculators": ["codice-fiscale-calculator"],
+        "note": "Validazione + calcolo algoritmici locali, niente API esterne.",
+    }
+
+
+# ─── Calcolatore Codice Fiscale ───────────────────────────────────────
+
+
+class CFCalculatorRequest(BaseModel):
+    cognome: str
+    nome: str
+    sesso: str  # "M" or "F"
+    data_nascita: str  # "1985-08-01"
+    comune_codice: str  # 4 char es "H501" (Roma). L'utente deve sapere il codice.
+
+
+CF_MONTH_CODES = ["A", "B", "C", "D", "E", "H", "L", "M", "P", "R", "S", "T"]
+
+
+def _extract_consonants_then_vowels(s: str, count: int) -> str:
+    """Estrae N consonanti, poi vocali se mancanti, padding con X."""
+    s_clean = "".join(c for c in s.upper() if c.isalpha())
+    consonants = [c for c in s_clean if c not in "AEIOU"]
+    vowels = [c for c in s_clean if c in "AEIOU"]
+    out = consonants[:count]
+    if len(out) < count:
+        out += vowels[:count - len(out)]
+    if len(out) < count:
+        out += ["X"] * (count - len(out))
+    return "".join(out[:count])
+
+
+def _cf_cognome(cognome: str) -> str:
+    return _extract_consonants_then_vowels(cognome, 3)
+
+
+def _cf_nome(nome: str) -> str:
+    """Per il nome: se ci sono ≥4 consonanti, prendi 1ª, 3ª, 4ª. Altrimenti 1ª, 2ª, 3ª."""
+    s_clean = "".join(c for c in nome.upper() if c.isalpha())
+    consonants = [c for c in s_clean if c not in "AEIOU"]
+    vowels = [c for c in s_clean if c in "AEIOU"]
+    if len(consonants) >= 4:
+        cons_picked = [consonants[0], consonants[2], consonants[3]]
+    else:
+        cons_picked = consonants[:3]
+    if len(cons_picked) < 3:
+        cons_picked += vowels[:3 - len(cons_picked)]
+    if len(cons_picked) < 3:
+        cons_picked += ["X"] * (3 - len(cons_picked))
+    return "".join(cons_picked[:3])
+
+
+@router.post("/codice-fiscale/calculate", response_model=dict)
+async def calculate_cf(req: CFCalculatorRequest) -> dict:
+    try:
+        year, month, day = map(int, req.data_nascita.split("-"))
+    except (ValueError, AttributeError):
+        raise HTTPException(400, {"code": "invalid_data_nascita",
+                                    "hint": "Formato: YYYY-MM-DD"})
+
+    if req.sesso.upper() not in ("M", "F"):
+        raise HTTPException(400, {"code": "invalid_sesso", "hint": "M o F"})
+
+    if not re.match(r"^[A-Z][0-9]{3}$", req.comune_codice.upper()):
+        raise HTTPException(400, {"code": "invalid_comune_codice",
+                                    "hint": "4 char es. H501 (Roma)"})
+
+    # 6 char anagrafica
+    surname = _cf_cognome(req.cognome)
+    name = _cf_nome(req.nome)
+
+    # 2 char anno
+    year_code = str(year)[-2:]
+
+    # 1 char mese
+    month_code = CF_MONTH_CODES[month - 1]
+
+    # 2 char giorno (+40 se femmina)
+    day_n = day + 40 if req.sesso.upper() == "F" else day
+    day_code = f"{day_n:02d}"
+
+    # 4 char codice comune
+    comune = req.comune_codice.upper()
+
+    cf15 = surname + name + year_code + month_code + day_code + comune
+    check = _cf_checksum(cf15)
+    cf = cf15 + check
+
+    return {
+        "codice_fiscale": cf,
+        "components": {
+            "cognome": surname,
+            "nome": name,
+            "anno": year_code,
+            "mese": month_code,
+            "giorno": day_code,
+            "comune": comune,
+            "check": check,
+        },
+        "input": req.model_dump(),
     }
