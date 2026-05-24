@@ -171,6 +171,13 @@
     ./modules/solem-voice.nix
     ./modules/solem-voice-wake.nix
     ./modules/solem-waybar.nix
+    # Step 17: 6 moduli desktop deps + office + creative (tutti opt-in)
+    ./modules/solem-creative.nix
+    ./modules/solem-office.nix
+    ./modules/solem-hyprland-config.nix
+    ./modules/solem-plymouth.nix
+    ./modules/solem-lockscreen.nix
+    ./modules/solem-desktop.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
