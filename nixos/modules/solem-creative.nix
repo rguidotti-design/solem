@@ -40,7 +40,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf (cfg.photo || cfg.video || cfg.audio || cfg.threed || cfg.design) {
     environment.systemPackages = with pkgs; lib.flatten [
       (lib.optionals cfg.photo [
         darktable rawtherapee digikam gimp krita

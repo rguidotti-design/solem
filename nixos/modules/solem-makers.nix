@@ -24,7 +24,7 @@ in {
     electronics = lib.mkEnableOption "Electronics FOSS (KiCad + ngspice + Wireshark + PulseView)";
   };
 
-  config = {
+  config = lib.mkIf (cfg.printing3d || cfg.cad || cfg.gis || cfg.science || cfg.education || cfg.electronics) {
     environment.systemPackages = with pkgs; lib.flatten [
 
       (lib.optionals cfg.printing3d [

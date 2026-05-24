@@ -35,7 +35,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf (cfg.python || cfg.rust || cfg.go || cfg.node || cfg.java || cfg.cpp || cfg.nix) {
     environment.systemPackages = with pkgs; lib.flatten [
       # Common dev tools (sempre presenti)
       [ git gh lazygit jq yq-go ripgrep fd bat eza fzf tmux zellij htop btop ]
