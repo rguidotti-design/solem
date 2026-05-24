@@ -1,57 +1,18 @@
 { config, pkgs, lib, ... }:
 
-# CONFIGURAZIONE MINIMALE VM — usata dalla CI per build veloce e affidabile.
-#
-# Single responsibility: SOLO i moduli core che sappiamo compilare in
-# nixpkgs 24.11 senza pacchetti rischiosi. Niente Bruno / SimpleX /
-# Cinny / Albert / Pika / Immich / Nextcloud (richiedono opzioni
-# servizio che possono variare tra release).
-#
-# Per il sistema "completo" usa configuration.nix (per Beelink/Workstation).
-# Questo file è solo per smoke test CI + nix build .#vm rapido.
+# CONFIGURAZIONE MINIMALE VM — solo solem-core per ora.
+# Ricostruzione incrementale: aggiungo 1 modulo per volta dopo CI verde.
 
 {
   imports = [
-    # Core obbligatorio
     ./modules/solem-core.nix
-    ./modules/solem-cli.nix
-    ./modules/solem-motd.nix
-    ./modules/solem-channels.nix
-    ./modules/solem-keep.nix
-    ./modules/solem-doctor.nix
-
-    # Sicurezza base (default-on)
-    ./modules/solem-kernel-hardening.nix
-    ./modules/solem-memory.nix
-    ./modules/solem-sandbox.nix
-
-    # Italian locale (FOSS-solid, 24.11 verified)
-    ./modules/solem-italian-locale.nix
-
-    # ── Tool low-risk (Python stdlib + pacchetti stabili) ──────────
-    ./modules/solem-shell.nix              # TUI Python (zero deps esterni)
-    ./modules/solem-clipboard.nix          # wl-clipboard + cliphist (solidi)
   ];
-
-  # Abilita i moduli verificati
-  solem.shell.enable          = true;
-  solem.clipboard.enable      = true;
-
-  # Memory minimal: niente protezione gavio (gavio non importato in minimal).
-  # Senza questo, solem-memory creerebbe un gavio.service vuoto che fallirebbe.
-  solem.memory.protectGavio = false;
 
   # Identità
   networking.hostName = "solem-vm";
-  networking.domain = "local";
   system.stateVersion = "24.11";
-  nixpkgs.config.allowUnfree = true;
 
-  # Italian locale: già gestito da solem-italian-locale; qui solo abilitazione.
-  solem.italianLocale.enable = true;
-  time.timeZone = "Europe/Rome";
-
-  # Utente default
+  # Utente di test
   users.users.gavio = {
     isNormalUser = true;
     initialPassword = "gavio";
@@ -59,23 +20,29 @@
   };
   users.mutableUsers = true;
 
-  # Network base (DHCP)
+  # Network base
   networking.networkmanager.enable = true;
 
-  # Tool base sempre presenti
+  # Tool base
   environment.systemPackages = with pkgs; [
-    git curl wget vim neovim
-    htop btop tmux jq yq
-    ripgrep fd bat eza tree
-    python312 uv
-    openssl gnupg
-    unzip zip
+    git curl vim
+    htop
+    python312
   ];
 
-  # Minimal SSH per debug VM via console
+  # SSH per debug VM
   services.openssh = {
     enable = true;
     settings.PermitRootLogin = "no";
     settings.PasswordAuthentication = true;
   };
+
+  # Locale + timezone Italia
+  time.timeZone = "Europe/Rome";
+  i18n.defaultLocale = "it_IT.UTF-8";
+  i18n.supportedLocales = [
+    "it_IT.UTF-8/UTF-8"
+    "en_US.UTF-8/UTF-8"
+  ];
+  console.keyMap = "it";
 }
