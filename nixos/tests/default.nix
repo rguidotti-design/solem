@@ -23,6 +23,9 @@
   # Test 8 — gavio-ai user isolation REALE (file access + sudo + groups)
   ai-user-isolation = import ./ai-user-isolation.nix { inherit pkgs; };
 
+  # Test 9 — nftables egress whitelist (BLOCK reale, non solo log)
+  ai-network-egress = import ./ai-network-egress.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 

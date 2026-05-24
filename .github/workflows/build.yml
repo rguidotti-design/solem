@@ -127,6 +127,7 @@ jobs:
           - solem-demo
           - ai-guardrails
           - ai-user-isolation
+          - ai-network-egress
           # Disabilitato temp: gavio-stub (richiede build package gavio)
     steps:
       - uses: actions/checkout@v4
