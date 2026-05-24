@@ -18,23 +18,17 @@
 
       # ────────────────────────────────────────────────────────────────
       # NixOS configurations
+      # NOTA: temporaneamente ridotte al minimo CI-friendly.
+      # solem-vm-full, raspberry, jetson sono COMMENTATI finché
+      # non passano singolarmente l'eval. Ricostruzione incrementale.
       # ────────────────────────────────────────────────────────────────
       nixosConfigurations = {
 
-        # VM x86_64 MINIMAL — `nix run .#vm` (CI-friendly, build veloce)
+        # VM x86_64 MINIMAL — `nix run .#vm`
         solem-vm = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
             ./nixos/configuration-vm-minimal.nix
-            ./nixos/hardware-vm.nix
-          ];
-        };
-
-        # VM x86_64 FULL — config completa (può rompersi)
-        solem-vm-full = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            ./nixos/configuration.nix
             ./nixos/hardware-vm.nix
           ];
         };
@@ -50,30 +44,10 @@
           ];
         };
 
-        # Raspberry Pi 4/5 — `nix build .#raspberry`
-        solem-raspberry = nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
-          modules = [
-            (nixpkgs + "/nixos/modules/installer/sd-card/sd-image-aarch64.nix")
-            nixos-hardware.nixosModules.raspberry-pi-4
-            ./nixos/configuration-edge.nix
-            ./nixos/modules/solem-edge.nix
-            ./nixos/modules/solem-raspberry.nix
-            ({ ... }: { solem.edge.enable = true; solem.raspberry.enable = true; })
-          ];
-        };
-
-        # Jetson Nano/Orin — `nix build .#jetson`
-        solem-jetson = nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
-          modules = [
-            (nixpkgs + "/nixos/modules/installer/sd-card/sd-image-aarch64.nix")
-            ./nixos/configuration-edge.nix
-            ./nixos/modules/solem-edge.nix
-            ./nixos/modules/solem-jetson.nix
-            ({ ... }: { solem.edge.enable = true; solem.jetson.enable = true; })
-          ];
-        };
+        # ── Disabilitati per ora (vedere docs/OPERATIVE.md) ────────────
+        # solem-vm-full: 130+ moduli, eval rompe per nomi/opzioni
+        # solem-raspberry: importa configuration-edge.nix + solem-api/cluster
+        # solem-jetson: idem
       };
 
       # ────────────────────────────────────────────────────────────────
@@ -86,9 +60,7 @@
         vm      = cfgs.solem-vm.config.system.build.vm;
         iso     = cfgs.solem-iso.config.system.build.isoImage;
       } else {
-        default   = cfgs.solem-raspberry.config.system.build.sdImage;
-        raspberry = cfgs.solem-raspberry.config.system.build.sdImage;
-        jetson    = cfgs.solem-jetson.config.system.build.sdImage;
+        # aarch64-linux: nessun package finché raspberry/jetson eval-clean
       }));
 
       # ────────────────────────────────────────────────────────────────

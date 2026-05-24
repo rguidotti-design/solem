@@ -48,15 +48,8 @@ jobs:
           nix eval .#nixosConfigurations.solem-iso.config.system.build.isoImage.drvPath \
             --show-trace --no-warn-dirty || echo "::warning ::ISO eval failed"
 
-      - name: Eval Raspberry aarch64 (cross)
-        run: |
-          nix eval .#nixosConfigurations.solem-raspberry.config.system.build.sdImage.drvPath \
-            --show-trace --no-warn-dirty || echo "::warning ::Raspberry eval failed"
-
-      - name: Eval gavio stub package
-        run: |
-          nix eval .#packages.x86_64-linux.gavio.drvPath --show-trace || \
-            echo "::warning ::gavio package eval failed"
+      # Raspberry/Jetson + gavio stub temporaneamente rimossi dal flake
+      # (vedere docs/OPERATIVE.md per ricostruzione incrementale)
 
       - name: Conteggio moduli SOLEM
         run: |

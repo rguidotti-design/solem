@@ -116,11 +116,4 @@ jobs:
         run: |
           nix --extra-experimental-features 'nix-command flakes' eval \
             .#nixosConfigurations.solem-vm.config.system.build.vm.drvPath
-      - name: Eval aarch64 raspberry sd-image
-        run: |
-          nix --extra-experimental-features 'nix-command flakes' eval \
-            .#nixosConfigurations.solem-raspberry.config.system.build.sdImage.drvPath
-      - name: Eval aarch64 jetson sd-image
-        run: |
-          nix --extra-experimental-features 'nix-command flakes' eval \
-            .#nixosConfigurations.solem-jetson.config.system.build.sdImage.drvPath
+      # Raspberry/Jetson temporaneamente rimossi dal flake — readd quando eval-clean
