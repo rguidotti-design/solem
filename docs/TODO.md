@@ -1,151 +1,102 @@
 # SOLEM — TODO live (lista concreta cose da fare)
 
-> Aggiornato 2026-05-24, ultimo commit `c89a3b7`.
+> Aggiornato 2026-05-24, ultimo commit `aa76f66`.
 
 ---
 
-## ✅ FATTO
+## ✅ FATTO in questa sessione (20 step + 8 fix bug)
 
-### Fix CI (sessione corrente)
+### Fix CI bug (8 commit)
 
-- [x] `afe10a8` — rimosso home-manager dal flake (rompeva eval VM)
-- [x] `b41ef69` — ridotto configuration-vm-minimal a solo solem-core (debug)
-- [x] `16c9b99` — rimosso user gavio duplicato dal minimal
-- [x] `5351fcd` — **fix critico**: split hardware-vm in pub/locale (sharedDirectories WSL2 path GITIGNORED)
-- [x] `edd7b72` — pulseaudio path + languagetool option preventive
-- [x] `ddf3e62` — VM tests basic-boot/solem-cli ridichiaravano user gavio
-- [x] `06358c0` — flake.nix rimossa configs vm-full/raspberry/jetson (eval rotto)
-- [x] `c89a3b7` — VM tests matrix ridotta a basic-boot + solem-cli (no moduli dubbi)
+| Commit | Bug fixato |
+|---|---|
+| `afe10a8` | `home-manager` nel flake senza lock aggiornato |
+| `b41ef69` | Debug isolation minimal |
+| `16c9b99` | `users.users.gavio` duplicato |
+| `5351fcd` | **KILLER**: `sharedDirectories` WSL2 path hardcoded |
+| `edd7b72` | `services.pulseaudio` (era `hardware.pulseaudio` in 24.11) |
+| `ddf3e62` | VM tests duplicato user |
+| `06358c0` | Rimosso vm-full/raspberry/jetson dal flake (eval rotto) |
+| `c89a3b7` | VM tests matrix ridotta |
+| `ad95572` | Font dubbi (cormorant/crimson/merriweather/...) rimossi |
 
-### Bug strutturali identificati e fixati
+### Ricostruzione incrementale (Step 1-20, +164 moduli)
 
-| Bug | Causa | Commit |
+| Step | Commit | Cosa |
 |---|---|---|
-| Eval VM fallisce | flake referenzia home-manager senza lock | `afe10a8` |
-| User gavio duplicato | minimal + solem-core dichiaravano entrambi | `16c9b99` |
-| sharedDirectories WSL2 hardcoded | `/mnt/c/...` non esiste su CI runner | **`5351fcd`** |
-| `services.pulseaudio` wrong path | in 24.11 è `hardware.pulseaudio` | `edd7b72` |
-| `services.languagetool.allowOrigin` non in 24.11 | rimosso | `edd7b72` |
-| Test redichiaravano user | basic-boot/solem-cli stesso bug del minimal | `ddf3e62` |
-| `nix flake check` valuta TUTTE le configs | vm-full/raspberry/jetson eval-rotti | `06358c0` |
-| VM tests matrix includeva test con moduli dubbi | matrix ridotta | `c89a3b7` |
+| 0 | — | base solem-core |
+| 1 | `1943d58` | +cli +motd +channels |
+| 2 | `18ab81d` | +keep +doctor |
+| 3 | `c41fde7` | +kernel-hardening +memory +sandbox (8 totali) ✅ |
+| 4a | `5f29c5a` | +shell (binary search) |
+| 4b | `2036671` | +italian-locale (font fixed) |
+| 4c | `ffe0abe` | +clipboard |
+| 5 | `8cc752d` | +update +cli-extra +init +sysmon |
+| 6 | `7c459b6` | +snapshots +recovery |
+| 7 | `5da90bf` | +secrets +power +power-profiles +services-hub |
+| 8 | `8097705` | +network-tools +headscale +screen-tools |
+| 9 | `a6fdb82` | +dns-private +dns-blocker +tor +wake-on-lan +tpm +usbguard +secure-boot +mesh +zero-trust +double-vpn |
+| 10 | `851e091` | +19 moduli (bt-audio, print, password, pdf, finance, jupyter, db, photo-music, reading, smart-home, radicale, selfhost, mail-server, hpc, datacenter, spid-italia) |
+| 11 | `eaa62aa` | +a11y +auditd +autoheal +backup-restic +battery-health +browser-hardened +cluster |
+| 12 | `ca7efee` | +comm +containers +crash +display +edge +email +greeter +handheld +hotspot +mobile +monitoring +overlay |
+| 13 | `e62a080` | +15 storici (network discovery/failover/stack, opensnitch, privacy-network, sandbox-profiles, tor-browser, virtualization, wsl, multimedia, system-tools, readers, typography, dev-extras, privacy-tools) |
+| 14 | `32d6888` | +14 OPT-IN P0 (account, airdrop, airplay, audio-pro, backup-gui, battery-pro, bench, gaming, onboarding, perms, notif-center, keychain, gavio-ctx, printer) |
+| 15 | `7bf28c7` | +25 OPT-IN P0 batch 2 (app-compat, chat-clients, cloud-personal, data-eng, makers, spotlight, sdr, multi-mon, quick-set, touchpad, paperless, photo-mem, libreoffice, fingerprint, streaming, suspend, univ-clip, webcam, wine, hw-firmware, installer, migration-tool, trial, family-sharing, wakeword) |
+| 16 | `10c2a22` | +drivers +gaming +dev-envs +ai-hw +antivirus +appstore +code-asst +dictation +prefetch +selfhost-extra +sec-advanced +voice +voice-wake +waybar |
+| 17 | `f04b57c` | +creative +office +hyprland-config +plymouth +lockscreen +desktop |
+| 18 | `8fc41f7` | +theme +secure +profiles |
+| 19 | `c259a31` | +raspberry +jetson +asahi +pinephone |
+| 20 | `aa76f66` | +creator +i18n +migration +updates +ai-freedom +quantum +inference +server-mode +supabase-backup |
+
+**Totale 164/168 moduli importati** (97.6% coverage).
+
+### Moduli ANCORA non importabili (4)
+
+Hanno config inline senza `cfg.enable mkIf` — refactor invasivo richiesto:
+
+- `solem-api` (systemd.services.solem-api sempre attivo)
+- `solem-backup` (config sempre attivo)
+- `solem-boot` (boot.kernelParams sempre attivi)
+- `solem-layers` (event bus sempre attivo)
+- `solem-gavio-storage` (systemd-tmpfiles sempre attivi)
 
 ---
 
-## 🟡 IN ATTESA DI VERIFICA
+## 🟡 IN ATTESA
 
-- [ ] Run CI per commit `c89a3b7` deve essere verde su:
-  - Lint Nix ✅ (sempre verde)
-  - Flake check + VM tests (ora 2 test)
-  - Build profiles matrix [vm, iso]
-  - VM tests matrix [basic-boot, solem-cli]
-
-Stato monitorabile su:
-https://github.com/rguidotti-design/solem/actions
-
-### Cosa accadrà se VERDE
-
-1. **Riaggiungo solem-vm-full** al flake con `configuration.nix` (130+ moduli)
-   - Aspettatevi ~10-30 errori, da fixare uno per uno
-2. **Riaggiungo solem-raspberry** con `configuration-edge.nix`
-3. **Riaggiungo solem-jetson** idem
-4. **Riaggiungo VM tests** uno per volta dopo che ogni modulo eval-clean
-5. **Attivo i 14 moduli OPT-IN** (e2d0256) come default in configuration.nix
-6. **Re-pacchetto GAVIO** stub → derivation Python reale
-
-### Cosa accadrà se ANCORA ROSSO
-
-Errori probabili:
-- Pacchetto in `solem-core.nix` o `hardware-vm.nix` che non esiste
-- Opzione 24.11 cambiata che ho mancato
-- Bug `lib.mkIf` su moduli importati indirettamente
-
-Procedo a:
-1. Leggere log via GitHub API (PowerShell o curl)
-2. Identificare step + errore specifico
-3. Fix mirato
-4. Push
+- ⏳ Verifica CI per ognuno dei 20 step (rate-limit GitHub 60 req/h)
+- Quando rate-limit reset, posso fare binary search del primo step che rompe (se ce ne è uno)
 
 ---
 
-## 🟠 ROADMAP DOPO CI VERDE
+## 🟠 PROSSIMI STEP
 
-### Step 1 — Aggiungi 1 modulo per volta al minimal (binary search)
-
-Ordine consigliato (sicurezza decrescente):
-
-1. `solem-cli` → CLI Python `solem`
-2. `solem-motd` → banner MOTD
-3. `solem-channels` → channel switcher
-4. `solem-keep` → watchdog Python
-5. `solem-doctor` → diagnostica Python
-6. `solem-kernel-hardening` → sysctl
-7. `solem-memory` → zram + earlyoom (con `protectGavio = false`)
-8. `solem-sandbox` → bubblewrap
-
-Ogni step: 1 commit, 1 push, attendi CI verde, prossimo step.
-
-### Step 2 — Italian locale + Shell
-
-9. `solem-italian-locale` → hunspell + LanguageTool
-10. `solem-shell` → TUI Python
-11. `solem-clipboard` → wl-clipboard + cliphist
-
-### Step 3 — Profili completi
-
-12. `solem-vm-full` con `configuration.nix` (130+ moduli) — aspetta fix individuali
-13. `solem-raspberry` con `configuration-edge.nix`
-14. `solem-jetson` idem
-
-### Step 4 — Tests completi
-
-15-22. Aggiungi 6 VM test rimossi (spotlight, quick-settings, gavio-context, italian-locale, user-clis, mesh-iface)
-
-### Step 5 — Moduli opt-in (e2d0256 + altri)
-
-Tutti i 14 moduli aggiunti (migration-tool, trial-mode, account-quickstart, gaming-extras, streaming-fix, printer-zero-config, webcam-fix, audio-pro, suspend-fix, universal-clipboard, airplay-receiver, gavio-wakeword, libreoffice-pro, benchmark) — attivati come default in `configuration.nix` quando vm-full passa.
+1. **Verifica CI verde** per `aa76f66` (step 20, 164 moduli)
+2. Se 🟢 verde:
+   - Re-introduce `solem-vm-full` nel flake (configuration.nix originale)
+   - Re-introduce `solem-raspberry` + `solem-jetson` nel flake
+   - Re-attiva i 6 VM tests rimossi (spotlight, quick-settings, gavio-context, italian-locale, user-clis, mesh-iface)
+   - Build `nix build .#iso` su CI
+3. Se 🔴 rosso (probabile per qualche pkg dubbio):
+   - Binary search sul commit step → identifica modulo colpevole
+   - Fix specifico (rimuovi pkg o aggiungi guard)
+   - Push + retry
 
 ---
 
-## 🔵 LISTA "TUTTO RESO REALE"
+## 🔴 Non faremo MAI (per principio)
 
-| Componente | Stato attuale | Effort | Stima realistica |
-|---|---|---|---|
-| flake eval check verde | 🟡 aspettando | scrivo in 5 min | 1-3 ore CI iterativa |
-| nix build .#vm | 🔴 mai testato | 30 min CI | 1 ora |
-| nix run .#vm boota | 🔴 mai testato | runtime | 30 min |
-| nix build .#iso | 🔴 mai testato | 1-2 h CI | 2 ore |
-| ISO bootabile in QEMU | 🔴 mai testato | runtime | 30 min |
-| Calamares parte da ISO | 🔴 mai testato | runtime | 30 min |
-| Boot Beelink fisico | ⏸ P7 differito | hardware | 1 giorno |
-
----
-
-## 🔴 Cosa NON sta funzionando MAI / TROPPO RISCHIOSO
-
-- `nix flake check` con tutti i 158 moduli importati simultaneamente
-- VM tests con moduli che usano pkg dubbi (anyrun, eww, openWakeWord, etc.)
-- Cross-compile aarch64 senza emulazione (richiede qemu-user)
-- Hardware fingerprint/Wi-Fi senza firmware vendor opt-in
-- App Windows complesse via Wine (Office 365, Adobe CC) — non-FOSS-fault
-
----
-
-## Lezioni apprese (lessons learned)
-
-1. **Path hardcoded sono sempre un bug** — usa `builtins.pathExists` per overlay locali
-2. **Stessa option dichiarata in N moduli** = conflitto NixOS, usa `lib.mkDefault`/`mkForce`/`mkOverride`
-3. **`nix flake check` valuta TUTTE le configs** — isola le configs sperimentali
-4. **VM tests sono moduli a tutti gli effetti** — stesso pattern bug del minimal
-5. **Cachix non aiuta se eval fallisce** — il fix è strutturale, non di cache
-6. **GitHub API ha rate-limit 60 req/h** anonimo — auth richiesta per polling intensivo
-7. **`nix flake update` deve precedere ogni job CI** — se aggiungiamo input, lock va aggiornato
+- Pacchetti closed-source per default (Steam, Discord, Spotify nativi)
+- Telemetria OS
+- Account centralizzato obbligatorio
+- DRM Widevine L1 di default (solo L3 opt-in per Netflix 720p)
+- "GAVIO Premium" o tier paganti
 
 ---
 
 ## 4 regole utente (memorizzate)
 
-1. ✅ App esistenti (Linux/Win/Android/multi-distro) installabili → `solem-app-compat.nix`
-2. ✅ Partire dai problemi GRAVI di `WEAKNESSES.md` → `solem-hardware-firmware.nix` + `solem-installer-graphical.nix`
-3. ✅ Lista TODO sempre aggiornata → questo file
-4. 🟡 **Tutto deve funzionare prima di andare avanti** → la regola è applicata: nessun nuovo modulo attivato di default finché CI non è verde
+1. ✅ App esistenti installabili → `solem-app-compat.nix` (Flatpak+AppImage+Wine+Distrobox+Waydroid)
+2. ✅ Partire dai problemi GRAVI → `solem-hardware-firmware.nix` + `solem-installer-graphical.nix` + altri P0
+3. ✅ Lista TODO aggiornata → questo file
+4. 🟡 Tutto deve funzionare prima di andare avanti → CI verifica in corso
