@@ -1,7 +1,7 @@
 # SOLEM — operazioni comuni.
 # Da WSL: make <target>. Da Windows nativo: usa scripts/*.ps1.
 
-.PHONY: help vm vm-full build build-iso build-aarch64 check check-quick eval eval-iso eval-raspberry test test-list ssh logs status restart-gavio setup-env clean clean-store fmt lint deadnix-check tests-all dev-loop
+.PHONY: help vm vm-full build build-iso build-aarch64 check check-quick eval eval-iso eval-raspberry test test-list ssh logs status restart-gavio setup-env clean clean-store fmt lint deadnix-check tests-all dev-loop ci-status ci-watch gavio-stub demo
 
 WSL_SOLEM := /mnt/c/Users/guido/Desktop/solem
 SSH_OPTS  := -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
@@ -95,6 +95,33 @@ fmt:                ## formatta tutti i .nix con nixpkgs-fmt
 lint:               ## statix + deadnix
 	nix run nixpkgs#statix -- check .
 	nix run nixpkgs#deadnix -- .
+
+# ── CI monitoring ──────────────────────────────────────────────────
+ci-status:          ## ultimi 5 run CI con status
+	@curl -s "https://api.github.com/repos/rguidotti-design/solem/actions/runs?per_page=10" 2>/dev/null | \
+	  python3 -c "import json, sys; d=json.load(sys.stdin); \
+	    [print(f\"{r['head_sha'][:7]}  {r['name']:30}  {r['status']:12}  {r['conclusion'] or '—'}\") \
+	     for r in d.get('workflow_runs', [])[:10]]" 2>/dev/null || \
+	  echo "Rate-limited (60 req/h). Aspetta o autenticati."
+
+ci-watch:           ## attendi ultimo run completi (polling 30s)
+	@while true; do \
+	  STATUS=$$(curl -s "https://api.github.com/repos/rguidotti-design/solem/actions/runs?per_page=1" 2>/dev/null | grep -o '"status":"[a-z_]*"' | head -1); \
+	  echo "$$(date +%H:%M:%S) — $$STATUS"; \
+	  echo "$$STATUS" | grep -q "completed" && break; \
+	  sleep 30; \
+	done
+
+# ── GAVIO stub ─────────────────────────────────────────────────────
+gavio-stub:         ## build + run GAVIO stub locale (porta 8765)
+	nix build .#gavio
+	GAVIO_PORT=8765 ./result/bin/gavio-server &
+	@sleep 1
+	@echo "GAVIO stub su http://127.0.0.1:8765/health"
+
+demo:               ## esegui solem-demo (se installato nel sistema corrente)
+	@command -v solem-demo >/dev/null && solem-demo || \
+	  echo "Non sei in SOLEM. Da WSL2: nix run .#vm, poi solem-demo dentro la VM."
 
 # ── Dev loop: il ciclo iterativo veloce ────────────────────────────
 dev-loop:           ## ciclo: eval → fix → eval → ... (rapido)
