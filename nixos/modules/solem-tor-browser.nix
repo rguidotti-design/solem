@@ -22,8 +22,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      tor-browser-bundle-bin
-      torsocks  # CLI wrapper per usare Tor con tool generici
+      tor-browser     # in 24.11 il nome è tor-browser (non tor-browser-bundle-bin)
+      torsocks        # CLI wrapper per usare Tor con tool generici
     ];
 
     # Disclaimer al primo lancio
