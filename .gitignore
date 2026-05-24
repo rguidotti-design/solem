@@ -47,3 +47,7 @@ backend/.venv/
 # Flake lock può essere committato MA Nix lo genera spesso
 # Lo committiamo per riproducibilità (commenta se preferisci no)
 # flake.lock
+
+# Path locali utente (sharedDirectories WSL2) — non committare!
+# Ogni dev ha i propri path host. Il file è opt-in (Nix lo ignora se assente).
+nixos/hardware-vm-local.nix
