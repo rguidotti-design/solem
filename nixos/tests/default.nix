@@ -26,6 +26,9 @@
   # Test 9 — nftables egress whitelist (BLOCK reale, non solo log)
   ai-network-egress = import ./ai-network-egress.nix { inherit pkgs; };
 
+  # Test 10 — GAVIO zero-trust: override systemd User/caps/syscall
+  gavio-zero-trust = import ./gavio-zero-trust.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 
