@@ -86,6 +86,19 @@
     ./modules/solem-battery-health.nix
     ./modules/solem-browser-hardened.nix
     ./modules/solem-cluster.nix
+    # Step 12: 12 moduli vari (tutti opt-in default off)
+    ./modules/solem-communication.nix
+    ./modules/solem-containers.nix
+    ./modules/solem-crash-reporter.nix
+    ./modules/solem-display.nix
+    ./modules/solem-edge.nix
+    ./modules/solem-email.nix
+    ./modules/solem-greeter.nix
+    ./modules/solem-handheld.nix
+    ./modules/solem-hotspot.nix
+    ./modules/solem-mobile.nix
+    ./modules/solem-monitoring.nix
+    ./modules/solem-overlay.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
