@@ -9,13 +9,42 @@
 
 ---
 
-## ✅ FATTO oggi (questo turno)
+## ✅ FATTO oggi (2 turni)
 
+### Turno 1 (commit 42e0cb8)
 - [x] `solem-app-compat.nix` — Flatpak + AppImage + Distrobox + Wine + Bottles + Waydroid + CLI `solem-install`
 - [x] `solem-hardware-firmware.nix` — firmware OOTB + microcode + Bluetooth + sensors + fwupd + NVIDIA opt-in
 - [x] `solem-installer-graphical.nix` — Calamares con branding navy/gold + slideshow QML 4 schermate
 - [x] `docs/APP-COMPAT.md` — matrix completa app per OS d'origine + 5 quick start
 - [x] `docs/TODO.md` (questo file)
+
+### Turno 2 (questo commit) — 14 moduli OPT-IN
+
+**Batch A — Onboarding**:
+- [x] `solem-migration-tool.nix` — `solem-migrate` wizard Win/Mac/Linux/USB/cloud (rsync + smbclient + rclone + hfsprogs)
+- [x] `solem-trial-mode.nix` — boot live "prova senza install" + `solem-trial save-to-usb`
+- [x] `solem-account-quickstart.nix` — auto-genera GPG + SSH + Mesh + Age + Restic al primo login
+
+**Batch B — App ecosystem extra**:
+- [x] `solem-gaming-extras.nix` — Heroic Launcher (Epic/GOG/Amazon) + ProtonUp-Qt
+- [x] `solem-streaming-fix.nix` — Widevine L3 (Netflix/Disney+ 720p) per Firefox/Chromium/Brave
+
+**Batch C — Hardware OOTB**:
+- [x] `solem-printer-zero-config.nix` — CUPS + Avahi + driver Gutenprint/HP/Epson/Canon/Brother + sane-airscan + GUI
+- [x] `solem-webcam-fix.nix` — v4l2loopback (virtual cam) + guvcview + cheese + gphoto2 (DSLR as webcam)
+- [x] `solem-audio-pro.nix` — PipeWire low-latency + EasyEffects + RNNoise + Helvum + qpwgraph
+- [x] `solem-suspend-fix.nix` — hooks pre/post suspend per moduli problematici + restart NetworkManager/PipeWire
+
+**Batch D — UX/AI/Sync**:
+- [x] `solem-universal-clipboard.nix` — clipboard sync mesh (porta 9700, daemon push + receiver)
+- [x] `solem-airplay-receiver.nix` — Shairport-sync audio + UxPlay video (ricevi mirror da iPhone/Mac)
+- [x] `solem-gavio-wakeword.nix` — "Hey GAVIO" daemon openWakeWord + LED privacy + trigger API
+
+**Batch E — Office**:
+- [x] `solem-libreoffice-pro.nix` — LibreOffice + hunspell-IT + LanguageTool + Zotero + OnlyOffice opt-in
+
+**Batch F — Performance**:
+- [x] `solem-benchmark.nix` — `solem-bench` cpu/memory/disk/boot/idle-ram + report log
 
 ---
 
