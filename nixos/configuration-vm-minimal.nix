@@ -23,6 +23,11 @@
     ./modules/solem-dictation-live.nix   # speech-to-text whisper.cpp
     ./modules/solem-cloud-auto-pair.nix  # solem-cloud QR pair Nextcloud
     ./modules/solem-ai-shortcuts.nix     # Super+T/M/W/D/R/G quick AI actions
+    ./modules/solem-quick-look.nix       # preview file spacebar-like
+    ./modules/solem-mission-control.nix  # Super+Tab overview
+    ./modules/solem-continuity-camera.nix  # Android phone webcam
+    ./modules/solem-airplay-auto.nix     # AirPlay receiver auto
+    ./modules/solem-photos-memories.nix  # digiKam face recognition
   ];
 
   # Identità
