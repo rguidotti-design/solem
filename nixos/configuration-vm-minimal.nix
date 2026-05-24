@@ -28,6 +28,8 @@
     ./modules/solem-continuity-camera.nix  # Android phone webcam
     ./modules/solem-airplay-auto.nix     # AirPlay receiver auto
     ./modules/solem-photos-memories.nix  # digiKam face recognition
+    ./modules/solem-clipboard-mesh.nix   # universal clipboard auto-push P2P
+    ./modules/solem-family-gui.nix       # zenity GUI family sharing
   ];
 
   # Identità
