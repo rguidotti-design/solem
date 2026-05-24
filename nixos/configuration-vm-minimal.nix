@@ -20,10 +20,19 @@
     ./modules/solem-kernel-hardening.nix
     ./modules/solem-memory.nix
     ./modules/solem-sandbox.nix
+    # Step 4: locale + shell TUI + clipboard
+    ./modules/solem-italian-locale.nix
+    ./modules/solem-shell.nix
+    ./modules/solem-clipboard.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
   solem.memory.protectGavio = false;
+
+  # Abilita step 4
+  solem.italianLocale.enable = true;
+  solem.shell.enable = true;
+  solem.clipboard.enable = true;
 
   # Identità
   networking.hostName = "solem-vm";
