@@ -22,6 +22,7 @@
     ./modules/solem-steam-deck.nix       # gaming Steam Deck-like
     ./modules/solem-dictation-live.nix   # speech-to-text whisper.cpp
     ./modules/solem-cloud-auto-pair.nix  # solem-cloud QR pair Nextcloud
+    ./modules/solem-ai-shortcuts.nix     # Super+T/M/W/D/R/G quick AI actions
   ];
 
   # Identità
