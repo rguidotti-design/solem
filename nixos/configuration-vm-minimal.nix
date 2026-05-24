@@ -24,6 +24,9 @@
     ./modules/solem-italian-locale.nix
     ./modules/solem-shell.nix
     ./modules/solem-clipboard.nix
+    # Step 5: update OTA + snapshots + CLI extra
+    ./modules/solem-update.nix
+    ./modules/solem-cli-extra.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
