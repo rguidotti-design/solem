@@ -197,6 +197,10 @@
     ./modules/solem-inference.nix
     ./modules/solem-server-mode.nix
     ./modules/solem-supabase-backup.nix
+    # Step 21: api + backup + boot (refactored con cfg.enable mkIf)
+    ./modules/solem-api.nix
+    ./modules/solem-backup.nix
+    ./modules/solem-boot.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)

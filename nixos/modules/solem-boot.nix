@@ -17,16 +17,16 @@ let
     cp ${../plymouth-theme/solem.plymouth} "$THEME_DIR/solem.plymouth"
     cp ${../plymouth-theme/solem.script} "$THEME_DIR/solem.script"
   '';
+  cfg = config.solem.boot;
 in {
   # ──────────────────────────────────────────────────────────────────────
   # SOLEM BOOT — boot esperienza premium (no kernel logs scorrenti)
   # ──────────────────────────────────────────────────────────────────────
-  # - Plymouth splash con tema "spinner" (loader minimalista navy)
-  # - Quiet boot: niente rumore kernel/systemd sotto al logo
-  # - Generations menu GRUB con timeout breve (3s) per emergency rollback
-  #
-  # Per disabilitare temporaneamente: aggiungi 'plymouth.enable=0' a kernel
-  # cmdline (menu GRUB → 'e' → edita).
+  options.solem.boot = {
+    enable = lib.mkEnableOption "Plymouth splash + quiet boot SOLEM (navy+gold)";
+  };
+
+  config = lib.mkIf cfg.enable {
 
   boot.plymouth = {
     enable = true;
@@ -55,4 +55,6 @@ in {
 
   # Bootloader theme — sfondo nero, niente distrazioni
   boot.loader.grub.splashImage = null;  # rimuove splash default GRUB
+
+  };  # fin lib.mkIf cfg.enable
 }

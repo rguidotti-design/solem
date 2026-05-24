@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
+  cfg = config.solem.api;
   pyDeps = pkgs.python312.withPackages (ps: with ps; [
     fastapi
     uvicorn
@@ -15,6 +16,12 @@ in {
   # Separato da GAVIO: gira su :8001 mentre GAVIO sta su :8000.
   # Questa è la radice della filosofia AI-native: un'API pensata perché
   # le AI (GAVIO oggi, altre AI domani) possano scoprire e usare SOLEM.
+
+  options.solem.api = {
+    enable = lib.mkEnableOption "SOLEM API backend (FastAPI :8001)";
+  };
+
+  config = lib.mkIf cfg.enable {
 
   systemd.services.solem-api = {
     description = "SOLEM API — backend di sistema (L1-L5 + users + system)";
@@ -140,4 +147,6 @@ in {
       Persistent = true;
     };
   };
+
+  };  # fin lib.mkIf cfg.enable
 }

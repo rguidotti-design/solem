@@ -43,11 +43,18 @@ let
     echo "[solem-backup] done. Snapshot esistenti:"
     ls -lh "$BACKUP_DIR"/solem-snap-*.tar.zst 2>/dev/null | tail -5
   '';
+  cfg = config.solem.backup;
 in {
   # SOLEM BACKUP — snapshot quotidiano dello stato persistente.
   # Cattura: dati GAVIO (venv state, dataset, conversazioni), stato SOLEM
   # (identity, context, memory), env file (/etc/gavio).
   # NON cattura: /nix/store (ricostruibile dal flake), log volatili.
+
+  options.solem.backup = {
+    enable = lib.mkEnableOption "Backup giornaliero stato persistente (tar+zstd)";
+  };
+
+  config = lib.mkIf cfg.enable {
 
   systemd.services.solem-backup = {
     description = "SOLEM — snapshot stato persistente";
@@ -77,4 +84,6 @@ in {
 
   # Aggiungi zstd ai system packages per ispezione manuale degli archivi
   environment.systemPackages = with pkgs; [ zstd ];
+
+  };  # fin lib.mkIf cfg.enable
 }
