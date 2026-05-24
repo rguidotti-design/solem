@@ -17,6 +17,10 @@
     ./modules/solem-migrate-windows.nix  # migrazione NTFS Windows
     ./modules/solem-snap-layouts.nix     # Hyprland binds Win-style
     ./modules/solem-hw-just-works.nix    # sane defaults HW (opt-in default false)
+    ./modules/solem-davinci.nix          # DaVinci Resolve helper
+    ./modules/solem-wine-office-photoshop.nix  # Office/Photoshop wine preset
+    ./modules/solem-steam-deck.nix       # gaming Steam Deck-like
+    ./modules/solem-dictation-live.nix   # speech-to-text whisper.cpp
   ];
 
   # Identità
