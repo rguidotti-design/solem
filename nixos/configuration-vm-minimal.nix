@@ -45,6 +45,8 @@
     ./modules/solem-anti-malware.nix     # 🛡️ ClamAV + AIDE + rkhunter + chkrootkit
     ./modules/solem-process-sentinel.nix # 👁️ rule-based anomaly detector
     ./modules/solem-vault.nix            # 🔐 secret manager age-encrypted
+    ./modules/solem-encrypted-memory.nix # 🧠 zram cifrato + tmpfs /tmp
+    ./modules/solem-net-audit.nix        # 📡 log ogni connect outbound
   ];
 
   # Identità
