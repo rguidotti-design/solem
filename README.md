@@ -31,18 +31,20 @@ preinstallate e libertà operativa totale.
 > - [docs/COMPETITIVE-GAP.md](docs/COMPETITIVE-GAP.md) — confronto colossi
 > - [docs/INSTALL-BEELINK.md](docs/INSTALL-BEELINK.md) — guida install Beelink
 
-### Artifacts buildati (al 2026-05-21, commit `a9cdcfd`)
-- ✅ **ISO x86_64** bootable (5.5 GB) — `nix build .#iso`
-- ✅ **Eval verde** per Raspberry, Jetson, VM, ISO
-- ⏳ SD-image ARM64 da buildare on-demand (`nix build .#raspberry` / `.#jetson`)
+### Stato CI (live, aggiornato 2026-05-24)
+- 🟡 **CI in stabilizzazione**: ricostruzione incrementale del minimal-vm in
+  corso. Bug killer trovato (`solem.shell.enable` mancava option dichiarazione)
+  fixato in commit `d371769`.
+- ✅ **GAVIO stub** packaged: `nix build .#gavio` → server REST 5-endpoint
+- ✅ **`solem-demo`** CLI tour capability in 30s
+- ✅ **5 VM tests** in CI matrix: basic-boot, solem-cli, solem-demo, gavio-stub, firewall-base
 
-### Stats (verificato eseguendo `pytest tests/ -q`)
-- **92 moduli NixOS** opt-in
-- **60 layer Python** (FastAPI single-responsibility)
-- **262 endpoint API**
-- **141 test passati / 0 falliti / 1 skipped** (su WSL, in-memory SQLite)
-- **10 ADR** architetturali
-- **23 docs** (INSTALL.md, USER-GUIDE.md, BUILD-STATUS.md, AI-BACKEND.md, …)
+### Stats
+- **168 moduli NixOS** opt-in (167 con `cfg.enable`, 1 always-on)
+- **8 home-manager modules** (auto-symlink config user)
+- **60 layer Python** GAVIO (FastAPI single-responsibility, repo separato)
+- **3 workflow CI**: SOLEM CI, Quick Validate, Smoke Test
+- **27 docs** + 10 ADR architetturali
 
 ### Architettura AI
 SOLEM è un **OS**, non un'AI. Pre-integra **GAVIO** (l'AI personale dell'autore) ma è
