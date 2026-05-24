@@ -38,6 +38,11 @@
     # Step 6: snapshots + recovery (opt-in)
     ./modules/solem-snapshots.nix
     ./modules/solem-recovery.nix
+    # Step 7: secrets + power + services-hub (tutti opt-in default off)
+    ./modules/solem-secrets.nix
+    ./modules/solem-power.nix
+    ./modules/solem-power-profiles.nix
+    ./modules/solem-services-hub.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
