@@ -1,10 +1,14 @@
 { config, pkgs, lib, ... }:
 
 # CONFIGURAZIONE MINIMALE VM — solem-core + tool basici.
-# Ricostruzione incrementale: aggiungo 1-3 moduli per volta.
+# Ricostruzione incrementale: aggiungo 1 modulo per volta.
 #
 # IMPORTANTE: solem-core.nix dichiara già users.users.gavio + users.mutableUsers=false
 # Non ridichiarare qui per evitare conflitti.
+#
+# BINARY SEARCH STEP 4: ultimo commit verde = c41fde7 (step 3).
+# Step 4 ha aggiunto italian-locale + shell + clipboard insieme → rotto.
+# Aggiungo SOLO shell per ora (Python stdlib, più sicuro).
 
 {
   imports = [
@@ -20,25 +24,15 @@
     ./modules/solem-kernel-hardening.nix
     ./modules/solem-memory.nix
     ./modules/solem-sandbox.nix
-    # Step 4: locale + shell TUI + clipboard
-    ./modules/solem-italian-locale.nix
+    # Step 4a: solo shell TUI (binary search)
     ./modules/solem-shell.nix
-    ./modules/solem-clipboard.nix
-    # Step 5: update OTA + snapshots + CLI extra
-    ./modules/solem-update.nix
-    ./modules/solem-cli-extra.nix
-    # Step 6: init script + system monitor tools (btop/bandwhich/dust/duf)
-    ./modules/solem-init.nix
-    ./modules/solem-system-monitor.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
   solem.memory.protectGavio = false;
 
-  # Abilita step 4
-  solem.italianLocale.enable = true;
+  # Abilita shell
   solem.shell.enable = true;
-  solem.clipboard.enable = true;
 
   # Identità
   networking.hostName = "solem-vm";
