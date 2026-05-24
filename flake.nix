@@ -4,15 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
-    # Home Manager 24.11 (utente-side config, FOSS)
-    home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, home-manager }:
+  outputs = { self, nixpkgs, nixos-hardware }:
     let
       systems = [ "x86_64-linux" "aarch64-linux" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
@@ -20,21 +14,14 @@
         inherit system;
         config.allowUnfree = true;
       };
-
-      # Pacchetto GAVIO (backend Python come Nix derivation, opzionale)
-      gavioPkg = system: (pkgsFor system).callPackage ./nix/gavio.nix {};
-
-      # Tutti i moduli home-manager di SOLEM (auto-symlink config user)
-      homeModules = import ./home/modules;
     in {
 
       # ────────────────────────────────────────────────────────────────
-      # NixOS configurations (host system)
+      # NixOS configurations
       # ────────────────────────────────────────────────────────────────
       nixosConfigurations = {
 
         # VM x86_64 MINIMAL — `nix run .#vm` (CI-friendly, build veloce)
-        # Solo moduli core: italian-locale + cli + motd. Niente Bruno/SimpleX/Immich.
         solem-vm = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
@@ -43,26 +30,16 @@
           ];
         };
 
-        # VM x86_64 FULL — `nix build .#nixosConfigurations.solem-vm-full.config.system.build.vm`
-        # Tutti i moduli SOLEM (rischia errori build se nixpkgs cambia API).
+        # VM x86_64 FULL — config completa (può rompersi)
         solem-vm-full = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
             ./nixos/configuration.nix
             ./nixos/hardware-vm.nix
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.gavio = { ... }: {
-                imports = builtins.attrValues homeModules;
-                home.stateVersion = "24.11";
-              };
-            }
           ];
         };
 
-        # ISO live x86_64 — `nix build .#iso` (config minimal + Calamares)
+        # ISO live x86_64 — `nix build .#iso`
         solem-iso = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
@@ -100,27 +77,11 @@
       };
 
       # ────────────────────────────────────────────────────────────────
-      # Standalone home-manager configurations
-      # Per chi gira NixOS non-SOLEM ma vuole solo i nostri home modules.
-      # ────────────────────────────────────────────────────────────────
-      homeConfigurations = forAllSystems (system: {
-        default = home-manager.lib.homeManagerConfiguration {
-          pkgs = pkgsFor system;
-          modules = builtins.attrValues homeModules ++ [
-            { home.username = "gavio"; home.homeDirectory = "/home/gavio"; home.stateVersion = "24.11"; }
-          ];
-        };
-      });
-
-      # ────────────────────────────────────────────────────────────────
       # Pacchetti per ogni arch
       # ────────────────────────────────────────────────────────────────
       packages = forAllSystems (system: let
         cfgs = self.nixosConfigurations;
-        commonPkgs = {
-          gavio = gavioPkg system;
-        };
-      in commonPkgs // (if system == "x86_64-linux" then {
+      in (if system == "x86_64-linux" then {
         default = cfgs.solem-vm.config.system.build.vm;
         vm      = cfgs.solem-vm.config.system.build.vm;
         iso     = cfgs.solem-iso.config.system.build.isoImage;
@@ -131,11 +92,11 @@
       }));
 
       # ────────────────────────────────────────────────────────────────
-      # `nix flake check` — chiama gli NixOS VM tests
+      # `nix flake check` — VM tests
       # ────────────────────────────────────────────────────────────────
       checks = forAllSystems (system:
         if system == "x86_64-linux" then
-          import ./nixos/tests { pkgs = pkgsFor system; inherit (self) nixosConfigurations; }
+          import ./nixos/tests { pkgs = pkgsFor system; nixosConfigurations = self.nixosConfigurations; }
         else {}
       );
 
@@ -151,16 +112,12 @@
             nixpkgs-fmt
             statix
             deadnix
-            home-manager.packages.${system}.home-manager
           ];
           shellHook = ''
             echo "── SOLEM dev shell ──"
-            echo "Comandi utili:"
             echo "  nix run .#vm                 → boot VM SOLEM"
             echo "  nix build .#iso              → build ISO live"
             echo "  nix flake check              → esegui VM tests"
-            echo "  nix build .#gavio            → impacchetta backend GAVIO"
-            echo "  statix check && deadnix .    → lint Nix"
           '';
         };
       });

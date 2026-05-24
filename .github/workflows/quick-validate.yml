@@ -29,8 +29,11 @@ jobs:
             substituters = https://cache.nixos.org/ https://solem.cachix.org
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
 
+      - name: Aggiorna flake.lock per nuovi input (se servono)
+        run: nix flake update --commit-lock-file || nix flake update
+
       - name: nix flake show (verifica struttura output)
-        run: nix flake show --legacy 2>&1 | head -80 || true
+        run: nix flake show --legacy --allow-import-from-derivation 2>&1 | head -80 || true
 
       - name: nix flake metadata (lock + inputs OK)
         run: nix flake metadata --json | jq '.locks.nodes | keys' || true

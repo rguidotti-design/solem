@@ -56,7 +56,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             substituters = https://cache.nixos.org/ https://solem.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
 
       - name: Setup Cachix cache (free tier 10 GB)
         uses: cachix/cachix-action@v15
@@ -65,6 +65,9 @@ jobs:
           name: solem
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           skipPush: ${{ secrets.CACHIX_AUTH_TOKEN == '' }}
+
+      - name: Aggiorna flake.lock
+        run: nix flake update || true
 
       - name: nix flake check (eval + VM tests)
         run: nix flake check --no-build --show-trace
@@ -92,7 +95,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             substituters = https://cache.nixos.org/ https://solem.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
 
       - uses: cachix/cachix-action@v15
         continue-on-error: true
@@ -100,6 +103,9 @@ jobs:
           name: solem
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           skipPush: ${{ secrets.CACHIX_AUTH_TOKEN == '' }}
+
+      - name: Aggiorna flake.lock
+        run: nix flake update || true
 
       - name: nix build .#${{ matrix.profile }}
         run: nix build .#${{ matrix.profile }} --no-link --show-trace --keep-going
@@ -138,7 +144,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
             substituters = https://cache.nixos.org/ https://solem.cachix.org
-            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU=
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= solem.cachix.org-1:/Qb3qrQen+Zz+DRFO1/RMMvDJ73LzUpTvkzAuEINREU= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
 
       - uses: cachix/cachix-action@v15
         continue-on-error: true
@@ -146,6 +152,9 @@ jobs:
           name: solem
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           skipPush: ${{ secrets.CACHIX_AUTH_TOKEN == '' }}
+
+      - name: Aggiorna flake.lock
+        run: nix flake update || true
 
       - name: Run VM test ${{ matrix.test }}
         run: nix build .#checks.x86_64-linux.${{ matrix.test }} --show-trace --print-build-logs
