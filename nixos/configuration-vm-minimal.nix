@@ -187,6 +187,16 @@
     ./modules/solem-jetson.nix
     ./modules/solem-asahi.nix
     ./modules/solem-pinephone.nix
+    # Step 20: ultimi 8 moduli con cfg.enable safe
+    ./modules/solem-creator.nix
+    ./modules/solem-i18n.nix
+    ./modules/solem-migration.nix
+    ./modules/solem-updates.nix
+    ./modules/solem-ai-freedom.nix
+    ./modules/solem-quantum.nix
+    ./modules/solem-inference.nix
+    ./modules/solem-server-mode.nix
+    ./modules/solem-supabase-backup.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
