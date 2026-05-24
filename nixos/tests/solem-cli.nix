@@ -8,7 +8,7 @@ pkgs.nixosTest {
       ../modules/solem-core.nix
       ../modules/solem-cli.nix
     ];
-    users.users.gavio = { isNormalUser = true; initialPassword = "x"; };
+    # solem-core dichiara già users.users.gavio. NON ridichiarare.
     system.stateVersion = "24.11";
   };
 

@@ -10,12 +10,7 @@ pkgs.nixosTest {
       ../modules/solem-motd.nix
     ];
 
-    # Set di base minimal per il test (evita pacchetti pesanti)
-    users.users.gavio = {
-      isNormalUser = true;
-      initialPassword = "gavio";
-      extraGroups = [ "wheel" ];
-    };
+    # solem-core dichiara già users.users.gavio. NON ridichiarare.
 
     networking.hostName = "solem-test";
     time.timeZone = "Europe/Rome";
