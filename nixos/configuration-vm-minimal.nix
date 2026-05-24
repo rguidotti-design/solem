@@ -1,14 +1,8 @@
 { config, pkgs, lib, ... }:
 
-# CONFIGURAZIONE MINIMALE VM — solem-core + tool basici.
-# Ricostruzione incrementale: aggiungo 1 modulo per volta.
-#
-# IMPORTANTE: solem-core.nix dichiara già users.users.gavio + users.mutableUsers=false
-# Non ridichiarare qui per evitare conflitti.
-#
-# BINARY SEARCH STEP 4: ultimo commit verde = c41fde7 (step 3).
-# Step 4 ha aggiunto italian-locale + shell + clipboard insieme → rotto.
-# Aggiungo SOLO shell per ora (Python stdlib, più sicuro).
+# CONFIGURAZIONE MINIMALE VM — solem-core + step 1-12 (verde) + 13a (safe).
+# Step 14+ rimossi: tutti rossi anche dopo aver tolto step 13.
+# Significa che il colpevole è in step 14+.
 
 {
   imports = [
@@ -24,30 +18,28 @@
     ./modules/solem-kernel-hardening.nix
     ./modules/solem-memory.nix
     ./modules/solem-sandbox.nix
-    # Step 4a: solo shell TUI (binary search)
+    # Step 4: shell + italian-locale + clipboard
     ./modules/solem-shell.nix
-    # Step 4b: italian-locale (font dubbi rimossi in ad95572)
     ./modules/solem-italian-locale.nix
-    # Step 4c: clipboard (cliphist + wl-clipboard + xclip)
     ./modules/solem-clipboard.nix
-    # Step 5: update OTA opt-in + CLI extra + init + system monitor
+    # Step 5: update + cli-extra + init + sysmon
     ./modules/solem-update.nix
     ./modules/solem-cli-extra.nix
     ./modules/solem-init.nix
     ./modules/solem-system-monitor.nix
-    # Step 6: snapshots + recovery (opt-in)
+    # Step 6: snapshots + recovery
     ./modules/solem-snapshots.nix
     ./modules/solem-recovery.nix
-    # Step 7: secrets + power + services-hub (tutti opt-in default off)
+    # Step 7: secrets + power + services-hub
     ./modules/solem-secrets.nix
     ./modules/solem-power.nix
     ./modules/solem-power-profiles.nix
     ./modules/solem-services-hub.nix
-    # Step 8: network tools + headscale + screen-tools (opt-in)
+    # Step 8: network tools + headscale + screen-tools
     ./modules/solem-network-tools.nix
     ./modules/solem-headscale.nix
     ./modules/solem-screen-tools.nix
-    # Step 9: networking + security + boot (10 moduli, tutti opt-in default off)
+    # Step 9: networking + security + boot
     ./modules/solem-dns-private.nix
     ./modules/solem-dns-blocker.nix
     ./modules/solem-tor.nix
@@ -58,7 +50,7 @@
     ./modules/solem-mesh.nix
     ./modules/solem-zero-trust.nix
     ./modules/solem-double-vpn.nix
-    # Step 10: 19 moduli "vita reale" (tutti opt-in default off)
+    # Step 10: 19 moduli "vita reale"
     ./modules/solem-bluetooth-audio.nix
     ./modules/solem-audio-bluetooth.nix
     ./modules/solem-print-scan.nix
@@ -78,7 +70,7 @@
     ./modules/solem-hpc.nix
     ./modules/solem-datacenter.nix
     ./modules/solem-spid-italia.nix
-    # Step 11: 7 moduli safe (opt-in default off)
+    # Step 11: 7 moduli safe
     ./modules/solem-accessibility.nix
     ./modules/solem-auditd.nix
     ./modules/solem-autoheal.nix
@@ -86,7 +78,7 @@
     ./modules/solem-battery-health.nix
     ./modules/solem-browser-hardened.nix
     ./modules/solem-cluster.nix
-    # Step 12: 12 moduli vari (tutti opt-in default off)
+    # Step 12: 12 moduli vari
     ./modules/solem-communication.nix
     ./modules/solem-containers.nix
     ./modules/solem-crash-reporter.nix
@@ -99,7 +91,7 @@
     ./modules/solem-mobile.nix
     ./modules/solem-monitoring.nix
     ./modules/solem-overlay.nix
-    # Step 13a: 7 moduli "metà safe" (binary search) — gli altri 8 lasciati fuori
+    # Step 13a: 7 moduli safe step-13
     ./modules/solem-network-discovery.nix
     ./modules/solem-network-failover.nix
     ./modules/solem-network-stack.nix
@@ -107,120 +99,25 @@
     ./modules/solem-virtualization.nix
     ./modules/solem-wsl.nix
     ./modules/solem-typography.nix
-    # Step 13b: 4 "medi" (i 4 più sospetti restano fuori)
+    # Step 13b: 4 medi step-13
     ./modules/solem-opensnitch.nix
     ./modules/solem-privacy-network.nix
     ./modules/solem-system-tools.nix
     ./modules/solem-privacy-tools.nix
-    # Step 13c RIMOSSI (più sospetti):
-    # ./modules/solem-tor-browser.nix        (tor-browser-bundle-bin)
-    # ./modules/solem-multimedia-tools.nix   (peek, kooha, tenacity, losslesscut-bin)
-    # ./modules/solem-readers.nix            (anytype-heart, joplin-desktop, wallabag-client)
-    # ./modules/solem-developer-extras.nix   (bruno, tea, dbeaver-bin, glab)
-    # Step 14: 14 moduli OPT-IN moderni (rischio medio per pkgs dubbi)
-    ./modules/solem-account-quickstart.nix
-    ./modules/solem-airdrop.nix
-    ./modules/solem-airplay-receiver.nix
-    ./modules/solem-audio-pro.nix
-    ./modules/solem-backup-gui.nix
-    ./modules/solem-battery-pro.nix
-    ./modules/solem-benchmark.nix
-    ./modules/solem-gaming-extras.nix
-    ./modules/solem-onboarding-wizard.nix
-    ./modules/solem-permissions-panel.nix
-    ./modules/solem-notification-center.nix
-    ./modules/solem-keychain.nix
-    ./modules/solem-gavio-context.nix
-    ./modules/solem-printer-zero-config.nix
-    # Step 15: ultimi moduli OPT-IN (rischio medio-alto pkgs dubbi)
-    ./modules/solem-app-compat.nix
-    ./modules/solem-chat-clients.nix
-    ./modules/solem-cloud-personal.nix
-    ./modules/solem-data-engineering.nix
-    ./modules/solem-makers.nix
-    ./modules/solem-spotlight.nix
-    ./modules/solem-radio-sdr.nix
-    ./modules/solem-multi-monitor.nix
-    ./modules/solem-quick-settings.nix
-    ./modules/solem-touchpad-pro.nix
-    ./modules/solem-paperless.nix
-    ./modules/solem-photo-memories.nix
-    ./modules/solem-libreoffice-pro.nix
-    ./modules/solem-fingerprint.nix
-    ./modules/solem-streaming-fix.nix
-    ./modules/solem-suspend-fix.nix
-    ./modules/solem-universal-clipboard.nix
-    ./modules/solem-webcam-fix.nix
-    ./modules/solem-wine-presets.nix
-    ./modules/solem-hardware-firmware.nix
-    ./modules/solem-installer-graphical.nix
-    ./modules/solem-migration-tool.nix
-    ./modules/solem-trial-mode.nix
-    ./modules/solem-family-sharing.nix
-    ./modules/solem-gavio-wakeword.nix
-    # Step 16: 14 moduli sistema (opt-in granulare)
-    ./modules/solem-drivers.nix
-    ./modules/solem-gaming.nix
-    ./modules/solem-dev-envs.nix
-    ./modules/solem-ai-hardware-tuning.nix
-    ./modules/solem-antivirus.nix
-    ./modules/solem-appstore.nix
-    ./modules/solem-code-assistant.nix
-    ./modules/solem-dictation.nix
-    ./modules/solem-prefetch-daemon.nix
-    ./modules/solem-selfhost-extra.nix
-    ./modules/solem-security-advanced.nix
-    ./modules/solem-voice.nix
-    ./modules/solem-voice-wake.nix
-    ./modules/solem-waybar.nix
-    # Step 17: 6 moduli desktop deps + office + creative (tutti opt-in)
-    ./modules/solem-creative.nix
-    ./modules/solem-office.nix
-    ./modules/solem-hyprland-config.nix
-    ./modules/solem-plymouth.nix
-    ./modules/solem-lockscreen.nix
-    ./modules/solem-desktop.nix
-    # Step 18: master + theme + secure + profiles (tutti gating opt-in)
-    ./modules/solem-theme.nix
-    ./modules/solem-secure.nix
-    ./modules/solem-profiles.nix
-    # Step 19: arch-specific (raspberry/jetson/asahi/pinephone) opt-in
-    ./modules/solem-raspberry.nix
-    ./modules/solem-jetson.nix
-    ./modules/solem-asahi.nix
-    ./modules/solem-pinephone.nix
-    # Step 20: ultimi 8 moduli con cfg.enable safe
-    ./modules/solem-creator.nix
-    ./modules/solem-i18n.nix
-    ./modules/solem-migration.nix
-    ./modules/solem-updates.nix
-    ./modules/solem-ai-freedom.nix
-    ./modules/solem-quantum.nix
-    ./modules/solem-inference.nix
-    ./modules/solem-server-mode.nix
-    ./modules/solem-supabase-backup.nix
-    # Step 21: api + backup + boot (refactored con cfg.enable mkIf)
-    ./modules/solem-api.nix
-    ./modules/solem-backup.nix
-    ./modules/solem-boot.nix
   ];
 
-  # solem-memory: niente protezione gavio service (non importato nel minimal)
+  # solem-memory: niente protezione gavio (non importato)
   solem.memory.protectGavio = false;
 
-  # Abilita shell + italian + clipboard
+  # Abilita servizi essenziali
   solem.shell.enable = true;
   solem.italianLocale.enable = true;
   solem.clipboard.enable = true;
+  solem.channel.enable = true;
 
   # Identità
   networking.hostName = "solem-vm";
   system.stateVersion = "24.11";
-
-  # Abilita channel switcher
-  solem.channel.enable = true;
-
-  # Network base
   networking.networkmanager.enable = true;
 
   # Tool base
@@ -230,14 +127,12 @@
     python312
   ];
 
-  # SSH per debug VM
   services.openssh = {
     enable = true;
     settings.PermitRootLogin = "no";
     settings.PasswordAuthentication = true;
   };
 
-  # Locale + timezone Italia
   time.timeZone = "Europe/Rome";
   i18n.defaultLocale = "it_IT.UTF-8";
   i18n.supportedLocales = [
