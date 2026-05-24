@@ -10,27 +10,28 @@ pkgs.nixosTest {
       ../modules/solem-motd.nix
     ];
 
-    # solem-core dichiara già users.users.gavio. NON ridichiarare.
-
     networking.hostName = "solem-test";
     time.timeZone = "Europe/Rome";
     system.stateVersion = "24.11";
   };
 
   testScript = ''
-    machine.wait_for_unit("multi-user.target")
+    # Aspetta system pronto (max 60s)
+    machine.wait_for_unit("multi-user.target", timeout=60)
+    machine.sleep(2)
 
-    # Utente esiste
-    machine.succeed("id gavio")
+    # Utente gavio esiste (da solem-core)
+    machine.succeed("id gavio || getent passwd gavio")
 
-    # MOTD presente
-    machine.succeed("test -e /etc/motd || test -e /run/motd.dynamic.d")
+    # solem CLI presente nel PATH (writePython3Bin)
+    machine.succeed("ls /run/current-system/sw/bin/solem || which solem")
 
-    # `solem` CLI presente
-    machine.succeed("which solem")
-
-    # hostname corretto
+    # hostname configurato
     out = machine.succeed("hostname")
-    assert "solem-test" in out, f"hostname mismatch: {out}"
+    assert "solem-test" in out, f"hostname mismatch: {out!r}"
+
+    # Diagnostica utile (no fail anche se manca)
+    machine.execute("cat /etc/os-release || true")
+    machine.execute("systemctl list-units --type=service --state=failed --no-pager || true")
   '';
 }

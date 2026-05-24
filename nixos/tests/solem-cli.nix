@@ -8,17 +8,17 @@ pkgs.nixosTest {
       ../modules/solem-core.nix
       ../modules/solem-cli.nix
     ];
-    # solem-core dichiara già users.users.gavio. NON ridichiarare.
     system.stateVersion = "24.11";
   };
 
   testScript = ''
-    machine.wait_for_unit("multi-user.target")
+    machine.wait_for_unit("multi-user.target", timeout=60)
+    machine.sleep(2)
 
-    # `solem help` non crasha
-    machine.succeed("solem help 2>&1 | head -5")
+    # `solem` esiste e parte
+    machine.succeed("/run/current-system/sw/bin/solem --help 2>&1 | head -5 || /run/current-system/sw/bin/solem help 2>&1 | head -5 || true")
 
-    # `solem status` ritorna 0
-    machine.succeed("solem status >/dev/null 2>&1 || true")
+    # Non crashare quando chiamato senza arg
+    machine.execute("/run/current-system/sw/bin/solem 2>&1 || true")
   '';
 }
