@@ -91,19 +91,9 @@
     ./modules/solem-mobile.nix
     ./modules/solem-monitoring.nix
     ./modules/solem-overlay.nix
-    # Step 13a: 7 moduli safe step-13
-    ./modules/solem-network-discovery.nix
-    ./modules/solem-network-failover.nix
-    ./modules/solem-network-stack.nix
-    ./modules/solem-sandbox-profiles.nix
-    ./modules/solem-virtualization.nix
-    ./modules/solem-wsl.nix
-    ./modules/solem-typography.nix
-    # Step 13b: 4 medi step-13
-    ./modules/solem-opensnitch.nix
-    ./modules/solem-privacy-network.nix
-    ./modules/solem-system-tools.nix
-    ./modules/solem-privacy-tools.nix
+    # Step 13a/13b RIMOSSI per ripristinare baseline verde step 1-12 (88 moduli)
+    # Vedi commit ca7efee verde confermato.
+    # Quando 791b3bf / 573c0b0 conferma verde, riaggiungo 1 alla volta.
   ];
 
   # solem-memory: niente protezione gavio (non importato)
