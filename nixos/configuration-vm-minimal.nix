@@ -130,6 +130,32 @@
     ./modules/solem-keychain.nix
     ./modules/solem-gavio-context.nix
     ./modules/solem-printer-zero-config.nix
+    # Step 15: ultimi moduli OPT-IN (rischio medio-alto pkgs dubbi)
+    ./modules/solem-app-compat.nix
+    ./modules/solem-chat-clients.nix
+    ./modules/solem-cloud-personal.nix
+    ./modules/solem-data-engineering.nix
+    ./modules/solem-makers.nix
+    ./modules/solem-spotlight.nix
+    ./modules/solem-radio-sdr.nix
+    ./modules/solem-multi-monitor.nix
+    ./modules/solem-quick-settings.nix
+    ./modules/solem-touchpad-pro.nix
+    ./modules/solem-paperless.nix
+    ./modules/solem-photo-memories.nix
+    ./modules/solem-libreoffice-pro.nix
+    ./modules/solem-fingerprint.nix
+    ./modules/solem-streaming-fix.nix
+    ./modules/solem-suspend-fix.nix
+    ./modules/solem-universal-clipboard.nix
+    ./modules/solem-webcam-fix.nix
+    ./modules/solem-wine-presets.nix
+    ./modules/solem-hardware-firmware.nix
+    ./modules/solem-installer-graphical.nix
+    ./modules/solem-migration-tool.nix
+    ./modules/solem-trial-mode.nix
+    ./modules/solem-family-sharing.nix
+    ./modules/solem-gavio-wakeword.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
