@@ -48,6 +48,7 @@
     ./modules/solem-encrypted-memory.nix # 🧠 zram cifrato + tmpfs /tmp
     ./modules/solem-net-audit.nix        # 📡 log ogni connect outbound
     ./modules/solem-download-scanner.nix # 🦠 ClamAV auto-scan download
+    ./modules/solem-ai-user.nix          # 👥 gavio-ai utente isolato (UID 970)
   ];
 
   # Identità

@@ -20,6 +20,9 @@
   # Test 7 — AI guardrails sandbox (test/exec/audit log)
   ai-guardrails = import ./ai-guardrails.nix { inherit pkgs; };
 
+  # Test 8 — gavio-ai user isolation REALE (file access + sudo + groups)
+  ai-user-isolation = import ./ai-user-isolation.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 
