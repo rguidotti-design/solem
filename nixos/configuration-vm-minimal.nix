@@ -43,6 +43,10 @@
     ./modules/solem-power.nix
     ./modules/solem-power-profiles.nix
     ./modules/solem-services-hub.nix
+    # Step 8: network tools + headscale + screen-tools (opt-in)
+    ./modules/solem-network-tools.nix
+    ./modules/solem-headscale.nix
+    ./modules/solem-screen-tools.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
