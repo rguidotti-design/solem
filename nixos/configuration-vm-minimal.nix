@@ -21,6 +21,7 @@
     ./modules/solem-wine-office-photoshop.nix  # Office/Photoshop wine preset
     ./modules/solem-steam-deck.nix       # gaming Steam Deck-like
     ./modules/solem-dictation-live.nix   # speech-to-text whisper.cpp
+    ./modules/solem-cloud-auto-pair.nix  # solem-cloud QR pair Nextcloud
   ];
 
   # Identità
