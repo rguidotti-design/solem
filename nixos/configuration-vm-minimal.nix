@@ -47,6 +47,17 @@
     ./modules/solem-network-tools.nix
     ./modules/solem-headscale.nix
     ./modules/solem-screen-tools.nix
+    # Step 9: networking + security + boot (10 moduli, tutti opt-in default off)
+    ./modules/solem-dns-private.nix
+    ./modules/solem-dns-blocker.nix
+    ./modules/solem-tor.nix
+    ./modules/solem-wake-on-lan.nix
+    ./modules/solem-tpm.nix
+    ./modules/solem-usbguard.nix
+    ./modules/solem-secure-boot.nix
+    ./modules/solem-mesh.nix
+    ./modules/solem-zero-trust.nix
+    ./modules/solem-double-vpn.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
