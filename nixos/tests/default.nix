@@ -17,6 +17,9 @@
   # Test 6 — solem-demo CLI (semplificato, solo echo no gum)
   solem-demo = import ./solem-demo.nix { inherit pkgs; };
 
+  # Test 7 — AI guardrails sandbox (test/exec/audit log)
+  ai-guardrails = import ./ai-guardrails.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 
