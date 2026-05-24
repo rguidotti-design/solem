@@ -2,10 +2,6 @@
 #
 # Single responsibility: SOLO registro dei test. Ogni test è in un file.
 # Tutti i test girano in QEMU/KVM senza richiedere hardware reale → 0 €.
-#
-# TEMPORANEAMENTE solo basic-boot + solem-cli mentre stabilizziamo CI.
-# Gli altri 6 test sono in nixos/tests/ ma esclusi dai checks finché
-# non verifichiamo che ogni modulo importato non rompe l'eval.
 { pkgs, nixosConfigurations }:
 
 {
@@ -15,7 +11,16 @@
   # Test 2 — `solem` CLI risponde a status / help
   solem-cli = import ./solem-cli.nix { inherit pkgs; };
 
-  # ── Disabilitati per ora (vedere docs/OPERATIVE.md) ────────────────
+  # Test 3 — solem-demo CLI esiste ed esegue
+  solem-demo = import ./solem-demo.nix { inherit pkgs; };
+
+  # Test 4 — GAVIO stub package builda e risponde
+  gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
+
+  # Test 5 — Firewall base + SSH funzionante
+  firewall-base = import ./firewall-base.nix { inherit pkgs; };
+
+  # ── Disabilitati per ora (richiedono moduli con pkg dubbi):
   # spotlight = import ./spotlight.nix { inherit pkgs; };
   # quick-settings = import ./quick-settings.nix { inherit pkgs; };
   # gavio-context = import ./gavio-context.nix { inherit pkgs; };
