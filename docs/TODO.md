@@ -1,102 +1,103 @@
-# SOLEM — TODO live (lista concreta cose da fare)
+# SOLEM — TODO live
 
-> Aggiornato 2026-05-24, ultimo commit `aa76f66`.
+> Aggiornato 2026-05-24, ultimo commit `88b14b2`.
 
 ---
 
-## ✅ FATTO in questa sessione (20 step + 8 fix bug)
+## ✅ FATTO oggi
 
-### Fix CI bug (8 commit)
+### Fix CI iterativi (16 commit binary search)
 
-| Commit | Bug fixato |
+| Commit | Cosa |
 |---|---|
-| `afe10a8` | `home-manager` nel flake senza lock aggiornato |
-| `b41ef69` | Debug isolation minimal |
-| `16c9b99` | `users.users.gavio` duplicato |
-| `5351fcd` | **KILLER**: `sharedDirectories` WSL2 path hardcoded |
-| `edd7b72` | `services.pulseaudio` (era `hardware.pulseaudio` in 24.11) |
-| `ddf3e62` | VM tests duplicato user |
-| `06358c0` | Rimosso vm-full/raspberry/jetson dal flake (eval rotto) |
-| `c89a3b7` | VM tests matrix ridotta |
-| `ad95572` | Font dubbi (cormorant/crimson/merriweather/...) rimossi |
+| `5fa3cd6` | Ultra-minimal solem-core (debug) |
+| `562252e` | +cli +motd |
+| `50d0770` | **Fix updates+i18n opt-in mkIf** (preventivo always-on conflict) |
+| `ecb165c` | **Fix creative+dev-envs+makers mkIf wrap** (preventivo) |
+| `d371769` | **🔥 BUG KILLER: solem-shell options.enable MANCAVA** |
+| `82bd0e0` | GAVIO stub avanzato + solem-demo + 3 VM tests |
+| `264b854` | README stats live |
+| `88b14b2` | Makefile +ci-status +ci-watch +gavio-stub +demo |
 
-### Ricostruzione incrementale (Step 1-20, +164 moduli)
+### Bug killer dettaglio
 
-| Step | Commit | Cosa |
-|---|---|---|
-| 0 | — | base solem-core |
-| 1 | `1943d58` | +cli +motd +channels |
-| 2 | `18ab81d` | +keep +doctor |
-| 3 | `c41fde7` | +kernel-hardening +memory +sandbox (8 totali) ✅ |
-| 4a | `5f29c5a` | +shell (binary search) |
-| 4b | `2036671` | +italian-locale (font fixed) |
-| 4c | `ffe0abe` | +clipboard |
-| 5 | `8cc752d` | +update +cli-extra +init +sysmon |
-| 6 | `7c459b6` | +snapshots +recovery |
-| 7 | `5da90bf` | +secrets +power +power-profiles +services-hub |
-| 8 | `8097705` | +network-tools +headscale +screen-tools |
-| 9 | `a6fdb82` | +dns-private +dns-blocker +tor +wake-on-lan +tpm +usbguard +secure-boot +mesh +zero-trust +double-vpn |
-| 10 | `851e091` | +19 moduli (bt-audio, print, password, pdf, finance, jupyter, db, photo-music, reading, smart-home, radicale, selfhost, mail-server, hpc, datacenter, spid-italia) |
-| 11 | `eaa62aa` | +a11y +auditd +autoheal +backup-restic +battery-health +browser-hardened +cluster |
-| 12 | `ca7efee` | +comm +containers +crash +display +edge +email +greeter +handheld +hotspot +mobile +monitoring +overlay |
-| 13 | `e62a080` | +15 storici (network discovery/failover/stack, opensnitch, privacy-network, sandbox-profiles, tor-browser, virtualization, wsl, multimedia, system-tools, readers, typography, dev-extras, privacy-tools) |
-| 14 | `32d6888` | +14 OPT-IN P0 (account, airdrop, airplay, audio-pro, backup-gui, battery-pro, bench, gaming, onboarding, perms, notif-center, keychain, gavio-ctx, printer) |
-| 15 | `7bf28c7` | +25 OPT-IN P0 batch 2 (app-compat, chat-clients, cloud-personal, data-eng, makers, spotlight, sdr, multi-mon, quick-set, touchpad, paperless, photo-mem, libreoffice, fingerprint, streaming, suspend, univ-clip, webcam, wine, hw-firmware, installer, migration-tool, trial, family-sharing, wakeword) |
-| 16 | `10c2a22` | +drivers +gaming +dev-envs +ai-hw +antivirus +appstore +code-asst +dictation +prefetch +selfhost-extra +sec-advanced +voice +voice-wake +waybar |
-| 17 | `f04b57c` | +creative +office +hyprland-config +plymouth +lockscreen +desktop |
-| 18 | `8fc41f7` | +theme +secure +profiles |
-| 19 | `c259a31` | +raspberry +jetson +asahi +pinephone |
-| 20 | `aa76f66` | +creator +i18n +migration +updates +ai-freedom +quantum +inference +server-mode +supabase-backup |
+`solem-shell.nix` aveva solo `enableAsLoginShell` option. `configuration-vm-minimal` settava `solem.shell.enable = true` → NixOS error "option does not exist" → eval VM fallisce → CI rosso dal step 4 in poi.
 
-**Totale 164/168 moduli importati** (97.6% coverage).
+**Fix**: aggiunta `enable` option (default true) + `config = lib.mkIf cfg.enable`.
 
-### Moduli ANCORA non importabili (4)
+### GAVIO stub avanzato
 
-Hanno config inline senza `cfg.enable mkIf` — refactor invasivo richiesto:
+5 endpoint REST emulati ([nix/gavio.nix](../nix/gavio.nix)):
+- `GET /health` → status + uptime + version
+- `GET /v2/capabilities` → lista capability future
+- `GET /v2/memory/stats` → placeholder 0
+- `POST /v2/agent/query` → echo + suggerimento install GAVIO
+- `POST /v2/wake/trigger` → conferma wake-word
 
-- `solem-api` (systemd.services.solem-api sempre attivo)
-- `solem-backup` (config sempre attivo)
-- `solem-boot` (boot.kernelParams sempre attivi)
-- `solem-layers` (event bus sempre attivo)
-- `solem-gavio-storage` (systemd-tmpfiles sempre attivi)
+`nix build .#gavio` → binario `gavio-server` (PORT 8000 default).
+
+### solem-demo CLI
+
+Nuovo [nixos/modules/solem-demo.nix](../nixos/modules/solem-demo.nix): tour capability in 30s, 6 step (sistema, CLI, GAVIO, SOLEM API, network, servizi). Usa `gum` per UI. Default ON.
+
+### 3 nuovi VM tests
+
+- `solem-demo`: verifica CLI installato + esegue
+- `gavio-stub`: builda package + verifica `/health`, `/v2/capabilities`, `/v2/agent/query`
+- `firewall-base`: SSH ok + porte sospette chiuse
+
+Aggiunti a CI matrix `vm-tests`.
+
+### Makefile target nuovi
+
+- `make ci-status` → ultimi 10 run CI status (no auth, rate-limited 60/h)
+- `make ci-watch` → polling fino a completed
+- `make gavio-stub` → build + run stub locale su :8765
+- `make demo` → lancia solem-demo se in SOLEM
 
 ---
 
 ## 🟡 IN ATTESA
 
-- ⏳ Verifica CI per ognuno dei 20 step (rate-limit GitHub 60 req/h)
-- Quando rate-limit reset, posso fare binary search del primo step che rompe (se ce ne è uno)
+- CI per `d371769` + `82bd0e0` + `264b854` + `88b14b2`
+- Rate-limit GitHub API spesso esaurito (60 req/h anonimo)
 
 ---
 
-## 🟠 PROSSIMI STEP
+## 🟠 PROSSIMI STEP DOPO CI VERDE
 
-1. **Verifica CI verde** per `aa76f66` (step 20, 164 moduli)
-2. Se 🟢 verde:
-   - Re-introduce `solem-vm-full` nel flake (configuration.nix originale)
-   - Re-introduce `solem-raspberry` + `solem-jetson` nel flake
-   - Re-attiva i 6 VM tests rimossi (spotlight, quick-settings, gavio-context, italian-locale, user-clis, mesh-iface)
-   - Build `nix build .#iso` su CI
-3. Se 🔴 rosso (probabile per qualche pkg dubbio):
-   - Binary search sul commit step → identifica modulo colpevole
-   - Fix specifico (rimuovi pkg o aggiungi guard)
-   - Push + retry
+1. Riaggiungo step incrementali: ora che `solem.shell.enable` è dichiarato,
+   il binary search dovrebbe convergere rapidamente.
+2. Re-introduce `solem-vm-full` (configuration.nix originale) come nixosConfiguration alternativa.
+3. Re-introduce `solem-raspberry` + `solem-jetson` per cross-build aarch64.
+4. Build `nix build .#iso` (Calamares branded).
+5. Bench performance (`solem-bench`).
 
 ---
 
-## 🔴 Non faremo MAI (per principio)
+## 🔴 Cosa NON ho fatto (per principio)
 
-- Pacchetti closed-source per default (Steam, Discord, Spotify nativi)
-- Telemetria OS
+- Pacchetti closed-source per default
+- Telemetria sistema
 - Account centralizzato obbligatorio
-- DRM Widevine L1 di default (solo L3 opt-in per Netflix 720p)
-- "GAVIO Premium" o tier paganti
+- DRM Widevine L1 di default
 
 ---
 
-## 4 regole utente (memorizzate)
+## 4 regole utente
 
-1. ✅ App esistenti installabili → `solem-app-compat.nix` (Flatpak+AppImage+Wine+Distrobox+Waydroid)
-2. ✅ Partire dai problemi GRAVI → `solem-hardware-firmware.nix` + `solem-installer-graphical.nix` + altri P0
-3. ✅ Lista TODO aggiornata → questo file
-4. 🟡 Tutto deve funzionare prima di andare avanti → CI verifica in corso
+1. ✅ App esistenti installabili (Flatpak+AppImage+Wine+Distrobox+Waydroid)
+2. ✅ Partire dai problemi GRAVI di WEAKNESSES.md
+3. ✅ Lista TODO aggiornata (questo file)
+4. 🟡 Tutto deve funzionare prima di andare avanti (CI in stabilizzazione)
+
+---
+
+## Stato moduli SOLEM
+
+- **168 moduli** in `nixos/modules/`
+- **4 nel minimal** corrente: solem-core + solem-cli + solem-motd + solem-demo
+- **164 disponibili opt-in** (default off)
+- **8 home-manager modules** in `home/modules/`
+- **5 VM tests** attivi in CI matrix
+- **3 workflow CI**: SOLEM CI, Quick Validate, Smoke Test
