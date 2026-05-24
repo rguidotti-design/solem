@@ -30,6 +30,12 @@
     ./modules/solem-photos-memories.nix  # digiKam face recognition
     ./modules/solem-clipboard-mesh.nix   # universal clipboard auto-push P2P
     ./modules/solem-family-gui.nix       # zenity GUI family sharing
+    ./modules/solem-cloud-sync.nix       # rclone 70+ provider
+    ./modules/solem-dark-mode.nix        # toggle dark/light system-wide
+    ./modules/solem-print-pdf.nix        # stampante virtuale PDF (CUPS-PDF)
+    ./modules/solem-net-monitor.nix      # solem-net CLI bandwidth/speed/dns
+    ./modules/solem-disk-health.nix      # solem-disk SMART monitoring
+    ./modules/solem-calendar-sync.nix    # solem-cal CalDAV khal+vdirsyncer
   ];
 
   # Identità
