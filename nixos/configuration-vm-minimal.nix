@@ -26,13 +26,16 @@
     ./modules/solem-sandbox.nix
     # Step 4a: solo shell TUI (binary search)
     ./modules/solem-shell.nix
+    # Step 4b: italian-locale (font dubbi rimossi in ad95572)
+    ./modules/solem-italian-locale.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
   solem.memory.protectGavio = false;
 
-  # Abilita shell
+  # Abilita shell + italian
   solem.shell.enable = true;
+  solem.italianLocale.enable = true;
 
   # Identità
   networking.hostName = "solem-vm";
