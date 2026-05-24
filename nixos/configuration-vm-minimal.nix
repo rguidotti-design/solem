@@ -58,6 +58,26 @@
     ./modules/solem-mesh.nix
     ./modules/solem-zero-trust.nix
     ./modules/solem-double-vpn.nix
+    # Step 10: 19 moduli "vita reale" (tutti opt-in default off)
+    ./modules/solem-bluetooth-audio.nix
+    ./modules/solem-audio-bluetooth.nix
+    ./modules/solem-print-scan.nix
+    ./modules/solem-password-manager.nix
+    ./modules/solem-pdf-tools.nix
+    ./modules/solem-notifications.nix
+    ./modules/solem-notes.nix
+    ./modules/solem-finance.nix
+    ./modules/solem-jupyter.nix
+    ./modules/solem-database.nix
+    ./modules/solem-photo-music.nix
+    ./modules/solem-reading.nix
+    ./modules/solem-smart-home.nix
+    ./modules/solem-radicale.nix
+    ./modules/solem-selfhost.nix
+    ./modules/solem-mail-server.nix
+    ./modules/solem-hpc.nix
+    ./modules/solem-datacenter.nix
+    ./modules/solem-spid-italia.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
