@@ -115,6 +115,21 @@
     ./modules/solem-typography.nix
     ./modules/solem-developer-extras.nix
     ./modules/solem-privacy-tools.nix
+    # Step 14: 14 moduli OPT-IN moderni (rischio medio per pkgs dubbi)
+    ./modules/solem-account-quickstart.nix
+    ./modules/solem-airdrop.nix
+    ./modules/solem-airplay-receiver.nix
+    ./modules/solem-audio-pro.nix
+    ./modules/solem-backup-gui.nix
+    ./modules/solem-battery-pro.nix
+    ./modules/solem-benchmark.nix
+    ./modules/solem-gaming-extras.nix
+    ./modules/solem-onboarding-wizard.nix
+    ./modules/solem-permissions-panel.nix
+    ./modules/solem-notification-center.nix
+    ./modules/solem-keychain.nix
+    ./modules/solem-gavio-context.nix
+    ./modules/solem-printer-zero-config.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
