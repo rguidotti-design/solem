@@ -16,6 +16,7 @@
     ./modules/solem-smart-install.nix    # solem-app store unificato
     ./modules/solem-migrate-windows.nix  # migrazione NTFS Windows
     ./modules/solem-snap-layouts.nix     # Hyprland binds Win-style
+    ./modules/solem-hw-just-works.nix    # sane defaults HW (opt-in default false)
   ];
 
   # Identità
