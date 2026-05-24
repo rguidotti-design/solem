@@ -30,6 +30,11 @@
     ./modules/solem-italian-locale.nix
     # Step 4c: clipboard (cliphist + wl-clipboard + xclip)
     ./modules/solem-clipboard.nix
+    # Step 5: update OTA opt-in + CLI extra + init + system monitor
+    ./modules/solem-update.nix
+    ./modules/solem-cli-extra.nix
+    ./modules/solem-init.nix
+    ./modules/solem-system-monitor.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
