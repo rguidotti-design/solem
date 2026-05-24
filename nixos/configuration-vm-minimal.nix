@@ -178,6 +178,10 @@
     ./modules/solem-plymouth.nix
     ./modules/solem-lockscreen.nix
     ./modules/solem-desktop.nix
+    # Step 18: master + theme + secure + profiles (tutti gating opt-in)
+    ./modules/solem-theme.nix
+    ./modules/solem-secure.nix
+    ./modules/solem-profiles.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
