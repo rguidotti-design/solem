@@ -107,15 +107,16 @@
     ./modules/solem-virtualization.nix
     ./modules/solem-wsl.nix
     ./modules/solem-typography.nix
-    # Step 13b RIMOSSI (sospetti alti per pkg dubbi 24.11):
-    # ./modules/solem-opensnitch.nix         (opensnitch-ui)
-    # ./modules/solem-privacy-network.nix    (i2p/yggdrasil)
+    # Step 13b: 4 "medi" (i 4 più sospetti restano fuori)
+    ./modules/solem-opensnitch.nix
+    ./modules/solem-privacy-network.nix
+    ./modules/solem-system-tools.nix
+    ./modules/solem-privacy-tools.nix
+    # Step 13c RIMOSSI (più sospetti):
     # ./modules/solem-tor-browser.nix        (tor-browser-bundle-bin)
     # ./modules/solem-multimedia-tools.nix   (peek, kooha, tenacity, losslesscut-bin)
-    # ./modules/solem-system-tools.nix       (filelight, hardinfo2, cpu-x, dust)
-    # ./modules/solem-readers.nix            (anytype, joplin-desktop, wallabag-client)
-    # ./modules/solem-developer-extras.nix   (bruno, tea, dbeaver-bin)
-    # ./modules/solem-privacy-tools.nix      (authenticator, gnupg-pkcs11-scd, yubikey-perso-gui)
+    # ./modules/solem-readers.nix            (anytype-heart, joplin-desktop, wallabag-client)
+    # ./modules/solem-developer-extras.nix   (bruno, tea, dbeaver-bin, glab)
     # Step 14: 14 moduli OPT-IN moderni (rischio medio per pkgs dubbi)
     ./modules/solem-account-quickstart.nix
     ./modules/solem-airdrop.nix
