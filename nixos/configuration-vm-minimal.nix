@@ -44,6 +44,7 @@
     ./modules/solem-workload-detect.nix  # profilo OS auto-adattivo
     ./modules/solem-anti-malware.nix     # 🛡️ ClamAV + AIDE + rkhunter + chkrootkit
     ./modules/solem-process-sentinel.nix # 👁️ rule-based anomaly detector
+    ./modules/solem-vault.nix            # 🔐 secret manager age-encrypted
   ];
 
   # Identità
