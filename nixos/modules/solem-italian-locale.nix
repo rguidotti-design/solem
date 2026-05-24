@@ -88,22 +88,16 @@ in {
       ])
 
       (lib.optionals cfg.extraFonts [
-        # Font con supporto Latin Extended (accenti italiani perfetti)
+        # Font con supporto Latin Extended (accenti italiani perfetti).
+        # Tolti font con nome variabile in 24.11 (cormorant/crimson/merriweather/
+        # source-sans/source-serif/eb-garamond/roboto/noto-fonts-cjk-sans).
+        # Tenuti solo quelli con nome stabile e diffuso in nixpkgs-24.11.
         inter
-        cormorant
-        eb-garamond
-        crimson
-        merriweather
-        source-sans
-        source-serif
         jetbrains-mono
         fira-code
-        ibm-plex
-        roboto
         liberation_ttf
         dejavu_fonts
         noto-fonts
-        noto-fonts-cjk-sans
         noto-fonts-emoji
       ])
     ];
@@ -112,8 +106,6 @@ in {
     fonts = lib.mkIf cfg.extraFonts {
       packages = with pkgs; [
         inter
-        cormorant
-        eb-garamond
         jetbrains-mono
         liberation_ttf
         dejavu_fonts
@@ -123,7 +115,7 @@ in {
       fontconfig = {
         enable = true;
         defaultFonts = {
-          serif = [ "Cormorant Garamond" "EB Garamond" "Liberation Serif" ];
+          serif = [ "Liberation Serif" "DejaVu Serif" ];
           sansSerif = [ "Inter" "Liberation Sans" ];
           monospace = [ "JetBrains Mono" "DejaVu Sans Mono" ];
           emoji = [ "Noto Color Emoji" ];
