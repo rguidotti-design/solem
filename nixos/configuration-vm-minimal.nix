@@ -42,6 +42,7 @@
     ./modules/solem-update-notifier.nix  # solem-update-check + notify-send
     ./modules/solem-ai-guardrails.nix    # 🔒 sandbox AI + kill switch
     ./modules/solem-workload-detect.nix  # profilo OS auto-adattivo
+    ./modules/solem-anti-malware.nix     # 🛡️ ClamAV + AIDE + rkhunter + chkrootkit
   ];
 
   # Identità
