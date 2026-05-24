@@ -27,6 +27,9 @@
     # Step 5: update OTA + snapshots + CLI extra
     ./modules/solem-update.nix
     ./modules/solem-cli-extra.nix
+    # Step 6: init script + system monitor tools (btop/bandwhich/dust/duf)
+    ./modules/solem-init.nix
+    ./modules/solem-system-monitor.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
