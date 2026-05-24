@@ -99,6 +99,22 @@
     ./modules/solem-mobile.nix
     ./modules/solem-monitoring.nix
     ./modules/solem-overlay.nix
+    # Step 13: 15 moduli storici opt-in
+    ./modules/solem-network-discovery.nix
+    ./modules/solem-network-failover.nix
+    ./modules/solem-network-stack.nix
+    ./modules/solem-opensnitch.nix
+    ./modules/solem-privacy-network.nix
+    ./modules/solem-sandbox-profiles.nix
+    ./modules/solem-tor-browser.nix
+    ./modules/solem-virtualization.nix
+    ./modules/solem-wsl.nix
+    ./modules/solem-multimedia-tools.nix
+    ./modules/solem-system-tools.nix
+    ./modules/solem-readers.nix
+    ./modules/solem-typography.nix
+    ./modules/solem-developer-extras.nix
+    ./modules/solem-privacy-tools.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
