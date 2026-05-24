@@ -32,6 +32,9 @@
   # Test 11 — Canary trip + kill switch (read honey token -> gavio stop)
   canary-trip = import ./canary-trip.nix { inherit pkgs; };
 
+  # Test 12 — RED-TEAM: 8 attacchi reali da gavio-ai, tutti DEVONO fallire
+  red-team-ai = import ./red-team-ai.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 

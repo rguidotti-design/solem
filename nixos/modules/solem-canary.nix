@@ -220,7 +220,7 @@ in {
     # Crea i file esca con honey token come content
     environment.etc = {
       "solem/canary/api-keys.env" = {
-        mode = "0600";
+        mode = "0644";  # world-readable: chiunque tocca -> trip (sono honey token, no segreti)
         text = ''
           # SOLEM canary — DO NOT READ
           # Honey token, content is meaningless. Reading triggers kill switch.
@@ -231,7 +231,7 @@ in {
       };
 
       "solem/canary/aws-credentials" = {
-        mode = "0600";
+        mode = "0644";  # world-readable: chiunque tocca -> trip (sono honey token, no segreti)
         text = ''
           [default]
           aws_access_key_id = AKIACANARY${honeyToken}
@@ -240,7 +240,7 @@ in {
       };
 
       "solem/canary/ssh-id_rsa" = {
-        mode = "0600";
+        mode = "0644";  # world-readable: chiunque tocca -> trip (sono honey token, no segreti)
         text = ''
           -----BEGIN OPENSSH PRIVATE KEY-----
           CANARY-NOT-A-REAL-KEY-${honeyToken}
@@ -249,7 +249,7 @@ in {
       };
 
       "solem/canary/vault-master-BACKUP.key" = {
-        mode = "0600";
+        mode = "0644";  # world-readable: chiunque tocca -> trip (sono honey token, no segreti)
         text = ''
           AGE-SECRET-KEY-CANARY-${honeyToken}-DO-NOT-USE
         '';
