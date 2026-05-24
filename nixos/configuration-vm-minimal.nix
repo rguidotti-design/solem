@@ -2,6 +2,9 @@
 
 # CONFIGURAZIONE MINIMALE VM — solo solem-core per ora.
 # Ricostruzione incrementale: aggiungo 1 modulo per volta dopo CI verde.
+#
+# IMPORTANTE: solem-core.nix dichiara già users.users.gavio + users.mutableUsers=false
+# Non ridichiarare qui per evitare conflitti.
 
 {
   imports = [
@@ -11,14 +14,6 @@
   # Identità
   networking.hostName = "solem-vm";
   system.stateVersion = "24.11";
-
-  # Utente di test
-  users.users.gavio = {
-    isNormalUser = true;
-    initialPassword = "gavio";
-    extraGroups = [ "wheel" "networkmanager" ];
-  };
-  users.mutableUsers = true;
 
   # Network base
   networking.networkmanager.enable = true;
