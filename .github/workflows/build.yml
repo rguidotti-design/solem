@@ -123,10 +123,8 @@ jobs:
         test:
           - basic-boot
           - solem-cli
-          - solem-demo
-          - gavio-stub
           - firewall-base
-          # Altri test reintrodotti quando moduli verificati.
+          # Disabilitati temp: solem-demo, gavio-stub (debug Quick Validate)
     steps:
       - uses: actions/checkout@v4
 

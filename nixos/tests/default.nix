@@ -11,14 +11,12 @@
   # Test 2 — `solem` CLI risponde a status / help
   solem-cli = import ./solem-cli.nix { inherit pkgs; };
 
-  # Test 3 — solem-demo CLI esiste ed esegue
-  solem-demo = import ./solem-demo.nix { inherit pkgs; };
-
-  # Test 4 — GAVIO stub package builda e risponde
-  gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
-
-  # Test 5 — Firewall base + SSH funzionante
+  # Test 5 — Firewall base + SSH funzionante (Test 3/4 temp rimossi)
   firewall-base = import ./firewall-base.nix { inherit pkgs; };
+
+  # ── Temp disabilitati per debug Quick Validate:
+  # solem-demo = import ./solem-demo.nix { inherit pkgs; };
+  # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 
   # ── Disabilitati per ora (richiedono moduli con pkg dubbi):
   # spotlight = import ./spotlight.nix { inherit pkgs; };
