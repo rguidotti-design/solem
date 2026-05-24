@@ -36,6 +36,10 @@
     ./modules/solem-net-monitor.nix      # solem-net CLI bandwidth/speed/dns
     ./modules/solem-disk-health.nix      # solem-disk SMART monitoring
     ./modules/solem-calendar-sync.nix    # solem-cal CalDAV khal+vdirsyncer
+    ./modules/solem-live-caption.nix     # solem-caption STT live mic
+    ./modules/solem-battery-predict.nix  # solem-battery-predict + alert
+    ./modules/solem-wifi-captive.nix     # solem-wifi-captive portal detect
+    ./modules/solem-update-notifier.nix  # solem-update-check + notify-send
   ];
 
   # Identità
