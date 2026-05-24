@@ -40,6 +40,7 @@ pkgs.nixosTest {
       netcat-gnu
       curl
       iproute2
+      python3        # per http.server come target server di test
     ];
 
     system.stateVersion = "24.11";
@@ -78,42 +79,54 @@ pkgs.nixosTest {
     print(f"gavio-ai -> loopback: rc={rc_ai}")
     assert rc_ai == 0, "FAIL: gavio-ai NON raggiunge loopback (deve essere whitelist)"
 
-    # ── TEST 4: gavio-ai BLOCCATO verso IP NON loopback ────────────
-    # Trova IP non-loopback dell'interfaccia
-    out = machine.succeed("ip -4 -o addr show | awk '!/127.0.0.1/ && /inet /{print $4}' | head -1")
-    nonlocal_ip = out.strip().split("/")[0]
-    print(f"Non-loopback IP della VM: {nonlocal_ip}")
+    # ── TEST 4: drop counter nftables aumenta per gavio-ai, non gavio ──
+    # Non possiamo bind un server esterno alla VM, e Linux fa local routing
+    # via lo per IP della propria interfaccia. Test piu' affidabile:
+    # verificare che il COUNTER drop di ai_egress aumenti quando gavio-ai
+    # tenta una connect() esterna (IP TEST-NET RFC 5737, irraggiungibile).
 
-    if nonlocal_ip and nonlocal_ip != "":
-        # Avvia HTTP server su quel IP porta 8888 (NON in whitelist)
-        machine.execute(f"python3 -m http.server 8888 --bind {nonlocal_ip} >/tmp/srv2.log 2>&1 &")
-        machine.sleep(2)
+    import re
 
-        # gavio (umano) deve raggiungere (NON filtrato)
-        rc_h, _ = machine.execute(
-            f"sudo -u gavio timeout 3 curl -sf -o /dev/null http://{nonlocal_ip}:8888/"
-        )
-        print(f"gavio -> {nonlocal_ip}:8888 rc={rc_h}")
-        assert rc_h == 0, f"FAIL: gavio (umano) NON dovrebbe essere filtrato, ma rc={rc_h}"
+    def get_drop_counter():
+        out = machine.succeed("nft -a list chain inet solem-ai ai_egress")
+        # Cerca riga "counter packets N bytes M drop" o "counter packets N bytes M"
+        # systemd-nftables in 24.11 formatta "counter packets X bytes Y drop"
+        m = re.search(r"counter packets (\d+) bytes \d+\s+drop", out)
+        if m:
+            return int(m.group(1))
+        # fallback: cerca tutti i counter
+        m = re.search(r"counter packets (\d+)", out)
+        return int(m.group(1)) if m else 0
 
-        # gavio-ai NON deve raggiungere (porta non whitelist + IP non whitelist)
-        rc_ai, _ = machine.execute(
-            f"sudo -u gavio-ai timeout 3 curl -sf -o /dev/null http://{nonlocal_ip}:8888/"
-        )
-        print(f"gavio-ai -> {nonlocal_ip}:8888 rc={rc_ai}")
-        assert rc_ai != 0, \
-            f"FAIL CRITICO: gavio-ai HA raggiunto {nonlocal_ip}:8888 (firewall NON sta bloccando!)"
-    else:
-        print("(no non-loopback interface - skip block test)")
+    before = get_drop_counter()
+    print(f"Drop counter BEFORE: {before}")
+
+    # gavio-ai tenta connect a 192.0.2.99:9999 (TEST-NET-1, irraggiungibile)
+    # Il pacchetto viene generato e nftables OUTPUT chain decide DROP
+    # prima ancora che parta verso il default gateway.
+    machine.execute("sudo -u gavio-ai timeout 2 curl -s http://192.0.2.99:9999/ 2>&1 || true")
+    machine.execute("sudo -u gavio-ai timeout 2 curl -s http://203.0.113.10:8080/ 2>&1 || true")
+    machine.sleep(1)
+
+    after_ai = get_drop_counter()
+    print(f"Drop counter AFTER gavio-ai attempts: {after_ai}")
+    assert after_ai > before, \
+        f"FAIL: drop counter NON aumentato per gavio-ai ({before} -> {after_ai}). " \
+        f"Significa che la regola skuid 970 ... drop NON sta matchando."
+
+    # gavio (umano) tenta lo stesso. NON deve incrementare il counter
+    # (skuid != 970 → return early, no drop).
+    pre_human = get_drop_counter()
+    machine.execute("sudo -u gavio timeout 2 curl -s http://192.0.2.99:9999/ 2>&1 || true")
+    machine.sleep(1)
+    post_human = get_drop_counter()
+    print(f"Drop counter after gavio (human) attempts: pre={pre_human} post={post_human}")
+    assert post_human == pre_human, \
+        f"FAIL: drop counter aumentato anche per gavio umano ({pre_human} -> {post_human}). " \
+        f"La regola dovrebbe filtrare SOLO UID 970."
 
     # ── TEST 5: CLI solem-ai-net status non crasha ─────────────────
     machine.succeed("/run/current-system/sw/bin/solem-ai-net status 2>&1 || true")
-
-    # ── TEST 6: drop counter incrementato ──────────────────────────
-    out = machine.succeed("nft list chain inet solem-ai ai_egress")
-    print(f"Final ai_egress chain:\n{out}")
-    # Cerchiamo "counter packets N" — se nostro test 4 ha generato traffico
-    # il counter deve essere > 0
 
     print("=" * 60)
     print("✓ TUTTI I TEST DI EGRESS FIREWALL gavio-ai PASSATI")

@@ -88,6 +88,7 @@ pkgs.nixosTest {
     environment.systemPackages = with pkgs; [
       curl
       netcat-gnu
+      python3       # http.server come target server fake exfiltration
     ];
 
     system.stateVersion = "24.11";
@@ -123,24 +124,28 @@ pkgs.nixosTest {
     else:
         print("  ✓ BLOCCATO")
 
-    # ── ATTACCO 3: exfiltration outbound ───────────────────────────
-    print("\n[ATK3] gavio-ai prova outbound HTTP a IP non-loopback porta 9999")
-    # Trova IP non-loopback
-    out = machine.succeed("ip -4 -o addr show | awk '!/127.0.0.1/ && /inet /{print $4}' | head -1").strip()
-    target_ip = out.split("/")[0] if out else None
-    if target_ip:
-        machine.execute(f"python3 -m http.server 9999 --bind {target_ip} >/tmp/exfil.log 2>&1 &")
-        machine.sleep(2)
-        rc, _ = machine.execute(
-            f"sudo -u gavio-ai timeout 3 curl -sf -o /dev/null http://{target_ip}:9999/"
-        )
-        print(f"  rc={rc}")
-        if rc == 0:
-            fails.append(f"ATK3: gavio-ai HA raggiunto {target_ip}:9999 (firewall NON blocca)")
-        else:
-            print("  ✓ BLOCCATO da nftables")
+    # ── ATTACCO 3: exfiltration outbound (verifica drop counter) ───
+    print("\n[ATK3] gavio-ai prova outbound HTTP a TEST-NET-1 192.0.2.99:9999")
+    import re
+
+    def get_drop_counter():
+        rc, out = machine.execute("nft -a list chain inet solem-ai ai_egress 2>&1")
+        m = re.search(r"counter packets (\d+) bytes \d+\s+drop", out)
+        if m:
+            return int(m.group(1))
+        m = re.search(r"counter packets (\d+)", out)
+        return int(m.group(1)) if m else 0
+
+    before = get_drop_counter()
+    machine.execute("sudo -u gavio-ai timeout 2 curl -s http://192.0.2.99:9999/ 2>&1 || true")
+    machine.execute("sudo -u gavio-ai timeout 2 curl -s http://203.0.113.10:8080/ 2>&1 || true")
+    machine.sleep(1)
+    after = get_drop_counter()
+    print(f"  drop counter: {before} -> {after}")
+    if after <= before:
+        fails.append(f"ATK3: drop counter NON aumentato ({before}->{after}). nftables non filtra gavio-ai.")
     else:
-        print("  (no non-loopback ip, skip)")
+        print(f"  ✓ DROP nftables matchato (+{after-before} packets)")
 
     # ── ATTACCO 4: ProtectProc invisible (gavio-ai non vede altri pid) ──
     print("\n[ATK4] gavio-ai prova ps aux per scoprire processi altri user")
