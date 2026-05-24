@@ -28,14 +28,17 @@
     ./modules/solem-shell.nix
     # Step 4b: italian-locale (font dubbi rimossi in ad95572)
     ./modules/solem-italian-locale.nix
+    # Step 4c: clipboard (cliphist + wl-clipboard + xclip)
+    ./modules/solem-clipboard.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
   solem.memory.protectGavio = false;
 
-  # Abilita shell + italian
+  # Abilita shell + italian + clipboard
   solem.shell.enable = true;
   solem.italianLocale.enable = true;
+  solem.clipboard.enable = true;
 
   # Identità
   networking.hostName = "solem-vm";
