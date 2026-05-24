@@ -3,9 +3,8 @@
 # SOLEM ISO OVERLAY — modificazioni per la live ISO.
 #
 # Single responsibility: SOLO le differenze rispetto a configuration-vm-minimal:
-# - utente live "gavio" con password "gavio"
 # - banner di benvenuto getty
-# - Calamares installer pre-installato (FOSS, GPL-3.0)
+# - Calamares installer pre-installato (se disponibile in nixpkgs)
 # - branding navy/gold per Calamares
 
 let
@@ -23,23 +22,18 @@ let
     ╚════════════════════════════════════════════════════╝
   '';
 in {
-  # === User live ===
-  users.users.gavio.initialPassword = lib.mkForce "gavio";
-  users.users.gavio.isSystemUser = lib.mkForce false;
-  users.users.gavio.isNormalUser = lib.mkForce true;
+  # User live: utente "gavio" già dichiarato in solem-core con hashedPassword "gavio".
+  # NON ridichiarare initialPassword/isSystemUser/isNormalUser → conflict.
 
   # Network: NetworkManager su live
   networking.wireless.enable = lib.mkForce false;
   networking.networkmanager.enable = lib.mkForce true;
   services.getty.greetingLine = welcomeBanner;
 
-  # === Calamares installer (FOSS, GPL-3.0) ===
-  environment.systemPackages = with pkgs; [
-    calamares-nixos
-    calamares-nixos-extensions
-  ];
-
-  # === Branding SOLEM per Calamares (navy + gold) ===
+  # === Calamares branding files (in /etc) ===
+  # Branding files SOLEM in /etc/calamares — Calamares stesso aggiunto a
+  # systemPackages solo se l'utente lo abilita esplicitamente
+  # (alcune versioni 24.11 non hanno calamares-nixos).
   environment.etc."calamares/branding/solem/branding.desc" = {
     text = ''
       ---
@@ -78,7 +72,6 @@ in {
 
   # Firmware redistribuibile incluso (Wi-Fi/Intel/Realtek FOSS)
   hardware.enableRedistributableFirmware = lib.mkDefault true;
-  hardware.enableAllFirmware = lib.mkDefault false;
 
   # ISO settings
   isoImage.squashfsCompression = "zstd -Xcompression-level 6";
