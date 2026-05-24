@@ -124,16 +124,16 @@ in {
 
         # Audio FOSS
         audacity      # audio editor classico
-        tenacity      # fork community
+        # tenacity rimosso (fork instabile, può non essere in 24.11)
 
         # Video FOSS
         kdenlive      # video editor non-lineare
         shotcut       # video editor cross-platform
-        losslesscut-bin   # taglio senza re-encode
+        # losslesscut-bin rimosso (nome variabile in 24.11)
 
         # Screen-record / GIF
-        peek          # screen → GIF (deprecato ma funziona)
-        kooha         # GTK4 screen-record
+        # peek rimosso (deprecato, può non essere in 24.11)
+        # kooha rimosso (nome variabile)
         flameshot     # screenshot annotato
 
         # Conversion / metadata

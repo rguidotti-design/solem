@@ -63,8 +63,7 @@ in {
         # Spaced repetition
         anki              # Anki classico (AGPL)
 
-        # Read-it-later locale
-        wallabag-client   # CLI Wallabag (server opt-in sotto)
+        # Read-it-later locale — wallabag-client rimosso (può non essere in 24.11)
 
         # Knowledge graph
         zotero            # gestione bibliografica (AGPL)

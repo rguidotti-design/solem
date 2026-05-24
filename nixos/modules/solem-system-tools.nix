@@ -86,8 +86,9 @@ in {
       dust        # già in solem-system-monitor ma utile anche qui
 
       # System info
-      cpu-x          # CPU-Z equivalent
-      hardinfo2      # System info GUI
+      # cpu-x rimosso (può non essere in 24.11)
+      # hardinfo2 rimosso (può non essere in 24.11; alternativa = `inxi`)
+      inxi           # system info CLI
       neofetch       # ASCII info
       fastfetch      # Faster neofetch
 
@@ -99,8 +100,8 @@ in {
       hdparm
       lm_sensors
 
-      # Boot analysis
-      bootchart2
+      # Boot analysis: systemd-analyze (already in systemd, no extra pkg needed)
+      # bootchart2 rimosso (nome variabile in 24.11)
 
       # Power
       tlp                # tools laptop power
