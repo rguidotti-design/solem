@@ -9,10 +9,13 @@
 {
   imports = [
     ./modules/solem-core.nix
-    # Step 1 (questo commit): CLI Python + banner + channel switcher
+    # Step 1: CLI Python + banner + channel switcher
     ./modules/solem-cli.nix
     ./modules/solem-motd.nix
     ./modules/solem-channels.nix
+    # Step 2: watchdog + diagnostica (Python stdlib)
+    ./modules/solem-keep.nix
+    ./modules/solem-doctor.nix
   ];
 
   # Identità
