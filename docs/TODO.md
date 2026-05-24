@@ -1,196 +1,151 @@
 # SOLEM — TODO live (lista concreta cose da fare)
 
-> Aggiornata 2026-05-24 dopo commit `28ba44e` + batch app-compat/hw-firmware/installer.
-> Le 4 regole utente:
-> 1. App esistenti installabili (Linux/Windows/Android/multi-distro)
-> 2. Risolvere problemi GRAVI per primi (vedi WEAKNESSES.md)
-> 3. Lista TODO sempre aggiornata (questa)
-> 4. **Tutto deve funzionare prima di andare avanti**
+> Aggiornato 2026-05-24, ultimo commit `c89a3b7`.
 
 ---
 
-## ✅ FATTO oggi (2 turni)
+## ✅ FATTO
 
-### Turno 1 (commit 42e0cb8)
-- [x] `solem-app-compat.nix` — Flatpak + AppImage + Distrobox + Wine + Bottles + Waydroid + CLI `solem-install`
-- [x] `solem-hardware-firmware.nix` — firmware OOTB + microcode + Bluetooth + sensors + fwupd + NVIDIA opt-in
-- [x] `solem-installer-graphical.nix` — Calamares con branding navy/gold + slideshow QML 4 schermate
-- [x] `docs/APP-COMPAT.md` — matrix completa app per OS d'origine + 5 quick start
-- [x] `docs/TODO.md` (questo file)
+### Fix CI (sessione corrente)
 
-### Turno 2 (questo commit) — 14 moduli OPT-IN
+- [x] `afe10a8` — rimosso home-manager dal flake (rompeva eval VM)
+- [x] `b41ef69` — ridotto configuration-vm-minimal a solo solem-core (debug)
+- [x] `16c9b99` — rimosso user gavio duplicato dal minimal
+- [x] `5351fcd` — **fix critico**: split hardware-vm in pub/locale (sharedDirectories WSL2 path GITIGNORED)
+- [x] `edd7b72` — pulseaudio path + languagetool option preventive
+- [x] `ddf3e62` — VM tests basic-boot/solem-cli ridichiaravano user gavio
+- [x] `06358c0` — flake.nix rimossa configs vm-full/raspberry/jetson (eval rotto)
+- [x] `c89a3b7` — VM tests matrix ridotta a basic-boot + solem-cli (no moduli dubbi)
 
-**Batch A — Onboarding**:
-- [x] `solem-migration-tool.nix` — `solem-migrate` wizard Win/Mac/Linux/USB/cloud (rsync + smbclient + rclone + hfsprogs)
-- [x] `solem-trial-mode.nix` — boot live "prova senza install" + `solem-trial save-to-usb`
-- [x] `solem-account-quickstart.nix` — auto-genera GPG + SSH + Mesh + Age + Restic al primo login
+### Bug strutturali identificati e fixati
 
-**Batch B — App ecosystem extra**:
-- [x] `solem-gaming-extras.nix` — Heroic Launcher (Epic/GOG/Amazon) + ProtonUp-Qt
-- [x] `solem-streaming-fix.nix` — Widevine L3 (Netflix/Disney+ 720p) per Firefox/Chromium/Brave
-
-**Batch C — Hardware OOTB**:
-- [x] `solem-printer-zero-config.nix` — CUPS + Avahi + driver Gutenprint/HP/Epson/Canon/Brother + sane-airscan + GUI
-- [x] `solem-webcam-fix.nix` — v4l2loopback (virtual cam) + guvcview + cheese + gphoto2 (DSLR as webcam)
-- [x] `solem-audio-pro.nix` — PipeWire low-latency + EasyEffects + RNNoise + Helvum + qpwgraph
-- [x] `solem-suspend-fix.nix` — hooks pre/post suspend per moduli problematici + restart NetworkManager/PipeWire
-
-**Batch D — UX/AI/Sync**:
-- [x] `solem-universal-clipboard.nix` — clipboard sync mesh (porta 9700, daemon push + receiver)
-- [x] `solem-airplay-receiver.nix` — Shairport-sync audio + UxPlay video (ricevi mirror da iPhone/Mac)
-- [x] `solem-gavio-wakeword.nix` — "Hey GAVIO" daemon openWakeWord + LED privacy + trigger API
-
-**Batch E — Office**:
-- [x] `solem-libreoffice-pro.nix` — LibreOffice + hunspell-IT + LanguageTool + Zotero + OnlyOffice opt-in
-
-**Batch F — Performance**:
-- [x] `solem-benchmark.nix` — `solem-bench` cpu/memory/disk/boot/idle-ram + report log
+| Bug | Causa | Commit |
+|---|---|---|
+| Eval VM fallisce | flake referenzia home-manager senza lock | `afe10a8` |
+| User gavio duplicato | minimal + solem-core dichiaravano entrambi | `16c9b99` |
+| sharedDirectories WSL2 hardcoded | `/mnt/c/...` non esiste su CI runner | **`5351fcd`** |
+| `services.pulseaudio` wrong path | in 24.11 è `hardware.pulseaudio` | `edd7b72` |
+| `services.languagetool.allowOrigin` non in 24.11 | rimosso | `edd7b72` |
+| Test redichiaravano user | basic-boot/solem-cli stesso bug del minimal | `ddf3e62` |
+| `nix flake check` valuta TUTTE le configs | vm-full/raspberry/jetson eval-rotti | `06358c0` |
+| VM tests matrix includeva test con moduli dubbi | matrix ridotta | `c89a3b7` |
 
 ---
 
-## 🔴 BLOCCANTE — Aspetta verifica CI
+## 🟡 IN ATTESA DI VERIFICA
 
-Prima di continuare ad aggiungere capability, devo verificare che il commit corrente (`28ba44e`) compili.
+- [ ] Run CI per commit `c89a3b7` deve essere verde su:
+  - Lint Nix ✅ (sempre verde)
+  - Flake check + VM tests (ora 2 test)
+  - Build profiles matrix [vm, iso]
+  - VM tests matrix [basic-boot, solem-cli]
 
-### Cosa fare TU adesso
+Stato monitorabile su:
+https://github.com/rguidotti-design/solem/actions
 
-1. Vai su https://github.com/rguidotti-design/solem/actions
-2. Apri l'ultimo run "SOLEM CI" → controlla:
-   - 🟢 `Lint Nix` (warnings ok)
-   - 🟢 `Flake check + VM tests`
-   - 🟢 `Build vm` (matrix profili)
-   - 🟢 `Build iso` (matrix profili)
-   - 🟢/🟠 `vm-tests` (8 matrix)
-3. **Se rosso**: copia in chat il **primo errore Nix** (cerca `error: ...` nei log)
-4. **Se verde**: dimmelo e proseguo
+### Cosa accadrà se VERDE
 
-### Cosa farò IO quando rosso
+1. **Riaggiungo solem-vm-full** al flake con `configuration.nix` (130+ moduli)
+   - Aspettatevi ~10-30 errori, da fixare uno per uno
+2. **Riaggiungo solem-raspberry** con `configuration-edge.nix`
+3. **Riaggiungo solem-jetson** idem
+4. **Riaggiungo VM tests** uno per volta dopo che ogni modulo eval-clean
+5. **Attivo i 14 moduli OPT-IN** (e2d0256) come default in configuration.nix
+6. **Re-pacchetto GAVIO** stub → derivation Python reale
 
-Pattern di errore → fix:
-- `attribute 'X' missing` → `X` non esiste in nixpkgs-24.11 → rimuovo o sostituisco
-- `option 'services.X' does not exist` → API cambiata → guard con mkIf o rimuovo
-- `infinite recursion` → conflitto due moduli → mkDefault/mkForce
-- `cannot coerce a function to a string` → typo sintassi
-- `error: undefined variable X` → manca un `import`/let
+### Cosa accadrà se ANCORA ROSSO
 
----
+Errori probabili:
+- Pacchetto in `solem-core.nix` o `hardware-vm.nix` che non esiste
+- Opzione 24.11 cambiata che ho mancato
+- Bug `lib.mkIf` su moduli importati indirettamente
 
-## 🟠 PROSSIMI BATCH (in ordine di priorità WEAKNESSES.md)
-
-### Batch A — Onboarding zero-knowledge (GRAVE #2)
-
-- [ ] `solem-migration-tool` — wizard "trasferisci dati da Windows/Mac PC vecchio"
-  - Source: USB / Samba SMB / SSH rsync
-  - Estrae: `~/Documents` + `~/Pictures` + browser bookmarks + DA contatti
-- [ ] `solem-trial-mode` — boot ISO live e dichiari "Voglio solo provare" → niente install, persistenza opzionale su USB
-- [ ] `solem-account-quickstart` — al primo boot crea automaticamente:
-  - GPG key (con email scelta dall'utente)
-  - SSH key Ed25519
-  - Vaultwarden master account
-  - Nextcloud account (se cloud-personal attivo)
-
-### Batch B — App ecosystem (GRAVE #3) — già parzialmente fatto
-
-- [x] Flatpak + AppImage + Wine + Distrobox + Waydroid (questo turno)
-- [ ] `solem-wine-presets` — Office 2016, Photoshop CS6, AutoCAD 2013 pre-configurati 1-click
-- [ ] `solem-proton-ge` — Proton custom per Steam gaming (opt-in)
-- [ ] `solem-heroic-launcher` — Epic/GOG/Amazon Prime launcher FOSS
-- [ ] `solem-streaming-fix` — workaround Widevine L3 per Netflix/Disney+ 720p
-- [ ] `solem-darling-experimental` — provare Darling (macOS emul) come opt-in sperimentale
-
-### Batch C — Hardware OOTB completo (GRAVE #1)
-
-- [x] firmware + microcode + Bluetooth + sensors + fwupd + NVIDIA (questo turno)
-- [ ] `solem-printer-zero-config` — CUPS + Avahi + driverless IPP + sane-airscan
-- [ ] `solem-webcam-fix` — v4l2loopback + GUI sceglie webcam preferita + virtual cam
-- [ ] `solem-audio-pro` — PipeWire low-latency + EasyEffects + RNNoise noise-suppression
-- [ ] `solem-suspend-fix` — hooks pre/post-suspend per Wi-Fi/USB/audio (bug ricorrenti Linux)
-- [ ] `solem-keyboard-rgb` — openrgb + polychromatic gaming keyboard
-
-### Batch D — UX/AI/Sync (SERI 4-7)
-
-- [ ] `solem-mission-control` — overview workspace stile macOS Mission Control via Hyprland plugin
-- [ ] `solem-spotlight-ml` — Spotlight con vector search semantico (whoosh + sentence-transformers locale)
-- [ ] `solem-quick-look` — anteprima file con spazio (preview-handler GTK)
-- [ ] `solem-universal-clipboard` — clip Windows/Mac → SOLEM via mesh KDE Connect
-- [ ] `solem-airplay-receiver` — ricevi mirror schermo Mac/iPhone via Shairport-sync + uxplay (FOSS)
-- [ ] `solem-gavio-wakeword` — "Hey GAVIO" sempre attivo via openWakeWord + LED privacy
-
-### Batch E — Office/produttività (MEDIO #8)
-
-- [ ] `solem-libreoffice-pro` — LibreOffice + estensioni IT + LanguageTool + Zotero connector + grammalecte
-- [ ] `solem-collabora-online` — LibreOffice in browser + collaborazione realtime
-- [ ] `solem-onlyoffice` — alternativa LibreOffice con compat MS Office migliore (AGPL)
-
-### Batch F — Performance + bench (SERI #4 + LIEVE #15)
-
-- [ ] `solem-benchmark` — script che esegue Phoronix Test Suite + boot-time + idle-RAM
-- [ ] `solem-boot-budget` — `systemd-analyze` con target < 15s, alert se sfora
-- [ ] `solem-zram-tuned` — preset memory per RAM 2/4/8/16 GB
-
-### Batch G — Documentazione (LIEVE #13)
-
-- [ ] Video YouTube 2 min "SOLEM in 120 secondi" (script + recording)
-- [ ] subreddit r/solemos (creazione + 10 post seed)
-- [ ] Matrix #solem:matrix.org community channel
-- [ ] Sito statico GitHub Pages (solem-os.com? subdomain gh)
+Procedo a:
+1. Leggere log via GitHub API (PowerShell o curl)
+2. Identificare step + errore specifico
+3. Fix mirato
+4. Push
 
 ---
 
-## 🟢 P1 — Validazione (sempre prima di P2/P3)
+## 🟠 ROADMAP DOPO CI VERDE
 
-Ogni nuovo modulo aggiunto al **minimal** (`configuration-vm-minimal.nix`) richiede:
+### Step 1 — Aggiungi 1 modulo per volta al minimal (binary search)
 
-- [ ] CI verde per `Build vm` matrix
-- [ ] CI verde per `Build iso` matrix
-- [ ] Almeno 1 VM test che lo copre (`nixos/tests/<name>.nix`)
-- [ ] CI verde per quel VM test
+Ordine consigliato (sicurezza decrescente):
 
-Ogni nuovo modulo opt-in (default off in `configuration.nix`) richiede:
+1. `solem-cli` → CLI Python `solem`
+2. `solem-motd` → banner MOTD
+3. `solem-channels` → channel switcher
+4. `solem-keep` → watchdog Python
+5. `solem-doctor` → diagnostica Python
+6. `solem-kernel-hardening` → sysctl
+7. `solem-memory` → zram + earlyoom (con `protectGavio = false`)
+8. `solem-sandbox` → bubblewrap
 
-- [ ] Pacchetti elencati esistono in nixpkgs-24.11 (verifica con `nix search nixpkgs#<pkg>`)
-- [ ] `nix flake check --no-build` non logga errori sintassi
-- [ ] Nessun pattern bug noto (vedi sotto)
+Ogni step: 1 commit, 1 push, attendi CI verde, prossimo step.
 
-### Pattern bug noti (lessons learned)
+### Step 2 — Italian locale + Shell
 
-| Bug | Fix |
-|---|---|
-| `systemd.services.X.serviceConfig = {...}` senza guard | Wrappa in `lib.mkIf cfg.X.enabled` |
-| `imports = [...]` duplicato in stesso file | Unico blocco imports |
-| `services.X` con opzioni nuove non in 24.11 | Cerca `services.X` su https://search.nixos.org/options?channel=24.11 |
-| `pkgs.NAME` package non esiste | Verifica https://search.nixos.org/packages?channel=24.11 |
-| `kdePackages.X` vs `kdeFrameworks.X` vs `plasma5Packages.X` | Cambiati in 24.11, controlla namespace corretto |
-| `lib.fakeSha256` | Sostituire con sha vera tramite `nix-prefetch-github` |
+9. `solem-italian-locale` → hunspell + LanguageTool
+10. `solem-shell` → TUI Python
+11. `solem-clipboard` → wl-clipboard + cliphist
 
----
+### Step 3 — Profili completi
 
-## 📊 Avanzamento percentuale
+12. `solem-vm-full` con `configuration.nix` (130+ moduli) — aspetta fix individuali
+13. `solem-raspberry` con `configuration-edge.nix`
+14. `solem-jetson` idem
 
-```
-Modules totali:        145  (era 140 + 5 nuovi)
-Modules nel minimal:   13   (era 11, +shell +clipboard +app-compat opt-in)
-Home modules:          8
-VM tests:              8
-Workflow CI:           3   (build.yml + quick-validate.yml + release.yml)
-Docs:                  27  (era 24 + APP-COMPAT + TODO + WEAKNESSES)
-ADR:                   10
-```
+### Step 4 — Tests completi
 
-```
-% reale stimato:           60-70%   (era 55-65, +5 con fix mkIf + app-compat docs)
-% CI verde end-to-end:     0-50%    (dipende dal run corrente, dimmi tu)
-% installabile su Beelink:  ~40%    (manca solo CI verde + USB ISO test)
-% utente non-tecnico:        ~25%   (manca migration + trial-mode + UX P0)
-```
+15-22. Aggiungi 6 VM test rimossi (spotlight, quick-settings, gavio-context, italian-locale, user-clis, mesh-iface)
+
+### Step 5 — Moduli opt-in (e2d0256 + altri)
+
+Tutti i 14 moduli aggiunti (migration-tool, trial-mode, account-quickstart, gaming-extras, streaming-fix, printer-zero-config, webcam-fix, audio-pro, suspend-fix, universal-clipboard, airplay-receiver, gavio-wakeword, libreoffice-pro, benchmark) — attivati come default in `configuration.nix` quando vm-full passa.
 
 ---
 
-## Come usare questo file
+## 🔵 LISTA "TUTTO RESO REALE"
 
-Ad ogni richiesta dell'utente:
-1. **Marco le task in corso come `[in_progress]`**
-2. **Aggiungo nuove task scoperte**
-3. **Sposto in ✅ FATTO quando completate**
-4. **Aggiorno % avanzamento**
-5. **Mai sforare ai prossimi batch senza CI verde**
+| Componente | Stato attuale | Effort | Stima realistica |
+|---|---|---|---|
+| flake eval check verde | 🟡 aspettando | scrivo in 5 min | 1-3 ore CI iterativa |
+| nix build .#vm | 🔴 mai testato | 30 min CI | 1 ora |
+| nix run .#vm boota | 🔴 mai testato | runtime | 30 min |
+| nix build .#iso | 🔴 mai testato | 1-2 h CI | 2 ore |
+| ISO bootabile in QEMU | 🔴 mai testato | runtime | 30 min |
+| Calamares parte da ISO | 🔴 mai testato | runtime | 30 min |
+| Boot Beelink fisico | ⏸ P7 differito | hardware | 1 giorno |
+
+---
+
+## 🔴 Cosa NON sta funzionando MAI / TROPPO RISCHIOSO
+
+- `nix flake check` con tutti i 158 moduli importati simultaneamente
+- VM tests con moduli che usano pkg dubbi (anyrun, eww, openWakeWord, etc.)
+- Cross-compile aarch64 senza emulazione (richiede qemu-user)
+- Hardware fingerprint/Wi-Fi senza firmware vendor opt-in
+- App Windows complesse via Wine (Office 365, Adobe CC) — non-FOSS-fault
+
+---
+
+## Lezioni apprese (lessons learned)
+
+1. **Path hardcoded sono sempre un bug** — usa `builtins.pathExists` per overlay locali
+2. **Stessa option dichiarata in N moduli** = conflitto NixOS, usa `lib.mkDefault`/`mkForce`/`mkOverride`
+3. **`nix flake check` valuta TUTTE le configs** — isola le configs sperimentali
+4. **VM tests sono moduli a tutti gli effetti** — stesso pattern bug del minimal
+5. **Cachix non aiuta se eval fallisce** — il fix è strutturale, non di cache
+6. **GitHub API ha rate-limit 60 req/h** anonimo — auth richiesta per polling intensivo
+7. **`nix flake update` deve precedere ogni job CI** — se aggiungiamo input, lock va aggiornato
+
+---
+
+## 4 regole utente (memorizzate)
+
+1. ✅ App esistenti (Linux/Win/Android/multi-distro) installabili → `solem-app-compat.nix`
+2. ✅ Partire dai problemi GRAVI di `WEAKNESSES.md` → `solem-hardware-firmware.nix` + `solem-installer-graphical.nix`
+3. ✅ Lista TODO sempre aggiornata → questo file
+4. 🟡 **Tutto deve funzionare prima di andare avanti** → la regola è applicata: nessun nuovo modulo attivato di default finché CI non è verde
