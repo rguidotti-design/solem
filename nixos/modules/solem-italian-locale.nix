@@ -135,7 +135,7 @@ in {
     services.languagetool = lib.mkIf cfg.languageTool {
       enable = true;
       port = 8010;
-      allowOrigin = "*";
+      # allowOrigin rimosso: potrebbe non esistere in 24.11 stable.
     };
   };
 }

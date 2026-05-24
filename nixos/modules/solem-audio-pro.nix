@@ -53,8 +53,8 @@ in {
       };
     };
 
-    # PipeWire deve essere preferito a PulseAudio
-    services.pulseaudio.enable = lib.mkForce false;
+    # PipeWire deve essere preferito a PulseAudio (NixOS 24.11)
+    hardware.pulseaudio.enable = lib.mkForce false;
     security.rtkit.enable = true;
 
     environment.systemPackages = with pkgs; lib.flatten [

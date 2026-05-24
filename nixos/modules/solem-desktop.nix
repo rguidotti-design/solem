@@ -94,6 +94,7 @@ in {
     # `environment.etc = lib.mkIf cfg.kiosk { ... }`.
 
     # ── Audio: Pipewire (replacement moderno di PulseAudio) ────────
+    # NixOS 24.11: il path corretto è hardware.pulseaudio (non services.pulseaudio).
     hardware.pulseaudio.enable = false;
     security.rtkit.enable = true;
     services.pipewire = {
