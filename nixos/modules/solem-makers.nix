@@ -30,8 +30,8 @@ in {
       (lib.optionals cfg.printing3d [
         prusa-slicer
         orca-slicer
-        cura-appimage     # ultimaker Cura (LGPL-3.0)
-        super-slicer
+        # cura-appimage: pacchetto rimosso in 24.11 (usa flatpak install com.ultimaker.cura)
+        # super-slicer: pacchetto rimosso in 24.11 (usa AppImage o Flatpak)
         openscad          # CAD parametrico script
         slic3r            # original slicer FOSS
       ])
