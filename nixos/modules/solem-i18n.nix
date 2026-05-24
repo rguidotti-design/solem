@@ -11,6 +11,8 @@ let
   cfg = config.solem.i18n;
 in {
   options.solem.i18n = {
+    enable = lib.mkEnableOption "Locale + tastiera + IME (alternativa a solem-italian-locale)";
+
     locale = lib.mkOption {
       type = lib.types.str;
       default = "it_IT.UTF-8";
@@ -47,7 +49,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     i18n = {
       defaultLocale = cfg.locale;
       supportedLocales = map (l: "${l}/UTF-8") (lib.unique ([ cfg.locale ] ++ cfg.extraLocales));

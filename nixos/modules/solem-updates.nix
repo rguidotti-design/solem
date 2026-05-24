@@ -15,6 +15,8 @@ let
   cfg = config.solem.updates;
 in {
   options.solem.updates = {
+    enable = lib.mkEnableOption "Auto-update timer + scrittura /etc/solem/channel (alternativa a solem-channels)";
+
     channel = lib.mkOption {
       type = lib.types.enum [ "stable" "testing" "nightly" ];
       default = "stable";
@@ -34,7 +36,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     # Scrivi canale in /etc/solem/channel
     environment.etc."solem/channel".text = cfg.channel;
 
