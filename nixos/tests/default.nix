@@ -29,6 +29,9 @@
   # Test 10 — GAVIO zero-trust: override systemd User/caps/syscall
   gavio-zero-trust = import ./gavio-zero-trust.nix { inherit pkgs; };
 
+  # Test 11 — Canary trip + kill switch (read honey token -> gavio stop)
+  canary-trip = import ./canary-trip.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 

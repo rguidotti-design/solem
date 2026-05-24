@@ -129,6 +129,7 @@ jobs:
           - ai-user-isolation
           - ai-network-egress
           - gavio-zero-trust
+          - canary-trip
           # Disabilitato temp: gavio-stub (richiede build package gavio)
     steps:
       - uses: actions/checkout@v4
