@@ -47,6 +47,7 @@
     ./modules/solem-vault.nix            # 🔐 secret manager age-encrypted
     ./modules/solem-encrypted-memory.nix # 🧠 zram cifrato + tmpfs /tmp
     ./modules/solem-net-audit.nix        # 📡 log ogni connect outbound
+    ./modules/solem-download-scanner.nix # 🦠 ClamAV auto-scan download
   ];
 
   # Identità
