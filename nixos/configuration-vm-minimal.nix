@@ -40,6 +40,8 @@
     ./modules/solem-battery-predict.nix  # solem-battery-predict + alert
     ./modules/solem-wifi-captive.nix     # solem-wifi-captive portal detect
     ./modules/solem-update-notifier.nix  # solem-update-check + notify-send
+    ./modules/solem-ai-guardrails.nix    # 🔒 sandbox AI + kill switch
+    ./modules/solem-workload-detect.nix  # profilo OS auto-adattivo
   ];
 
   # Identità
