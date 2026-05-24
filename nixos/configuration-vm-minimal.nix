@@ -78,6 +78,14 @@
     ./modules/solem-hpc.nix
     ./modules/solem-datacenter.nix
     ./modules/solem-spid-italia.nix
+    # Step 11: 7 moduli safe (opt-in default off)
+    ./modules/solem-accessibility.nix
+    ./modules/solem-auditd.nix
+    ./modules/solem-autoheal.nix
+    ./modules/solem-backup-restic.nix
+    ./modules/solem-battery-health.nix
+    ./modules/solem-browser-hardened.nix
+    ./modules/solem-cluster.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
