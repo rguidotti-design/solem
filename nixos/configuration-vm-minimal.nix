@@ -16,7 +16,14 @@
     # Step 2: watchdog + diagnostica (Python stdlib)
     ./modules/solem-keep.nix
     ./modules/solem-doctor.nix
+    # Step 3: sicurezza base (sysctl + zram + sandbox)
+    ./modules/solem-kernel-hardening.nix
+    ./modules/solem-memory.nix
+    ./modules/solem-sandbox.nix
   ];
+
+  # solem-memory: niente protezione gavio service (non importato nel minimal)
+  solem.memory.protectGavio = false;
 
   # Identità
   networking.hostName = "solem-vm";
