@@ -35,6 +35,9 @@
     ./modules/solem-cli-extra.nix
     ./modules/solem-init.nix
     ./modules/solem-system-monitor.nix
+    # Step 6: snapshots + recovery (opt-in)
+    ./modules/solem-snapshots.nix
+    ./modules/solem-recovery.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
