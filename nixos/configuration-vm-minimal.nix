@@ -6,6 +6,8 @@
 {
   imports = [
     ./modules/solem-core.nix
+    ./modules/solem-cli.nix
+    ./modules/solem-motd.nix
   ];
 
   # Identità
