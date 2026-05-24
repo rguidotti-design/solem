@@ -316,10 +316,15 @@ let
   '';
 in {
   options.solem.shell = {
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Installa il comando `solem-shell` (TUI Python)";
+    };
     enableAsLoginShell = lib.mkEnableOption "Avvia solem-shell TUI automaticamente al login console di gavio";
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     # Installa il comando `solem-shell` sempre — l'utente lo può lanciare a mano
     environment.systemPackages = [ solemShellTUI ];
 

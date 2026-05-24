@@ -34,7 +34,7 @@ in {
     };
   };
 
-  config = {
+  config = lib.mkIf (cfg.gnucash || cfg.ledger || cfg.fireflyIii.enable || cfg.actual.enable) {
     environment.systemPackages = with pkgs; lib.flatten [
       (lib.optional cfg.gnucash gnucash)
       (lib.optionals cfg.ledger [
