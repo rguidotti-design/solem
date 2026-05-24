@@ -156,6 +156,21 @@
     ./modules/solem-trial-mode.nix
     ./modules/solem-family-sharing.nix
     ./modules/solem-gavio-wakeword.nix
+    # Step 16: 14 moduli sistema (opt-in granulare)
+    ./modules/solem-drivers.nix
+    ./modules/solem-gaming.nix
+    ./modules/solem-dev-envs.nix
+    ./modules/solem-ai-hardware-tuning.nix
+    ./modules/solem-antivirus.nix
+    ./modules/solem-appstore.nix
+    ./modules/solem-code-assistant.nix
+    ./modules/solem-dictation.nix
+    ./modules/solem-prefetch-daemon.nix
+    ./modules/solem-selfhost-extra.nix
+    ./modules/solem-security-advanced.nix
+    ./modules/solem-voice.nix
+    ./modules/solem-voice-wake.nix
+    ./modules/solem-waybar.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
