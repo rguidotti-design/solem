@@ -14,6 +14,7 @@
     ./modules/solem-clipboard-share.nix  # solem-clip HTTP share
     ./modules/solem-productivity.nix     # solem-pomo + solem-todo + solem-note
     ./modules/solem-smart-install.nix    # solem-app store unificato
+    ./modules/solem-migrate-windows.nix  # migrazione NTFS Windows
   ];
 
   # Identità
