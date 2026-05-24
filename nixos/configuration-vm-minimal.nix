@@ -182,6 +182,11 @@
     ./modules/solem-theme.nix
     ./modules/solem-secure.nix
     ./modules/solem-profiles.nix
+    # Step 19: arch-specific (raspberry/jetson/asahi/pinephone) opt-in
+    ./modules/solem-raspberry.nix
+    ./modules/solem-jetson.nix
+    ./modules/solem-asahi.nix
+    ./modules/solem-pinephone.nix
   ];
 
   # solem-memory: niente protezione gavio service (non importato nel minimal)
