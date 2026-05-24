@@ -200,6 +200,108 @@ let
           curl -s "https://api.coingecko.com/api/v3/simple/price?ids=$COIN&vs_currencies=$VS" | jq
           ;;
 
+        # ─────────────────────────────────────────────────────────────
+        # EXTRA APIs (14 nuove, tutte free no-auth)
+        # ─────────────────────────────────────────────────────────────
+
+        # ── NASA APOD ────────────────────────────────────────────────
+        nasa|apod)
+          curl -s "https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY" | \
+            jq '{title: .title, url: .url, date: .date}'
+          ;;
+
+        # ── ISS position ─────────────────────────────────────────────
+        iss)
+          curl -s "http://api.open-notify.org/iss-now.json" | jq
+          ;;
+
+        # ── People in space ──────────────────────────────────────────
+        space|astronauts)
+          curl -s "http://api.open-notify.org/astros.json" | jq
+          ;;
+
+        # ── Country flag download ────────────────────────────────────
+        flag)
+          CODE="''${1:?Usage: solem-api flag <iso-2-code>}"
+          OUT="''${2:-flag-$CODE.png}"
+          curl -s "https://flagcdn.com/w320/$CODE.png" -o "$OUT"
+          echo "Flag salvato: $OUT"
+          ;;
+
+        # ── Time zone ────────────────────────────────────────────────
+        time|orario)
+          TZ="''${1:-Europe/Rome}"
+          curl -s "https://worldtimeapi.org/api/timezone/$TZ" | \
+            jq '{datetime: .datetime, timezone: .timezone, utc_offset: .utc_offset}'
+          ;;
+
+        # ── DuckDuckGo instant search ────────────────────────────────
+        search|cerca)
+          Q="''${1:?Usage: solem-api search <query>}"
+          curl -s --get "https://api.duckduckgo.com/" \
+            --data-urlencode "q=$Q" --data "format=json" --data "no_html=1" | \
+            jq '{abstract: .AbstractText, source: .AbstractSource, url: .AbstractURL}'
+          ;;
+
+        # ── HTTP cat (fun) ───────────────────────────────────────────
+        http-cat)
+          CODE="''${1:-200}"
+          OUT="''${2:-http-$CODE.jpg}"
+          curl -s "https://http.cat/$CODE" -o "$OUT"
+          echo "HTTP $CODE cat: $OUT"
+          ;;
+
+        # ── Pokemon ──────────────────────────────────────────────────
+        pokemon)
+          NAME="''${1:?Usage: solem-api pokemon <name>}"
+          curl -s "https://pokeapi.co/api/v2/pokemon/$NAME" | \
+            jq '{name: .name, height: .height, weight: .weight, types: [.types[].type.name]}'
+          ;;
+
+        # ── MusicBrainz (FOSS) ───────────────────────────────────────
+        artist|music)
+          Q="''${1:?Usage: solem-api artist <name>}"
+          curl -s --get "https://musicbrainz.org/ws/2/artist" \
+            -H "User-Agent: solem-api/0.1" \
+            --data-urlencode "query=$Q" --data "fmt=json" --data "limit=3" | \
+            jq '.artists[] | {name: .name, country: .country, type: .type}'
+          ;;
+
+        # ── GitHub user (free no auth) ───────────────────────────────
+        github|gh-user)
+          USER="''${1:?Usage: solem-api github <username>}"
+          curl -s "https://api.github.com/users/$USER" | \
+            jq '{login: .login, name: .name, bio: .bio, public_repos: .public_repos, followers: .followers}'
+          ;;
+
+        # ── HuggingFace search (free no auth) ────────────────────────
+        hf|huggingface)
+          Q="''${1:?Usage: solem-api hf <model-keyword>}"
+          curl -s "https://huggingface.co/api/models?search=$Q&limit=5" | \
+            jq '.[] | {id: .id, downloads: .downloads}'
+          ;;
+
+        # ── Public IP (ipify) ────────────────────────────────────────
+        myip)
+          curl -s "https://api.ipify.org?format=json" | jq -r '.ip'
+          ;;
+
+        # ── URL shortener (is.gd) ────────────────────────────────────
+        shorten|short)
+          URL="''${1:?Usage: solem-api shorten <url>}"
+          curl -s --get "https://is.gd/create.php" \
+            --data-urlencode "url=$URL" --data "format=simple"
+          echo
+          ;;
+
+        # ── Sunrise / Sunset ─────────────────────────────────────────
+        sun|sunrise)
+          LAT="''${1:-41.9028}"
+          LON="''${2:-12.4964}"
+          curl -s "https://api.sunrise-sunset.org/json?lat=$LAT&lng=$LON&formatted=0" | \
+            jq '.results | {sunrise: .sunrise, sunset: .sunset, day_length: .day_length}'
+          ;;
+
         # ── HELP ────────────────────────────────────────────────────
         help|--help|-h|*)
           cat <<'HELP'
@@ -228,7 +330,23 @@ solem-api — 22 API gratuite FOSS/no-auth
   QR code:      solem-api qr "https://solem.org" out.png
   Animali:      solem-api cat | dog | fox
 
-Tutti FOSS o free-tier no-auth. 0 €.
+EXTRA (14 nuove):
+  NASA APOD:    solem-api nasa                  immagine astronomica giorno
+  ISS:          solem-api iss                   posizione International Space Station
+  Astronauti:   solem-api space                 chi è ora in orbita
+  Bandiera:     solem-api flag it               scarica bandiera Italia
+  Orario:       solem-api time Europe/Rome      ora corrente fuso
+  Cerca:        solem-api search "topic"        DuckDuckGo instant
+  HTTP cat:     solem-api http-cat 404          immagine HTTP status
+  Pokemon:      solem-api pokemon pikachu
+  Musica:       solem-api artist Beatles
+  GitHub:       solem-api github torvalds
+  HF model:     solem-api hf bert
+  Mio IP:       solem-api myip
+  Short URL:    solem-api shorten <url>
+  Alba/Tram.:   solem-api sun [lat] [lon]
+
+Totale: 36 endpoint FOSS o free-tier no-auth. 0 €.
 Documentazione: docs/PUBLIC-APIS.md
 HELP
           ;;
@@ -240,7 +358,7 @@ in {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Installa CLI `solem-api` (wrapper 22 API gratuite)";
+      description = "Installa CLI `solem-api` (wrapper 36 API gratuite FOSS/no-auth)";
     };
   };
 
