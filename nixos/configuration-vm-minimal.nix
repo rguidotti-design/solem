@@ -9,7 +9,7 @@
     ./modules/solem-cli.nix
     ./modules/solem-motd.nix
     ./modules/solem-public-apis.nix
-    # ./modules/solem-demo.nix  # TEMP rimosso: verificare se rompe Quick Validate
+    ./modules/solem-demo.nix    # riaggiunto: gum rimosso, solo echo
   ];
 
   # Identità

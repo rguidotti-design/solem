@@ -124,7 +124,8 @@ jobs:
           - basic-boot
           - solem-cli
           - firewall-base
-          # Disabilitati temp: solem-demo, gavio-stub (debug Quick Validate)
+          - solem-demo
+          # Disabilitato temp: gavio-stub (richiede build package gavio)
     steps:
       - uses: actions/checkout@v4
 
