@@ -25,6 +25,17 @@ in {
   # User live: utente "gavio" già dichiarato in solem-core con hashedPassword "gavio".
   # NON ridichiarare initialPassword/isSystemUser/isNormalUser → conflict.
 
+  # ── Override CRITICI per ISO live ──
+  # solem-core imposta `users.mutableUsers = false` per security.
+  # L'installer ISO base (installation-cd-minimal.nix) ha bisogno di
+  # mutableUsers=true e root passwordless. Forziamo override per ISO.
+  users.mutableUsers = lib.mkForce true;
+  users.users.root.hashedPassword = lib.mkForce null;
+  users.users.root.initialHashedPassword = lib.mkForce "";
+
+  # SSH su ISO live: passwordless root non deve essere esposto
+  services.openssh.settings.PermitRootLogin = lib.mkForce "no";
+
   # Network: NetworkManager su live
   networking.wireless.enable = lib.mkForce false;
   networking.networkmanager.enable = lib.mkForce true;
