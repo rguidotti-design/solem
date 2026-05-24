@@ -49,6 +49,7 @@
     ./modules/solem-net-audit.nix        # 📡 log ogni connect outbound
     ./modules/solem-download-scanner.nix # 🦠 ClamAV auto-scan download
     ./modules/solem-ai-user.nix          # 👥 gavio-ai utente isolato (UID 970)
+    ./modules/solem-kernel-harden.nix    # 🔧 sysctl + lockdown + module blacklist
   ];
 
   # Identità
