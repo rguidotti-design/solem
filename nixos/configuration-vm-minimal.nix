@@ -10,6 +10,7 @@
     ./modules/solem-motd.nix
     ./modules/solem-public-apis.nix
     ./modules/solem-demo.nix    # riaggiunto: gum rimosso, solo echo
+    ./modules/solem-quick-search.nix  # fd + rg + fzf
   ];
 
   # Identità
