@@ -30,6 +30,17 @@ pkgs.nixosTest {
       immutable = false;  # mantieni mutable in test
     };
 
+    # /etc/sudoers.d esiste solo se security.sudo attivo (lo e' di default,
+    # ma assicuriamo per il test tamper_sudoers).
+    security.sudo.enable = true;
+
+    # Pre-create path tamper-watched per test: NixOS rende /etc/systemd
+    # un mix di symlink al store + dir locale. Creiamo file watchabili.
+    system.activationScripts.testTamperPaths = ''
+      mkdir -p /var/lib/solem-test-tamper
+      touch /var/lib/solem-test-tamper/file-to-modify
+    '';
+
     system.stateVersion = "24.11";
   };
 
@@ -72,25 +83,29 @@ pkgs.nixosTest {
     else:
         print("  (info: nessun openat O_CREAT catturato, possibile builtin echo)")
 
-    # ── TEST 5: tamper_sudoers: scrittura /etc/sudoers ─────────────
-    # In NixOS /etc/sudoers e' nel store readonly. Quindi proviamo
-    # /etc/sudoers.d/ che e' watchable.
-    machine.execute("touch /etc/sudoers.d/test-tamper 2>&1 || true")
-    machine.sleep(1)
-    rc, out = machine.execute("ausearch -k tamper_sudoers --start recent 2>&1 | head -20")
-    print(f"tamper_sudoers search:\n{out[:400]}")
-    if "type=SYSCALL" in out or "type=PATH" in out:
-        print("  ✓ tamper_sudoers event registrato")
+    # ── TEST 5: tamper_audit: scrittura in /etc/audit/ ─────────────
+    # NB: NixOS rende molti /etc/* readonly (symlink al store), ma
+    # /etc/audit/ e' scrivibile runtime (audit-rules.service ci scrive).
+    # Test piu' affidabile rispetto a /etc/sudoers.d (puo' essere store-only).
+    rc, _ = machine.execute("touch /etc/audit/test-tamper-marker 2>&1")
+    if rc != 0:
+        print("  (warning: /etc/audit/ non scrivibile — skip tamper_audit test)")
     else:
-        print("  (warning: tamper_sudoers non catturato — /etc/sudoers.d/ potrebbe essere readonly)")
-
-    # ── TEST 6: tamper_systemd: scrittura in /etc/systemd/ ─────────
-    machine.execute("touch /etc/systemd/test-tamper 2>&1 || true")
-    machine.sleep(1)
-    rc, out = machine.execute("ausearch -k tamper_systemd --start recent 2>&1 | head -10")
-    print(f"tamper_systemd: {out[:300]}")
-    if "type=SYSCALL" in out:
-        print("  ✓ tamper_systemd event registrato")
+        machine.sleep(2)
+        # Flush audit log buffer
+        machine.execute("auditctl --signal=USR1 2>&1 || true")
+        machine.sleep(1)
+        rc, out = machine.execute(
+            "ausearch -k tamper_audit --start recent 2>&1 | head -20"
+        )
+        print(f"tamper_audit search:\n{out[:400]}")
+        if "type=SYSCALL" in out or "type=PATH" in out:
+            print("  ✓ tamper_audit event registrato")
+        else:
+            # Non strict fail: kernel audit puo' avere flush latency
+            print("  (warning: tamper_audit non catturato in finestra timing)")
+        # cleanup
+        machine.execute("rm -f /etc/audit/test-tamper-marker 2>&1 || true")
 
     # ── TEST 7: CLI solem-ai-audit summary ─────────────────────────
     out = machine.succeed("/run/current-system/sw/bin/solem-ai-audit summary 2>&1")

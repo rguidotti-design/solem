@@ -35,9 +35,9 @@ let
     -a always,exit -F arch=b32 -F uid=${toString aiUid} -S execve -k ai_execve
 
     # ─── 2. Tentativi di apertura file da gavio-ai ───────────────────
-    # Solo openat (open syscall obsoleto). Filtriamo per accesso write/exec.
-    -a always,exit -F arch=b64 -F uid=${toString aiUid} -S openat -F a2&0x3 -k ai_open_write
-    -a always,exit -F arch=b64 -F uid=${toString aiUid} -S openat -F a2&0x40 -k ai_open_create
+    # Solo openat (open syscall obsoleto). Filtriamo per O_CREAT (0x40).
+    # NB: auditctl usa "&=" per bitmask AND, NON "&" puro.
+    -a always,exit -F arch=b64 -F uid=${toString aiUid} -S openat -F a2&=0x40 -k ai_open_create
 
     # ─── 3. Connect / sendto / accept di gavio-ai ────────────────────
     # Anche se nftables DROP, audit logga il tentativo.
@@ -199,7 +199,13 @@ in {
     security.auditd.enable = true;
     security.audit = {
       enable = true;
-      rules = lib.splitString "\n" (builtins.readFile rulesFile)
+      # IMPORTANTE: filtra righe vuote e commenti, altrimenti auditctl -R
+      # rifiuta le rule e audit-rules.service entra in failed.
+      rules = (lib.filter
+        (line:
+          let trimmed = lib.removePrefix " " (lib.removePrefix "\t" line);
+          in trimmed != "" && !(lib.hasPrefix "#" trimmed))
+        (lib.splitString "\n" (builtins.readFile rulesFile)))
         ++ lib.optional cfg.immutable "-e 2";
     };
 

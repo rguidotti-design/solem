@@ -120,7 +120,12 @@ in {
     security.auditd.enable = true;
     security.audit = {
       enable = true;
-      rules = lib.splitString "\n" (builtins.readFile auditRules);
+      # Filtra commenti e righe vuote (auditctl -R li rifiuta -> service fail)
+      rules = lib.filter
+        (line:
+          let trimmed = lib.removePrefix " " (lib.removePrefix "\t" line);
+          in trimmed != "" && !(lib.hasPrefix "#" trimmed))
+        (lib.splitString "\n" (builtins.readFile auditRules));
     };
 
     environment.etc."solem/net-audit.md".text = ''
