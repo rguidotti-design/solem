@@ -38,6 +38,9 @@
   # Test 13 — Kernel hardening sysctl + lockdown + module blacklist
   kernel-harden = import ./kernel-harden.nix { inherit pkgs; };
 
+  # Test 14 — DNS allowlist + NAT redirect per gavio-ai (anti tunneling)
+  ai-dns-allowlist = import ./ai-dns-allowlist.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 
