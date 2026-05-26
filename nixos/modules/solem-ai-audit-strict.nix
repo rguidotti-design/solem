@@ -191,10 +191,28 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    assertions = [{
-      assertion = config.solem.aiUser.enable;
-      message = "solem.aiAuditStrict richiede solem.aiUser.enable = true";
-    }];
+    assertions = [
+      {
+        assertion = config.solem.aiUser.enable;
+        message = "solem.aiAuditStrict richiede solem.aiUser.enable = true";
+      }
+      {
+        # solem-auditd.nix ha regole duplicate (-w /etc/passwd, /etc/sudoers)
+        # + immutable -e 2 di default → auditctl rifiuta duplicate o ignora
+        # le rules dopo -e 2. Conflict garantito.
+        assertion = !(config.solem.auditd.enable or false);
+        message = ''
+          solem.aiAuditStrict e solem.auditd sono mutually exclusive:
+          entrambi watchano /etc/passwd, /etc/sudoers, /etc/audit/... con
+          chiavi diverse ma stesso target → auditctl rifiuta duplicate o
+          solem-auditd "-e 2" blocca caricamento delle rules successive.
+          Scegli UNO dei due:
+            solem.auditd.enable = false;        # usa solo aiAuditStrict
+            # OPPURE
+            solem.aiAuditStrict.enable = false; # usa solo solem-auditd
+        '';
+      }
+    ];
 
     security.auditd.enable = true;
     security.audit = {
