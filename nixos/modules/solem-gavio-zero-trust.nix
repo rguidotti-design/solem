@@ -183,16 +183,19 @@ in {
 
           NNP=$(systemctl show gavio.service -p NoNewPrivileges --value)
           echo "NoNewPrivileges:     $NNP"
-          [ "$NNP" = "yes" ] && echo "  ✓ NNP attivo" || echo "  ✗ FAIL: NNP off"
+          if [ "$NNP" = "yes" ]; then echo "  ✓ NNP attivo"; else echo "  ✗ FAIL: NNP off"; fi
 
           CAP=$(systemctl show gavio.service -p CapabilityBoundingSet --value)
           echo "CapabilityBoundingSet: $CAP"
-          [ -z "$CAP" ] || [ "$CAP" = "0" ] && echo "  ✓ NO capability" \
-            || echo "  ⚠ capability presenti: $CAP"
+          if [ -z "$CAP" ] || [ "$CAP" = "0" ]; then
+            echo "  ✓ NO capability"
+          else
+            echo "  ⚠ capability presenti: $CAP"
+          fi
 
           PRV=$(systemctl show gavio.service -p PrivateDevices --value)
           echo "PrivateDevices:      $PRV"
-          [ "$PRV" = "yes" ] && echo "  ✓ device isolato" || echo "  ✗ device condivisi"
+          if [ "$PRV" = "yes" ]; then echo "  ✓ device isolato"; else echo "  ✗ device condivisi"; fi
 
           echo
           echo "── systemd-analyze security (esposizione service) ──"

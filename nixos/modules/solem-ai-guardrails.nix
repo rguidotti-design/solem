@@ -318,7 +318,7 @@ in {
     environment.systemPackages = with pkgs; [
       guardCli
       bubblewrap
-      auditd
+      audit
     ];
 
     # Audit log dir

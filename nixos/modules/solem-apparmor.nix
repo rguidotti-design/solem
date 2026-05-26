@@ -261,7 +261,7 @@ in {
     # CLI di ispezione
     environment.systemPackages = with pkgs; [
       apparmor-utils
-      apparmor-parser
+      apparmor-bin-utils  # fornisce apparmor_parser (pkgs.apparmor-parser NON esiste)
       (pkgs.writeShellApplication {
         name = "solem-apparmor";
         runtimeInputs = with pkgs; [ coreutils apparmor-utils gnugrep ];

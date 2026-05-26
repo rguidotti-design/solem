@@ -42,9 +42,10 @@ let
       }
 
       alert_human() {
-        local msg="$1"
-        # Notify-send a tutti gli utenti grafici loggati
-        for DISP_FILE in /run/user/*/wayland-* /run/user/*/DISPLAY 2>/dev/null; do
+        msg="$1"
+        # Notify-send a tutti gli utenti grafici loggati.
+        # NB: niente redirect dentro il for-in (sintassi invalida + shellcheck).
+        for DISP_FILE in /run/user/*/wayland-* /run/user/*/DISPLAY; do
           [ -e "$DISP_FILE" ] || continue
           UID_DIR=$(echo "$DISP_FILE" | sed -E 's|/run/user/([0-9]+)/.*|\1|')
           if [ -n "$UID_DIR" ]; then
