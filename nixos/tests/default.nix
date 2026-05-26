@@ -47,6 +47,9 @@
   # Test 16 — Audit AI-specific + tamper detection /etc/systemd /etc/sudoers
   ai-audit-strict = import ./ai-audit-strict.nix { inherit pkgs; };
 
+  # Test 17 — Hardened kernel package boota + uname contiene "hardened"
+  hardened-kernel = import ./hardened-kernel.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 
