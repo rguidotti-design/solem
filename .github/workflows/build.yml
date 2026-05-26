@@ -133,6 +133,7 @@ jobs:
           - red-team-ai
           - kernel-harden
           - ai-dns-allowlist
+          - apparmor
           # Disabilitato temp: gavio-stub (richiede build package gavio)
     steps:
       - uses: actions/checkout@v4

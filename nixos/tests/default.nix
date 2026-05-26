@@ -41,6 +41,9 @@
   # Test 14 — DNS allowlist + NAT redirect per gavio-ai (anti tunneling)
   ai-dns-allowlist = import ./ai-dns-allowlist.nix { inherit pkgs; };
 
+  # Test 15 — AppArmor profilo gavio-ai enforce (DENIED su /etc/shadow + /home)
+  apparmor = import ./apparmor.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 
