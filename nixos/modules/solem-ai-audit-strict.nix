@@ -197,10 +197,11 @@ in {
         message = "solem.aiAuditStrict richiede solem.aiUser.enable = true";
       }
       {
-        # solem-auditd.nix ha regole duplicate (-w /etc/passwd, /etc/sudoers)
-        # + immutable -e 2 di default → auditctl rifiuta duplicate o ignora
-        # le rules dopo -e 2. Conflict garantito.
-        assertion = !(config.solem.auditd.enable or false);
+        # Conflict con solem-auditd: regole duplicate + immutable -e 2.
+        # NB: usiamo lookupOptions style safe — `config.solem ? auditd`
+        # ritorna false se il modulo solem-auditd.nix non e' importato,
+        # evitando "attribute missing" error in eval.
+        assertion = !(lib.attrByPath [ "solem" "auditd" "enable" ] false config);
         message = ''
           solem.aiAuditStrict e solem.auditd sono mutually exclusive:
           entrambi watchano /etc/passwd, /etc/sudoers, /etc/audit/... con

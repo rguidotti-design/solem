@@ -77,7 +77,7 @@ let
 
   guardCli = pkgs.writeShellApplication {
     name = "solem-guard";
-    runtimeInputs = with pkgs; [ coreutils bubblewrap util-linux jq libnotify auditd ];
+    runtimeInputs = with pkgs; [ coreutils bubblewrap util-linux jq libnotify audit ];
     text = ''
       ACTION="''${1:-help}"
       shift || true
