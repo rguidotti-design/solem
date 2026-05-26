@@ -134,6 +134,7 @@ jobs:
           - kernel-harden
           - ai-dns-allowlist
           - apparmor
+          - ai-audit-strict
           # Disabilitato temp: gavio-stub (richiede build package gavio)
     steps:
       - uses: actions/checkout@v4

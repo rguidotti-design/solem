@@ -44,6 +44,9 @@
   # Test 15 — AppArmor profilo gavio-ai enforce (DENIED su /etc/shadow + /home)
   apparmor = import ./apparmor.nix { inherit pkgs; };
 
+  # Test 16 — Audit AI-specific + tamper detection /etc/systemd /etc/sudoers
+  ai-audit-strict = import ./ai-audit-strict.nix { inherit pkgs; };
+
   # ── Temp disabilitato (richiede build package gavio):
   # gavio-stub = import ./gavio-stub.nix { inherit pkgs; };
 
