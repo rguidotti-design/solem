@@ -102,8 +102,10 @@ in {
             "0.0.0.0/0 refuse"
             "::/0 refuse"
           ];
-          # DNSSEC validation
-          auto-trust-anchor-file = "/var/lib/unbound/root.key";
+          # DNSSEC validation (NixOS gestisce root.key via enableRootTrustAnchor)
+          # Non settare auto-trust-anchor-file qui: unbound-keygen.service lo
+          # popola se enableRootTrustAnchor=true (default). In VM isolata
+          # disabilita via solem.aiDns.dnssec = false oppure usa il test setup.
           val-permissive-mode = "no";
           # Privacy: minimize query info (RFC 7816)
           qname-minimisation = "yes";

@@ -37,6 +37,10 @@ pkgs.nixosTest {
       ];
     };
 
+    # VM isolata: disabilita root trust anchor (unbound-anchor non puo'
+    # bootstrappare senza internet -> unbound service fail)
+    services.unbound.enableRootTrustAnchor = false;
+
     networking.firewall.enable = false;
 
     environment.systemPackages = with pkgs; [

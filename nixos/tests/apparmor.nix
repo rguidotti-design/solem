@@ -80,11 +80,28 @@ pkgs.nixosTest {
             print("  ✓ solem-gavio-ai in ENFORCE mode")
 
     # ── TEST 4: setup binary fake per testare enforcement ──────────
-    # Il profilo si applica al path /var/lib/gavio-ai/venv/bin/python3.
-    # Creo quel path come symlink a bash (per esercitare il profilo).
+    # CRITICO: AppArmor risolve i symlink prima di applicare il profilo,
+    # quindi ln -sf NON applica solem-gavio-ai al path simbolico.
+    # Devo COPIARE il binary bash (no symlink) al path del profilo.
     machine.succeed("mkdir -p /var/lib/gavio-ai/venv/bin")
-    machine.succeed("ln -sf /run/current-system/sw/bin/bash /var/lib/gavio-ai/venv/bin/python3")
+    machine.succeed("cp /run/current-system/sw/bin/bash /var/lib/gavio-ai/venv/bin/python3")
+    machine.succeed("chmod +x /var/lib/gavio-ai/venv/bin/python3")
     machine.succeed("chown -R gavio-ai:gavio-ai /var/lib/gavio-ai/")
+
+    # Verifica che il profilo si applichi DAVVERO eseguendo e leggendo
+    # /proc/self/attr/current dentro il processo confinato.
+    rc, out = machine.execute(
+        "sudo -u gavio-ai /var/lib/gavio-ai/venv/bin/python3 -c "
+        "'cat /proc/self/attr/current' 2>&1"
+    )
+    print(f"AppArmor self attr: rc={rc} out={out!r}")
+    if "solem-gavio-ai" not in out:
+        raise Exception(
+            f"FAIL: il binary /var/lib/gavio-ai/venv/bin/python3 NON e' confinato "
+            f"da AppArmor profile solem-gavio-ai (out={out!r}). I test DENY "
+            f"sotto darebbero falso positivo via DAC."
+        )
+    print(f"  ✓ processo confinato da: {out.strip()}")
 
     # ── TEST 5a: read /etc/passwd → ALLOW ──────────────────────────
     # Il profilo permette /etc/** r,

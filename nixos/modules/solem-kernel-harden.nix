@@ -49,12 +49,16 @@ in {
 
     disableUserNamespaces = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;  # default OFF: rompe nix-daemon sandbox + chromium + bwrap
       description = ''
-        Disabilita user namespaces non privilegiati.
-        IMPATTO: rootless docker/podman NON funziona, alcuni sandbox
-        (chromium namespace, bubblewrap senza --userns) si rompono.
-        Mitiga: CVE-2022-0492, CVE-2018-18955, lateral movement.
+        Disabilita user namespaces non privilegiati (user.max_user_namespaces=0).
+        IMPATTO MOLTO INVASIVO:
+          - nix-daemon sandbox build NON funziona (rebuild di pacchetti fallisce)
+          - rootless docker/podman NON funziona
+          - chromium sandbox userspace si rompe
+          - bubblewrap senza --userns si rompe
+        Mitiga: CVE-2022-0492, CVE-2018-18955, vettori privesc via userns.
+        Default OFF per safety; abilita solo su server statici sapendo trade-off.
       '';
     };
   };

@@ -50,6 +50,13 @@ pkgs.nixosTest {
     machine.wait_for_unit("multi-user.target", timeout=60)
     machine.sleep(3)
 
+    # Setup: rotta fittizia per TEST-NET RFC 5737 verso loopback.
+    # Senza questa, connect(192.0.2.x) ritorna ENETUNREACH PRIMA che
+    # il packet attraversi OUTPUT chain -> counter NON incrementa per
+    # ragione sbagliata (no packet generato, no rule match).
+    machine.succeed("ip route add 192.0.2.0/24 dev lo 2>&1 || true")
+    machine.succeed("ip route add 203.0.113.0/24 dev lo 2>&1 || true")
+
     # ── TEST 1: tabella nftables caricata ──────────────────────────
     out = machine.succeed("nft list tables 2>&1")
     print(f"nft tables:\n{out}")

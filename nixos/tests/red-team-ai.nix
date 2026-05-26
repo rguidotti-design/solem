@@ -100,6 +100,11 @@ pkgs.nixosTest {
     machine.wait_for_unit("solem-canary-watcher.service", timeout=30)
     machine.sleep(3)
 
+    # Route fittizia per TEST-NET RFC 5737 (anti ENETUNREACH che bypasserebbe
+    # OUTPUT chain nftables senza generare packet)
+    machine.succeed("ip route add 192.0.2.0/24 dev lo 2>&1 || true")
+    machine.succeed("ip route add 203.0.113.0/24 dev lo 2>&1 || true")
+
     print("=" * 60)
     print("RED-TEAM SOLEM: simulazione AI compromessa")
     print("=" * 60)

@@ -41,7 +41,9 @@ let
     # all'interno del venv di gavio-ai. Il path matchara' il binary del venv.
     profile solem-gavio-ai ${aiHome}/venv/bin/python3 {
       include <abstractions/base>
-      include <abstractions/python>
+      # abstractions/python NON presente in tutte le versioni apparmor-profiles;
+      # le permission Python (read /usr/lib/python*, /tmp/__pycache__) sono
+      # gia' coperte dalle regole /usr/** r, /tmp/** rwk sotto.
       include <abstractions/ssl_certs>
 
       # ── Filesystem: read-only quasi tutto ─────────────────────────
@@ -132,8 +134,10 @@ let
       deny capability setuid,
       deny capability setgid,
 
-      # ── exec child con stesso profilo ────────────────────────────
-      /run/current-system/sw/bin/* Px,
+      # ── exec child: Pix = try profile, fallback inherit ──────────
+      # Pix evita il fail di Px quando non esiste un profilo dedicato
+      # per il binary child (es. cat, sed, jq).
+      /run/current-system/sw/bin/* Pix,
       /usr/bin/* Pix,
       ${aiHome}/venv/bin/* Pix,
 

@@ -276,8 +276,9 @@ in {
         Restart = "on-failure";
         RestartSec = 30;
 
-        # Hardening del watcher stesso (deve essere root per stop service)
-        NoNewPrivileges = false;  # serve per systemctl stop
+        # Hardening del watcher stesso (gira come root per stop service)
+        # NoNewPrivileges=true safe: systemctl stop NON richiede setuid
+        NoNewPrivileges = true;
         ProtectSystem = "strict";
         ReadWritePaths = [
           "/var/log/solem"

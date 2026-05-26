@@ -57,21 +57,23 @@ let
       }
 
       chain ai_egress {
-        type filter hook output priority 0; policy accept;
+        # Fail-closed: policy drop. Se nessuna regola matcha, packet dropped.
+        # Per altri UID return early (no impact su utente umano).
+        type filter hook output priority 0; policy drop;
 
-        # Solo regole per processi del nostro UID AI
-        meta skuid != ${toString aiUid} return
+        # Utente umano gavio (UID != 970): return -> chain successive decidono
+        meta skuid != ${toString aiUid} accept
 
-        # Permetti loopback completo (gavio-ai parla con GAVIO API locale)
+        # Loopback completo (gavio-ai parla con GAVIO API locale)
         oif "lo" accept
 
-        # Permetti destinazioni in whitelist
+        # Whitelist destinazioni + porte
         ip daddr @ai_allowed_v4 tcp dport @ai_allowed_ports accept
         ip daddr @ai_allowed_v4 udp dport @ai_allowed_ports accept
         ip6 daddr @ai_allowed_v6 tcp dport @ai_allowed_ports accept
         ip6 daddr @ai_allowed_v6 udp dport @ai_allowed_ports accept
 
-        # Log + DROP tutto il resto
+        # Log esplicito + DROP esplicito (policy drop e' fallback anyway)
         ${lib.optionalString cfg.logBlocked ''
           limit rate 10/minute log prefix "SOLEM-AI-BLOCK: " flags all
         ''}
