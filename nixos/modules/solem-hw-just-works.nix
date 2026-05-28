@@ -40,7 +40,7 @@ in {
       pulse.enable = true;
       wireplumber.enable = true;
     };
-    services.pulseaudio.enable = lib.mkForce false;
+    hardware.pulseaudio.enable = lib.mkForce false;  # 24.11 (rev 50ab793): path e' hardware.*, non services.*
     security.rtkit.enable = true;
 
     # ── BLUETOOTH: A2DP audio ────────────────────────────────────────

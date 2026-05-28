@@ -97,7 +97,7 @@ print(json.dumps(data, indent=2))
 import json
 try: data = json.loads('''$DATA''')
 except: data = {}
-print(data.get('$KEY', ''))
+print(data.get('$KEY', ""))
 ")
           if [ -z "$VAL" ]; then
             echo "(non trovato)" >&2

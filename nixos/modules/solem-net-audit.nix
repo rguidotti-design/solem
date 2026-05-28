@@ -12,7 +12,8 @@
 let
   cfg = config.solem.netAudit;
 
-  auditRules = pkgs.writeText "solem-net-audit.rules" ''
+  # Stringa diretta (no writeText+readFile -> drv path not valid in pure-eval)
+  auditRulesText = ''
     ## SOLEM Network Audit rules
 
     # Log ogni connect() syscall (outbound TCP/UDP)
@@ -125,7 +126,7 @@ in {
         (line:
           let trimmed = lib.removePrefix " " (lib.removePrefix "\t" line);
           in trimmed != "" && !(lib.hasPrefix "#" trimmed))
-        (lib.splitString "\n" (builtins.readFile auditRules));
+        (lib.splitString "\n" auditRulesText);
     };
 
     environment.etc."solem/net-audit.md".text = ''

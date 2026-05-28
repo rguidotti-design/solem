@@ -23,7 +23,9 @@ let
   cfg = config.solem.aiNetwork;
   aiUid = config.solem.aiUser.uid or 970;
 
-  ruleFile = pkgs.writeText "solem-ai-network.nft" ''
+  # NB: stringa diretta (no writeText + readFile per evitare
+  # "drv path not valid" in pure-eval mode).
+  ruleText = ''
     # SOLEM AI Network — egress whitelist per UID ${toString aiUid} (gavio-ai)
     #
     # NB: questo file e' MERGED con il ruleset esistente, non lo sostituisce.
@@ -224,7 +226,7 @@ in {
     networking.nftables.enable = true;
 
     # Iniettiamo il nostro ruleset
-    networking.nftables.ruleset = lib.mkBefore (builtins.readFile ruleFile);
+    networking.nftables.ruleset = lib.mkBefore ruleText;
 
     environment.systemPackages = [
       netCli

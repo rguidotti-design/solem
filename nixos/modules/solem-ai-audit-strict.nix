@@ -23,7 +23,8 @@ let
   cfg = config.solem.aiAuditStrict;
   aiUid = config.solem.aiUser.uid or 970;
 
-  rulesFile = pkgs.writeText "solem-ai-audit-strict.rules" ''
+  # Stringa diretta (no writeText+readFile -> drv path not valid in pure-eval)
+  rulesText = ''
     ## SOLEM AI Audit STRICT — regole dedicate per UID ${toString aiUid} (gavio-ai)
     ## + tamper detection su file di sistema critici.
 
@@ -224,7 +225,7 @@ in {
         (line:
           let trimmed = lib.removePrefix " " (lib.removePrefix "\t" line);
           in trimmed != "" && !(lib.hasPrefix "#" trimmed))
-        (lib.splitString "\n" (builtins.readFile rulesFile)))
+        (lib.splitString "\n" rulesText))
         ++ lib.optional cfg.immutable "-e 2";
     };
 

@@ -330,11 +330,21 @@ in {
     # auditd: kernel-level event tracking
     security.auditd.enable = cfg.auditd;
 
-    # Falco eBPF runtime security (opt-in)
-    services.falco = lib.mkIf cfg.falco.enable {
-      enable = true;
-      rules = {
-        solem-ai-rules = builtins.readFile falcoRules;
+    # Falco eBPF runtime security (opt-in).
+    # NB: NixOS 24.11 NON ha un modulo services.falco stabile. Installiamo
+    # il pacchetto + rules in /etc; l'avvio e' via systemd service custom.
+    environment.etc."falco/rules.d/solem-ai-rules.yaml" = lib.mkIf cfg.falco.enable {
+      source = falcoRules;
+    };
+
+    systemd.services.solem-falco = lib.mkIf cfg.falco.enable {
+      description = "SOLEM Falco eBPF anomaly detection (AI runtime)";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStart = "${pkgs.falco}/bin/falco -r /etc/falco/rules.d/solem-ai-rules.yaml";
+        Restart = "on-failure";
+        RestartSec = 30;
       };
     };
 
