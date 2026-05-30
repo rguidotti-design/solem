@@ -1,0 +1,202 @@
+# VM test apparmor FAIL — commit e228e83 @ 20260530T203158Z
+
+vm-test-run-solem-apparmor> machine # [    9.620454] 42m8vzags3w669djhcs5bbm7jf10phdb-audit-disable[635]: No rules
+vm-test-run-solem-apparmor> machine # [    9.657297] systemd[1]: Finished Kernel Auditing.
+vm-test-run-solem-apparmor> machine # [    9.671785] systemd[1]: Found device Virtio network device.
+vm-test-run-solem-apparmor> machine: Guest shell says: b'Spawning backdoor root shell...\n'
+vm-test-run-solem-apparmor> machine: connected to guest root shell
+vm-test-run-solem-apparmor> machine: (connecting took 10.90 seconds)
+vm-test-run-solem-apparmor> (finished: waiting for the VM to finish booting, in 10.99 seconds)
+vm-test-run-solem-apparmor> machine # [    9.718301] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-apparmor> machine # [    9.729574] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-apparmor> machine # [    9.738838] nsncd[627]: May 30 20:31:45.970 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-apparmor> machine # [    9.750346] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-apparmor> machine # [    9.755729] systemd[1]: Starting User Login Management...
+vm-test-run-solem-apparmor> machine # [    9.790943] dbus-daemon[631]: dbus[631]: Unknown username "systemd-timesync" in message bus configuration file
+vm-test-run-solem-apparmor> machine # [    9.873998] systemd[1]: Started D-Bus System Message Bus.
+vm-test-run-solem-apparmor> machine # [   10.067420] systemd-logind[656]: New seat seat0.
+vm-test-run-solem-apparmor> machine # [   10.093887] systemd[1]: Started User Login Management.
+vm-test-run-solem-apparmor> machine # [   10.119198] systemd[1]: Stopped target Host and Network Name Lookups.
+vm-test-run-solem-apparmor> machine # [   10.130152] systemd[1]: Stopping Host and Network Name Lookups...
+vm-test-run-solem-apparmor> machine # [   10.132833] systemd[1]: Stopped target User and Group Name Lookups.
+vm-test-run-solem-apparmor> machine # [   10.143429] systemd[1]: Stopping User and Group Name Lookups...
+vm-test-run-solem-apparmor> machine # [   10.153419] systemd[1]: Stopping Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-apparmor> machine # [   10.160316] systemd[1]: nscd.service: Deactivated successfully.
+vm-test-run-solem-apparmor> machine # [   10.163562] systemd[1]: Stopped Name Service Cache Daemon (nsncd).
+vm-test-run-solem-apparmor> machine # [   10.172165] systemd[1]: Starting Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-apparmor> machine # [   10.556775] mousedev: PS/2 mouse device common for all mice
+vm-test-run-solem-apparmor> machine # [   10.306750] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-apparmor> machine # [   10.310802] nsncd[712]: May 30 20:31:46.561 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-apparmor> machine # [   10.322004] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-apparmor> machine # [   10.331852] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-apparmor> machine # [   10.369769] systemd[1]: Finished resolvconf update.
+vm-test-run-solem-apparmor> machine # [   10.378815] systemd[1]: Starting DHCP Client...
+vm-test-run-solem-apparmor> machine # [   10.762305] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input3
+vm-test-run-solem-apparmor> machine # [   10.411224] systemd[1]: Finished Firewall.
+vm-test-run-solem-apparmor> machine # [   10.414404] systemd[1]: Reached target Preparation for Network.
+vm-test-run-solem-apparmor> machine # [   10.423533] systemd[1]: Starting Address configuration of eth1...
+vm-test-run-solem-apparmor> machine # [   10.858491] ACPI: button: Power Button [PWRF]
+vm-test-run-solem-apparmor> machine # [   10.940923] Floppy drive(s): fd0 is 2.88M AMI BIOS
+vm-test-run-solem-apparmor> machine # [   10.590614] network-addresses-eth1-start[745]: adding address 192.168.1.1/24... done
+vm-test-run-solem-apparmor> machine # [   10.963814] parport_pc 00:03: reported by Plug and Play ACPI
+vm-test-run-solem-apparmor> machine # [   10.617791] network-addresses-eth1-start[745]: adding address 2001:db8:1::1/64... done
+vm-test-run-solem-apparmor> machine # [   10.656397] systemd[1]: Finished Address configuration of eth1.
+vm-test-run-solem-apparmor> machine # [   10.663510] systemd[1]: Starting Networking Setup...
+vm-test-run-solem-apparmor> machine # [   11.035535] parport0: PC-style at 0x378, irq 7 [PCSPP(,...)]
+vm-test-run-solem-apparmor> machine # [   11.041833] FDC 0 is a S82078B
+vm-test-run-solem-apparmor> machine # [   10.736492] dhcpcd[748]: dhcpcd-10.1.0 starting
+vm-test-run-solem-apparmor> machine # [   10.754594] dhcpcd[760]: dev: loaded udev
+vm-test-run-solem-apparmor> machine # [   11.147803] 8021q: 802.1Q VLAN Support v1.8
+vm-test-run-solem-apparmor> machine # [   11.152486] 8021q: adding VLAN 0 to HW filter on device eth1
+vm-test-run-solem-apparmor> machine # [   11.170065] piix4_smbus 0000:00:01.3: SMBus Host Controller at 0x700, revision 0
+vm-test-run-solem-apparmor> machine # [   11.317533] input: QEMU Virtio Keyboard as /devices/pci0000:00/0000:00:0a.0/virtio7/input/input4
+vm-test-run-solem-apparmor> machine # [   11.340054] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+vm-test-run-solem-apparmor> machine # [   11.387676] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+vm-test-run-solem-apparmor> machine # [   11.394191] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+vm-test-run-solem-apparmor> machine # [   11.038297] systemd[1]: Finished Networking Setup.
+vm-test-run-solem-apparmor> machine # [   11.411570] platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
+vm-test-run-solem-apparmor> machine # [   11.421039] cfg80211: failed to load regulatory.db
+vm-test-run-solem-apparmor> machine # [   11.057527] systemd[1]: Starting Extra networking commands....
+vm-test-run-solem-apparmor> machine # [   11.442824] bochs-drm 0000:00:02.0: vgaarb: deactivate vga console
+vm-test-run-solem-apparmor> machine # [   11.468265] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input6
+vm-test-run-solem-apparmor> machine # [   11.476829] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input5
+vm-test-run-solem-apparmor> machine # [   11.484717] cryptd: max_cpu_qlen set to 1000
+vm-test-run-solem-apparmor> machine # [   11.149537] systemd[1]: Finished Extra networking commands..
+vm-test-run-solem-apparmor> machine # [   11.168536] systemd[1]: Reached target Network.
+vm-test-run-solem-apparmor> machine # [   11.173321] systemd[1]: Starting Permit User Sessions...
+vm-test-run-solem-apparmor> machine # [   11.588037] 8021q: adding VLAN 0 to HW filter on device eth0
+vm-test-run-solem-apparmor> machine # [   11.631107] AVX2 version of gcm_enc/dec engaged.
+vm-test-run-solem-apparmor> machine # [   11.631138] AES CTR mode by8 optimization enabled
+vm-test-run-solem-apparmor> machine # [   11.649539] Console: switching to colour dummy device 80x25
+vm-test-run-solem-apparmor> machine # [   11.728290] [drm] Found bochs VGA, ID 0xb0c5.
+vm-test-run-solem-apparmor> machine # [   11.728294] [drm] Framebuffer size 16384 kB @ 0xfd000000, mmio @ 0xfebd0000.
+vm-test-run-solem-apparmor> machine # [   11.221858] dhcpcd[760]: eth0: waiting for carrier
+vm-test-run-solem-apparmor> machine # [   11.377817] systemd-logind[656]: Watching system buttons on /dev/input/event0 (AT Translated Set 2 keyboard)
+vm-test-run-solem-apparmor> machine # [   11.382362] dhcpcd[760]: eth0: carrier acquired
+vm-test-run-solem-apparmor> machine # [   11.386961] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-apparmor> machine # [   11.392941] dhcpcd[760]: DUID 00:01:00:01:31:ae:05:b3:52:54:00:12:34:56
+vm-test-run-solem-apparmor> machine # [   11.397885] dhcpcd[760]: eth0: IAID 00:12:34:56
+vm-test-run-solem-apparmor> machine # [   11.409371] dhcpcd[760]: eth0: adding address fe80::5054:ff:fe12:3456
+vm-test-run-solem-apparmor> machine # [   11.784182] [drm] Found EDID data blob.
+vm-test-run-solem-apparmor> machine # [   11.434197] systemd-logind[656]: Watching system buttons on /dev/input/event2 (Power Button)
+vm-test-run-solem-apparmor> machine # [   11.460339] systemd[1]: Finished Permit User Sessions.
+vm-test-run-solem-apparmor> machine # [   11.469934] systemd[1]: Started Getty on tty1.
+vm-test-run-solem-apparmor> machine # [   11.472440] systemd[1]: Reached target Login Prompts.
+vm-test-run-solem-apparmor> machine # [   11.850733] [drm] Initialized bochs-drm 1.0.0 20130925 for 0000:00:02.0 on minor 0
+vm-test-run-solem-apparmor> machine # [   11.911665] ppdev: user-space parallel port driver
+vm-test-run-solem-apparmor> machine # [   12.121855] systemd[1]: Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
+vm-test-run-solem-apparmor> machine # [   12.127232] dhcpcd[760]: eth0: soliciting a DHCP lease
+vm-test-run-solem-apparmor> machine # [   12.162332] dhcpcd[760]: eth0: offered 10.0.2.15 from 10.0.2.2
+vm-test-run-solem-apparmor> machine # [   12.166478] dhcpcd[760]: eth0: probing address 10.0.2.15/24
+vm-test-run-solem-apparmor> machine # [   12.197247] systemd-logind[656]: Watching system buttons on /dev/input/event3 (QEMU Virtio Keyboard)
+vm-test-run-solem-apparmor> machine # [   11.925828] fbcon: bochs-drmdrmfb (fb0) is primary device
+vm-test-run-solem-apparmor> machine # [   12.521995] NET: Registered PF_PACKET protocol family
+vm-test-run-solem-apparmor> machine # [   12.746275] Console: switching to colour frame buffer device 160x50
+vm-test-run-solem-apparmor> machine # [   12.980898] bochs-drm 0000:00:02.0: [drm] fb0: bochs-drmdrmfb frame buffer device
+vm-test-run-solem-apparmor> machine # [   12.633915] systemd[1]: systemd-vconsole-setup.service: Deactivated successfully.
+vm-test-run-solem-apparmor> machine # [   12.638793] systemd[1]: Stopped Virtual Console Setup.
+vm-test-run-solem-apparmor> machine # [   12.643340] systemd[1]: run-credentials-systemd\x2dvconsole\x2dsetup.service.mount: Deactivated successfully.
+vm-test-run-solem-apparmor> machine # [   12.650485] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-apparmor> machine # [   13.061212] kvm_amd: TSC scaling supported
+vm-test-run-solem-apparmor> machine # [   13.062672] kvm_amd: Nested Virtualization enabled
+vm-test-run-solem-apparmor> machine # [   13.064033] kvm_amd: Nested Paging enabled
+vm-test-run-solem-apparmor> machine # [   13.069199] kvm_amd: Virtual VMLOAD VMSAVE supported
+vm-test-run-solem-apparmor> machine # [   13.070715] kvm_amd: PMU virtualization is disabled
+vm-test-run-solem-apparmor> machine # [   13.107812] EDAC MC: Ver: 3.0.0
+vm-test-run-solem-apparmor> machine # [   13.100427] dhcpcd[760]: eth0: soliciting an IPv6 router
+vm-test-run-solem-apparmor> machine # [   13.103456] dhcpcd[760]: eth0: Router Advertisement from fe80::2
+vm-test-run-solem-apparmor> machine # [   13.107773] dhcpcd[760]: eth0: adding address fec0::5054:ff:fe12:3456/64
+vm-test-run-solem-apparmor> machine # [   13.111309] dhcpcd[760]: eth0: adding route to fec0::/64
+vm-test-run-solem-apparmor> machine # [   13.114364] dhcpcd[760]: eth0: adding default route via fe80::2
+vm-test-run-solem-apparmor> machine # [   13.142708] systemd[1]: Finished Virtual Console Setup.
+vm-test-run-solem-apparmor> machine # [   17.334256] dhcpcd[760]: eth0: leased 10.0.2.15 for 86400 seconds
+vm-test-run-solem-apparmor> machine # [   17.336674] dhcpcd[760]: eth0: adding route to 10.0.2.0/24
+vm-test-run-solem-apparmor> machine # [   17.339444] dhcpcd[760]: eth0: adding default route via 10.0.2.2
+vm-test-run-solem-apparmor> machine # [   17.483474] systemd[1]: Started DHCP Client.
+vm-test-run-solem-apparmor> machine # [   17.489670] systemd[1]: Reached target Network is Online.
+vm-test-run-solem-apparmor> machine # [   17.493881] systemd[1]: Reached target Multi-User System.
+vm-test-run-solem-apparmor> machine # [   17.629520] systemd[1]: Startup finished in 4.639s (kernel) + 12.852s (userspace) = 17.492s.
+vm-test-run-solem-apparmor> (finished: waiting for unit multi-user.target, in 19.00 seconds)
+vm-test-run-solem-apparmor> machine: must succeed: sleep 3
+vm-test-run-solem-apparmor> (finished: must succeed: sleep 3, in 3.04 seconds)
+vm-test-run-solem-apparmor> machine: must succeed: ls /sys/module/apparmor 2>&1
+vm-test-run-solem-apparmor> (finished: must succeed: ls /sys/module/apparmor 2>&1, in 0.04 seconds)
+vm-test-run-solem-apparmor> machine: must succeed: ls /sys/kernel/security/apparmor 2>&1 || true
+vm-test-run-solem-apparmor> (finished: must succeed: ls /sys/kernel/security/apparmor 2>&1 || true, in 0.03 seconds)
+vm-test-run-solem-apparmor> aa-status:
+vm-test-run-solem-apparmor> apparmor module is loaded.
+vm-test-run-solem-apparmor> 1 profiles are loaded.
+vm-test-run-solem-apparmor> 1 profiles are in enforce mode.
+vm-test-run-solem-apparmor>    solem-gavio-ai
+vm-test-run-solem-apparmor> 0 profiles are in complain mode.
+vm-test-run-solem-apparmor> 0 profiles are in prompt mode.
+vm-test-run-solem-apparmor> 0 profiles are in kill mode.
+vm-test-run-solem-apparmor> 0 profiles are in unconfined mode.
+vm-test-run-solem-apparmor> 0 processes have profiles defined.
+vm-test-run-solem-apparmor> 0 processes are in enforce mode.
+vm-test-run-solem-apparmor> 0 processes are in complain mode.
+vm-test-run-solem-apparmor> 0 processes are in prompt mode.
+vm-test-run-solem-apparmor> 0 processes are in kill mode.
+vm-test-run-solem-apparmor> 0 processes are unconfined but have a profile defined.
+vm-test-run-solem-apparmor> 0 processes are in mixed mode.
+vm-test-run-solem-apparmor>   ✓ profilo solem-gavio-ai loaded
+vm-test-run-solem-apparmor>   ⚠ solem-gavio-ai NON in enforce, output: MISSING
+vm-test-run-solem-apparmor> machine: must succeed: mkdir -p /var/lib/gavio-ai/venv/bin
+vm-test-run-solem-apparmor> (finished: must succeed: mkdir -p /var/lib/gavio-ai/venv/bin, in 0.03 seconds)
+vm-test-run-solem-apparmor> machine: must succeed: cp /run/current-system/sw/bin/bash /var/lib/gavio-ai/venv/bin/python3
+vm-test-run-solem-apparmor> (finished: must succeed: cp /run/current-system/sw/bin/bash /var/lib/gavio-ai/venv/bin/python3, in 0.04 seconds)
+vm-test-run-solem-apparmor> machine: must succeed: chmod +x /var/lib/gavio-ai/venv/bin/python3
+vm-test-run-solem-apparmor> (finished: must succeed: chmod +x /var/lib/gavio-ai/venv/bin/python3, in 0.03 seconds)
+vm-test-run-solem-apparmor> machine: must succeed: chown -R gavio-ai:gavio-ai /var/lib/gavio-ai/
+vm-test-run-solem-apparmor> (finished: must succeed: chown -R gavio-ai:gavio-ai /var/lib/gavio-ai/, in 0.04 seconds)
+vm-test-run-solem-apparmor> machine # [   21.134523] sudo[978]:     root : TTY=hvc0 ; PWD=/tmp ; USER=gavio-ai ; COMMAND=/var/lib/gavio-ai/venv/bin/python3 -c 'cat /proc/self/attr/current'
+vm-test-run-solem-apparmor> machine # [   21.158741] sudo[978]: pam_unix(sudo:session): session opened for user gavio-ai(uid=970) by (uid=0)
+vm-test-run-solem-apparmor> machine # [   21.534551] audit: type=1400 audit(1780173117.425:3): apparmor="DENIED" operation="open" class="file" profile="solem-gavio-ai" name="/dev/tty" pid=981 comm="python3" requested_mask="wr" denied_mask="wr" fsuid=970 ouid=0
+vm-test-run-solem-apparmor> machine # [   21.557652] audit: type=1400 audit(1780173117.448:4): apparmor="DENIED" operation="exec" class="file" profile="solem-gavio-ai" name="/nix/store/84avgshmk55h60703mcd3mxg8wchxzz4-coreutils-full-9.5/bin/coreutils" pid=981 comm="python3" requested_mask="x" denied_mask="x" fsuid=970 ouid=0
+vm-test-run-solem-apparmor> machine # [   21.217521] sudo[978]: pam_unix(sudo:session): session closed for user gavio-ai
+vm-test-run-solem-apparmor> AppArmor self attr: rc=126 out='/var/lib/gavio-ai/venv/bin/python3: line 1: /run/current-system/sw/bin/cat: Permission denied\n'
+vm-test-run-solem-apparmor> cleanup
+vm-test-run-solem-apparmor> kill machine (pid 9)
+vm-test-run-solem-apparmor> qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+vm-test-run-solem-apparmor> kill vlan (pid 7)
+vm-test-run-solem-apparmor> (finished: cleanup, in 0.01 seconds)
+vm-test-run-solem-apparmor> Traceback (most recent call last):
+vm-test-run-solem-apparmor>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+vm-test-run-solem-apparmor>     sys.exit(main())
+vm-test-run-solem-apparmor>              ^^^^^^
+vm-test-run-solem-apparmor>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+vm-test-run-solem-apparmor>     driver.run_tests()
+vm-test-run-solem-apparmor>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+vm-test-run-solem-apparmor>     self.test_script()
+vm-test-run-solem-apparmor>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+vm-test-run-solem-apparmor>     exec(self.tests, symbols, None)
+vm-test-run-solem-apparmor>   File "<string>", line 48, in <module>
+vm-test-run-solem-apparmor> Exception: FAIL: il binary /var/lib/gavio-ai/venv/bin/python3 NON e' confinato da AppArmor profile solem-gavio-ai (out='/var/lib/gavio-ai/venv/bin/python3: line 1: /run/current-system/sw/bin/cat: Permission denied\n'). I test DENY sotto darebbero falso positivo via DAC.
+error: builder for '/nix/store/skdvwf87kdxydidswj8183zcx0nydqnc-vm-test-run-solem-apparmor.drv' failed with exit code 1;
+       last 25 log lines:
+       > machine: must succeed: chown -R gavio-ai:gavio-ai /var/lib/gavio-ai/
+       > (finished: must succeed: chown -R gavio-ai:gavio-ai /var/lib/gavio-ai/, in 0.04 seconds)
+       > machine # [   21.134523] sudo[978]:     root : TTY=hvc0 ; PWD=/tmp ; USER=gavio-ai ; COMMAND=/var/lib/gavio-ai/venv/bin/python3 -c 'cat /proc/self/attr/current'
+       > machine # [   21.158741] sudo[978]: pam_unix(sudo:session): session opened for user gavio-ai(uid=970) by (uid=0)
+       > machine # [   21.534551] audit: type=1400 audit(1780173117.425:3): apparmor="DENIED" operation="open" class="file" profile="solem-gavio-ai" name="/dev/tty" pid=981 comm="python3" requested_mask="wr" denied_mask="wr" fsuid=970 ouid=0
+       > machine # [   21.557652] audit: type=1400 audit(1780173117.448:4): apparmor="DENIED" operation="exec" class="file" profile="solem-gavio-ai" name="/nix/store/84avgshmk55h60703mcd3mxg8wchxzz4-coreutils-full-9.5/bin/coreutils" pid=981 comm="python3" requested_mask="x" denied_mask="x" fsuid=970 ouid=0
+       > machine # [   21.217521] sudo[978]: pam_unix(sudo:session): session closed for user gavio-ai
+       > AppArmor self attr: rc=126 out='/var/lib/gavio-ai/venv/bin/python3: line 1: /run/current-system/sw/bin/cat: Permission denied\n'
+       > cleanup
+       > kill machine (pid 9)
+       > qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+       > kill vlan (pid 7)
+       > (finished: cleanup, in 0.01 seconds)
+       > Traceback (most recent call last):
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+       >     sys.exit(main())
+       >              ^^^^^^
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+       >     driver.run_tests()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+       >     self.test_script()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+       >     exec(self.tests, symbols, None)
+       >   File "<string>", line 48, in <module>
+       > Exception: FAIL: il binary /var/lib/gavio-ai/venv/bin/python3 NON e' confinato da AppArmor profile solem-gavio-ai (out='/var/lib/gavio-ai/venv/bin/python3: line 1: /run/current-system/sw/bin/cat: Permission denied\n'). I test DENY sotto darebbero falso positivo via DAC.
+       For full logs, run 'nix log /nix/store/skdvwf87kdxydidswj8183zcx0nydqnc-vm-test-run-solem-apparmor.drv'.
