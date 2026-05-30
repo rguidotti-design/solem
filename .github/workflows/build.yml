@@ -183,10 +183,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set +e
           # Estrai tail 200 del log
-          LOG_TAIL=$(tail -200 /tmp/vmtest-${{ matrix.test }}.log 2>/dev/null || echo "(no log)")
+          LOG_TAIL=$(tail -200 /tmp/vmtest-${{ matrix.test }}.log 2>/dev/null)
+          if [ -z "$LOG_TAIL" ]; then LOG_TAIL="(no log file)"; fi
 
-          # 1. Markdown summary visibile UI GitHub
+          # 1. Markdown summary (visibile UI GitHub, non via API)
           {
             echo "## VM test ${{ matrix.test }} — FAIL log (tail 200)"
             echo '```'
@@ -194,23 +196,46 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
-          # 2. Stdout (visibile in job log con accesso admin)
+          # 2. Stdout (visibile in job log)
           echo "===== TAIL 200 LOG ====="
           echo "$LOG_TAIL"
+          echo "===== END LOG ====="
 
-          # 3. Crea GitHub Issue comment (visibile pubblicamente senza auth)
-          # Trova issue "CI fail logs" (creo se non esiste) e aggiungo comment.
-          # NB: github.token ha permessi default (write su issues per workflow).
-          set +e
-          ISSUE_NUM=$(gh issue list --search "CI fail logs in:title" --json number --jq '.[0].number' 2>/dev/null)
-          if [ -z "$ISSUE_NUM" ] || [ "$ISSUE_NUM" = "null" ]; then
-            ISSUE_NUM=$(gh issue create --title "CI fail logs" --body "Auto-populated by workflow on VM test failure." --label "ci" 2>/dev/null | grep -oE '/issues/[0-9]+' | grep -oE '[0-9]+')
+          # 3. Commit del log a branch dedicato ci-logs (visibile via raw URL).
+          # Approccio piu' affidabile di gh issue comment (permessi/CLI).
+          TEST_NAME="${{ matrix.test }}"
+          SHA_SHORT="${GITHUB_SHA:0:7}"
+          TIMESTAMP=$(date -u +%Y%m%dT%H%M%SZ)
+          LOG_FILE="logs/${SHA_SHORT}/${TIMESTAMP}-${TEST_NAME}.log"
+
+          # Setup git identity
+          git config --global user.email "ci-bot@solem.local"
+          git config --global user.name "SOLEM CI bot"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+          # Clone branch ci-logs in dir separata (orphan se non esiste)
+          cd /tmp
+          rm -rf solem-ci-logs
+          if git ls-remote --exit-code --heads "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" ci-logs >/dev/null 2>&1; then
+            git clone --branch ci-logs --single-branch "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" solem-ci-logs
+          else
+            mkdir -p solem-ci-logs
+            cd solem-ci-logs
+            git init -b ci-logs
+            git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            cd ..
           fi
-          if [ -n "$ISSUE_NUM" ]; then
-            BODY=$(printf '### VM test %s FAIL (commit %s)\n\n```\n%s\n```\n' \
-              "${{ matrix.test }}" "${GITHUB_SHA:0:7}" "$LOG_TAIL")
-            gh issue comment "$ISSUE_NUM" --body "$BODY" 2>&1 | head -3
-          fi
+
+          cd solem-ci-logs
+          mkdir -p "logs/${SHA_SHORT}"
+          echo "# VM test ${TEST_NAME} FAIL — commit ${SHA_SHORT} @ ${TIMESTAMP}" > "${LOG_FILE}"
+          echo "" >> "${LOG_FILE}"
+          echo "${LOG_TAIL}" >> "${LOG_FILE}"
+
+          git add "${LOG_FILE}"
+          git commit -m "log: ${TEST_NAME} fail @ ${SHA_SHORT}" || true
+          git push origin ci-logs 2>&1 | tail -5
+          echo "Log committed to ci-logs branch: ${LOG_FILE}"
           set -e
 
       - name: Upload VM test log artifact
