@@ -48,10 +48,10 @@ let
 EOF
             chmod 600 "$CRED_FILE"
             echo "Credenziali generate:"
-            cat "$CRED_FILE" | jq
+            jq < "$CRED_FILE"
           else
             echo "Credenziali esistenti:"
-            cat "$CRED_FILE" | jq
+            jq < "$CRED_FILE"
           fi
           ;;
 
@@ -77,7 +77,7 @@ EOF
         status)
           if [ -f "$CRED_FILE" ]; then
             echo "── Credenziali SOLEM cloud ──"
-            cat "$CRED_FILE" | jq
+            jq < "$CRED_FILE"
             echo
             URL=$(jq -r '.url' "$CRED_FILE")
             if curl -s -m 2 -o /dev/null "$URL"; then
