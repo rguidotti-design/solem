@@ -65,10 +65,10 @@ let
     -w /var/spool/cron/ -p wa -k tamper_cron
 
     # ─── 6. Tamper detection: regole audit stesse ────────────────────
-    # Se qualcuno prova a disabilitare auditd o modificare regole.
+    # NB: su NixOS /etc/audit/audit.rules e auditd.conf NON esistono come
+    # file (le rules sono in /nix/store readonly). Solo /etc/audit/ dir.
+    # Rule su file inesistenti causano auditctl FAIL -> audit.service down.
     -w /etc/audit/ -p wa -k tamper_audit
-    -w /etc/audit/audit.rules -p wa -k tamper_audit
-    -w /etc/audit/auditd.conf -p wa -k tamper_audit
 
     # ─── 7. Watch kernel modules load/unload ─────────────────────────
     # NB: rule b32 init_module/delete_module su kernel x86_64 produce

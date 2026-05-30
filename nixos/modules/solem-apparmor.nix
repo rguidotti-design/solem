@@ -47,12 +47,15 @@ let
       include <abstractions/ssl_certs>
 
       # ── Filesystem: read-only quasi tutto ─────────────────────────
-      # NB: "mr" = mmap + read. Le librerie shared (libreadline, libc,
-      # libpython, ...) richiedono "m" (mmap) per essere caricate.
-      # Solo "r" produce apparmor=DENIED su file_mmap di .so file.
-      /usr/** mr,
-      /run/current-system/** mr,
-      /nix/store/** mr,
+      # NB: "mrix" = mmap + read + execute (inherit child).
+      # - m: mmap shared libs (libreadline, libc, libpython, ...)
+      # - r: read
+      # - i: ipc-inherit (eredita profilo su exec interno)
+      # - x: execute (cat, sed, jq sotto bash/python)
+      # Solo "r" o "mr" produce DENIED su mmap .so o exec binaries.
+      /usr/** mrix,
+      /run/current-system/** mrix,
+      /nix/store/** mrix,
       /etc/ssl/** r,
       /etc/resolv.conf r,
       /etc/nsswitch.conf r,
@@ -164,10 +167,10 @@ let
       /var/lib/ollama/ r,
       /var/lib/ollama/** rwk,
 
-      # Read-only system + nix store (mr = mmap+read per shared libs)
-      /usr/** mr,
-      /run/current-system/** mr,
-      /nix/store/** mr,
+      # Read-only system + nix store (mrix = mmap + read + execute + inherit)
+      /usr/** mrix,
+      /run/current-system/** mrix,
+      /nix/store/** mrix,
       /etc/ssl/** r,
       /etc/resolv.conf r,
       /etc/hosts r,

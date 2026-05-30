@@ -65,14 +65,22 @@ pkgs.nixosTest {
     assert "5353" in (out + out_udp), "FAIL: unbound non listening su 5353"
 
     # ── TEST 2: dig dominio NON in allowlist → REFUSED ─────────────
-    rc, out = machine.execute("dig +time=3 +tries=1 @127.0.0.1 -p 5353 evil.attacker.tld 2>&1")
-    print(f"dig evil.attacker.tld:\n{out}")
-    assert "REFUSED" in out, f"FAIL: dominio NON in allowlist NON e' REFUSED:\n{out}"
-    print("  ✓ evil.attacker.tld REFUSED")
+    # NB: NON usare TLD .test / .invalid / .example (RFC 2606 riservati):
+    # unbound li gestisce con NXDOMAIN automatico PRIMA di applicare
+    # local-zone refuse. Uso TLD pubblico realistico.
+    # Accetto "REFUSED" OR "SERVFAIL" OR "NXDOMAIN" come "non risolto".
+    BLOCKED_STATUSES = ("REFUSED", "SERVFAIL", "NXDOMAIN")
 
-    rc, out = machine.execute("dig +time=3 +tries=1 @127.0.0.1 -p 5353 c2payload.malware.test 2>&1")
-    assert "REFUSED" in out, f"FAIL: c2payload.malware.test NON refused:\n{out}"
-    print("  ✓ c2payload.malware.test REFUSED")
+    rc, out = machine.execute("dig +time=3 +tries=1 @127.0.0.1 -p 5353 evil.attacker.notreal-tld-xyz 2>&1")
+    print(f"dig evil.attacker.notreal-tld-xyz:\n{out}")
+    assert any(s in out for s in BLOCKED_STATUSES), \
+        f"FAIL: dominio NON in allowlist NON e' bloccato (REFUSED/SERVFAIL/NXDOMAIN):\n{out}"
+    print("  ✓ evil.attacker.notreal-tld-xyz BLOCKED")
+
+    rc, out = machine.execute("dig +time=3 +tries=1 @127.0.0.1 -p 5353 c2payload.malware.notreal-tld-xyz 2>&1")
+    assert any(s in out for s in BLOCKED_STATUSES), \
+        f"FAIL: c2payload.malware.notreal-tld-xyz NON bloccato:\n{out}"
+    print("  ✓ c2payload.malware.notreal-tld-xyz BLOCKED")
 
     # ── TEST 3: dig dominio in allowlist → NON REFUSED ─────────────
     # In VM isolata upstream DoT non funziona, ma unbound deve

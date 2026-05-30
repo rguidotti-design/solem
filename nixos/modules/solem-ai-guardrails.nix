@@ -91,7 +91,8 @@ let
         local TS
         TS=$(date -Iseconds)
         local USER
-        USER="''${SUDO_USER:-$USER}"
+        # Fallback chain: SUDO_USER → USER (env) → "unknown" (set -u safe)
+        USER="''${SUDO_USER:-''${USER:-unknown}}"
         echo "$TS|$USER|$STATUS|$CMD" >> "$AUDIT_LOG" 2>/dev/null || true
       }
 

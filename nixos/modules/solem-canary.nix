@@ -31,7 +31,7 @@ let
 
   watcherScript = pkgs.writeShellApplication {
     name = "solem-canary-watcher";
-    runtimeInputs = with pkgs; [ coreutils inotify-tools systemd libnotify util-linux gawk ];
+    runtimeInputs = with pkgs; [ coreutils inotify-tools systemd libnotify util-linux gawk psmisc ];
     text = ''
       LOG_FILE="/var/log/solem/canary.log"
       mkdir -p "$(dirname "$LOG_FILE")"

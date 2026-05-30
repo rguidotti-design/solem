@@ -72,13 +72,29 @@ pkgs.nixosTest {
     print(f"ProtectSystem = '{ps}'")
     assert ps == "strict", f"FAIL: ProtectSystem='{ps}', atteso 'strict'"
 
-    # ── TEST 6: SystemCallFilter contiene tag denylist ────────────
+    # ── TEST 6: SystemCallFilter esclude syscall pericolosi ────────
+    # systemd risolve @system-service ~@privileged ~@mount ecc. in
+    # una LISTA WHITELIST concreta di syscall name (non tag string).
+    # Verifichiamo che syscall NOTORIAMENTE pericolosi NON siano presenti.
     scf = machine.succeed("systemctl show gavio.service -p SystemCallFilter --value")
-    print(f"SystemCallFilter = '{scf[:200]}...'")
-    # @privileged, @mount, @keyring devono comparire come "blocked"
-    # systemd serializza con simboli; verifichiamo le keyword presenti
-    for required in ["privileged", "mount", "module", "keyring"]:
-        assert required in scf, f"FAIL: SystemCallFilter manca tag '{required}': {scf}"
+    print(f"SystemCallFilter (first 300) = '{scf[:300]}...'")
+    # Syscall che dovrebbero essere BLOCCATI da ~@privileged ~@mount ~@module ~@raw-io
+    BLOCKED_SYSCALLS = [
+        "mount",        # ~@mount: mount/umount
+        "umount2",
+        "init_module",  # ~@module: kernel module load
+        "finit_module",
+        "delete_module",
+        "ioperm",       # ~@raw-io
+        "iopl",
+        "reboot",       # ~@reboot
+        "kexec_load",
+        "swapon",       # ~@swap
+        "keyctl",       # ~@keyring (vault protection)
+    ]
+    leaked = [s for s in BLOCKED_SYSCALLS if f" {s} " in f" {scf} " or f" {s}\n" in scf]
+    assert not leaked, f"FAIL: syscall pericolosi presenti in whitelist: {leaked}"
+    print(f"  ✓ {len(BLOCKED_SYSCALLS)} syscall pericolosi tutti esclusi")
 
     # ── TEST 7: ReadWritePaths esclude /home /etc ─────────────────
     rwp = machine.succeed("systemctl show gavio.service -p ReadWritePaths --value")

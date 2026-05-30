@@ -39,10 +39,13 @@ pkgs.nixosTest {
     print("  ✓ kernel hardened attivo")
 
     # ── TEST 2: VM e' stabile (no panic, no oops) ─────────────────
-    rc, out = machine.execute("dmesg | grep -iE 'panic|oops|BUG:' | head -5")
-    if "panic" in out.lower() or "BUG:" in out:
+    # NB: il kernel boot param "panic=1" (timeout reboot after panic) appare
+    # in dmesg come Command line: panic=1 — NON e' un kernel panic vero.
+    # Verifichiamo solo pattern di REAL panic ("Kernel panic" frase intera).
+    rc, out = machine.execute("dmesg | grep -iE 'Kernel panic|Oops:|BUG:' | head -5")
+    if "Kernel panic" in out or "Oops:" in out or "BUG:" in out:
         raise Exception(f"FAIL: kernel hardened ha panic/oops:\n{out}")
-    print("  ✓ no panic/oops nel dmesg")
+    print("  ✓ no real panic/oops nel dmesg")
 
     # ── TEST 3: CLI solem-kernel-info non crasha ──────────────────
     out = machine.succeed("/run/current-system/sw/bin/solem-kernel-info 2>&1")
