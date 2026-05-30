@@ -1,0 +1,202 @@
+# VM test ai-audit-strict FAIL — commit 1ccf133 @ 20260530T181617Z
+
+vm-test-run-solem-ai-audit-strict> machine # [    9.020772] systemd[1]: Starting Kernel Auditing...
+vm-test-run-solem-ai-audit-strict> machine # [    9.024995] systemd[1]: Started backdoor.service.
+vm-test-run-solem-ai-audit-strict> machine # [    9.036920] systemd[1]: Starting Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-ai-audit-strict> machine # [    9.044339] systemd[1]: Started Reset console on configuration changes.
+vm-test-run-solem-ai-audit-strict> machine # [    9.046781] systemd[1]: Starting resolvconf update...
+vm-test-run-solem-ai-audit-strict> machine # [    9.058570] systemd[1]: Starting D-Bus System Message Bus...
+vm-test-run-solem-ai-audit-strict> machine: Guest shell says: b'Spawning backdoor root shell...\n'
+vm-test-run-solem-ai-audit-strict> machine: connected to guest root shell
+vm-test-run-solem-ai-audit-strict> machine: (connecting took 10.27 seconds)
+vm-test-run-solem-ai-audit-strict> (finished: waiting for the VM to finish booting, in 10.36 seconds)
+vm-test-run-solem-ai-audit-strict> machine # [    9.588133] mousedev: PS/2 mouse device common for all mice
+vm-test-run-solem-ai-audit-strict> machine # [    9.292446] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.295680] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.303877] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.308529] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.318637] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.329173] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.332638] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.338956] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.343495] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.352691] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.359210] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.362531] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.368526] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Old style watch rules are slower
+vm-test-run-solem-ai-audit-strict> machine # [    9.372921] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: Error sending add rule data request (No such file or directory)
+vm-test-run-solem-ai-audit-strict> machine # [    9.380168] clyl7y794ywlafkpaxhhf5w7ai9a2xyq-audit-start[643]: There was an error in line 23 of /tmp/tmp.XgsgkBRn3D
+vm-test-run-solem-ai-audit-strict> machine # [    9.383823] nsncd[626]: May 30 18:16:05.378 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-ai-audit-strict> machine # [    9.395271] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-ai-audit-strict> machine # [    9.402448] dbus-daemon[630]: dbus[630]: Unknown username "systemd-timesync" in message bus configuration file
+vm-test-run-solem-ai-audit-strict> machine # [    9.410343] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-ai-audit-strict> machine # [    9.420567] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-ai-audit-strict> machine # [    9.424676] systemd[1]: Starting User Login Management...
+vm-test-run-solem-ai-audit-strict> machine # [    9.431247] systemd[1]: audit.service: Main process exited, code=exited, status=1/FAILURE
+vm-test-run-solem-ai-audit-strict> machine # [    9.437756] systemd[1]: audit.service: Failed with result 'exit-code'.
+vm-test-run-solem-ai-audit-strict> machine # [    9.443930] systemd[1]: Failed to start Kernel Auditing.
+vm-test-run-solem-ai-audit-strict> machine # [    9.453180] systemd[1]: Started D-Bus System Message Bus.
+vm-test-run-solem-ai-audit-strict> machine # [    9.561390] systemd-logind[659]: New seat seat0.
+vm-test-run-solem-ai-audit-strict> machine # [    9.919467] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input3
+vm-test-run-solem-ai-audit-strict> machine # [    9.591796] systemd[1]: Started User Login Management.
+vm-test-run-solem-ai-audit-strict> machine # [    9.605340] systemd[1]: Stopped target Host and Network Name Lookups.
+vm-test-run-solem-ai-audit-strict> machine # [    9.612447] systemd[1]: Stopping Host and Network Name Lookups...
+vm-test-run-solem-ai-audit-strict> machine # [    9.652402] systemd[1]: Stopped target User and Group Name Lookups.
+vm-test-run-solem-ai-audit-strict> machine # [    9.656631] systemd[1]: Stopping User and Group Name Lookups...
+vm-test-run-solem-ai-audit-strict> machine # [    9.661710] systemd[1]: Stopping Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-ai-audit-strict> machine # [    9.678329] systemd[1]: nscd.service: Deactivated successfully.
+vm-test-run-solem-ai-audit-strict> machine # [    9.680582] systemd[1]: Stopped Name Service Cache Daemon (nsncd).
+vm-test-run-solem-ai-audit-strict> machine # [    9.686873] systemd[1]: Starting Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-ai-audit-strict> machine # [    9.725366] systemd[1]: Finished Firewall.
+vm-test-run-solem-ai-audit-strict> machine # [   10.081976] ACPI: button: Power Button [PWRF]
+vm-test-run-solem-ai-audit-strict> machine # [    9.782397] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-ai-audit-strict> machine # [    9.785835] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-ai-audit-strict> machine # [    9.791615] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-ai-audit-strict> machine # [    9.796840] nsncd[710]: May 30 18:16:06.062 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-ai-audit-strict> machine # [    9.837614] systemd[1]: Finished resolvconf update.
+vm-test-run-solem-ai-audit-strict> machine # [    9.839681] systemd[1]: Reached target Preparation for Network.
+vm-test-run-solem-ai-audit-strict> machine # [    9.861290] systemd[1]: Starting DHCP Client...
+vm-test-run-solem-ai-audit-strict> machine # [    9.863657] systemd[1]: Starting Address configuration of eth1...
+vm-test-run-solem-ai-audit-strict> machine # [   10.238428] Floppy drive(s): fd0 is 2.88M AMI BIOS
+vm-test-run-solem-ai-audit-strict> machine # [   10.249620] parport_pc 00:03: reported by Plug and Play ACPI
+vm-test-run-solem-ai-audit-strict> machine # [   10.280381] parport0: PC-style at 0x378, irq 7 [PCSPP(,...)]
+vm-test-run-solem-ai-audit-strict> machine # [   10.292024] FDC 0 is a S82078B
+vm-test-run-solem-ai-audit-strict> machine # [   10.016812] network-addresses-eth1-start[739]: adding address 192.168.1.1/24... done
+vm-test-run-solem-ai-audit-strict> machine # [   10.046943] network-addresses-eth1-start[739]: adding address 2001:db8:1::1/64... done
+vm-test-run-solem-ai-audit-strict> machine # [   10.092695] systemd[1]: Finished Address configuration of eth1.
+vm-test-run-solem-ai-audit-strict> machine # [   10.097152] systemd[1]: Starting Networking Setup...
+vm-test-run-solem-ai-audit-strict> machine # [   10.478985] piix4_smbus 0000:00:01.3: SMBus Host Controller at 0x700, revision 0
+vm-test-run-solem-ai-audit-strict> machine # [   10.207669] dhcpcd[744]: dhcpcd-10.1.0 starting
+vm-test-run-solem-ai-audit-strict> machine # [   10.567197] input: QEMU Virtio Keyboard as /devices/pci0000:00/0000:00:0a.0/virtio7/input/input4
+vm-test-run-solem-ai-audit-strict> machine # [   10.233244] dhcpcd[757]: dev: loaded udev
+vm-test-run-solem-ai-audit-strict> machine # [   10.608404] 8021q: 802.1Q VLAN Support v1.8
+vm-test-run-solem-ai-audit-strict> machine # [   10.612923] 8021q: adding VLAN 0 to HW filter on device eth1
+vm-test-run-solem-ai-audit-strict> machine # [   10.639104] bochs-drm 0000:00:02.0: vgaarb: deactivate vga console
+vm-test-run-solem-ai-audit-strict> machine # [   10.475869] systemd[1]: Finished Networking Setup.
+vm-test-run-solem-ai-audit-strict> machine # [   10.482509] systemd[1]: Starting Extra networking commands....
+vm-test-run-solem-ai-audit-strict> machine # [   10.777660] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input6
+vm-test-run-solem-ai-audit-strict> machine # [   10.778373] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input5
+vm-test-run-solem-ai-audit-strict> machine # [   10.789442] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+vm-test-run-solem-ai-audit-strict> machine # [   10.808926] cryptd: max_cpu_qlen set to 1000
+vm-test-run-solem-ai-audit-strict> machine # [   10.834476] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+vm-test-run-solem-ai-audit-strict> machine # [   10.834628] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+vm-test-run-solem-ai-audit-strict> machine # [   10.837183] platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
+vm-test-run-solem-ai-audit-strict> machine # [   10.837188] cfg80211: failed to load regulatory.db
+vm-test-run-solem-ai-audit-strict> machine # [   10.901640] AVX2 version of gcm_enc/dec engaged.
+vm-test-run-solem-ai-audit-strict> machine # [   10.901662] AES CTR mode by8 optimization enabled
+vm-test-run-solem-ai-audit-strict> machine # [   10.926709] Console: switching to colour dummy device 80x25
+vm-test-run-solem-ai-audit-strict> machine # [   10.945447] 8021q: adding VLAN 0 to HW filter on device eth0
+vm-test-run-solem-ai-audit-strict> machine # [   11.094942] ppdev: user-space parallel port driver
+vm-test-run-solem-ai-audit-strict> machine # [   11.131164] [drm] Found bochs VGA, ID 0xb0c5.
+vm-test-run-solem-ai-audit-strict> machine # [   11.131167] [drm] Framebuffer size 16384 kB @ 0xfd000000, mmio @ 0xfebd0000.
+vm-test-run-solem-ai-audit-strict> machine # [   10.598811] dhcpcd[757]: eth0: waiting for carrier
+vm-test-run-solem-ai-audit-strict> machine # [   10.800406] systemd-logind[659]: Watching system buttons on /dev/input/event0 (AT Translated Set 2 keyboard)
+vm-test-run-solem-ai-audit-strict> machine # [   10.804768] dhcpcd[757]: eth0: carrier acquired
+vm-test-run-solem-ai-audit-strict> machine # [   10.808812] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-ai-audit-strict> machine # [   10.816670] dhcpcd[757]: DUID 00:01:00:01:31:ad:e5:e6:52:54:00:12:34:56
+vm-test-run-solem-ai-audit-strict> machine # [   10.823518] systemd-logind[659]: Watching system buttons on /dev/input/event2 (Power Button)
+vm-test-run-solem-ai-audit-strict> machine # [   10.829712] dhcpcd[757]: eth0: IAID 00:12:34:56
+vm-test-run-solem-ai-audit-strict> machine # [   10.839216] systemd[1]: Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
+vm-test-run-solem-ai-audit-strict> machine # [   10.846889] dhcpcd[757]: eth0: adding address fe80::5054:ff:fe12:3456
+vm-test-run-solem-ai-audit-strict> machine # [   11.205579] [drm] Found EDID data blob.
+vm-test-run-solem-ai-audit-strict> machine # [   10.880975] systemd[1]: Finished Extra networking commands..
+vm-test-run-solem-ai-audit-strict> machine # [   10.886701] systemd[1]: Reached target Network.
+vm-test-run-solem-ai-audit-strict> machine # [   10.892418] systemd[1]: Starting Permit User Sessions...
+vm-test-run-solem-ai-audit-strict> machine # [   10.924422] systemd-logind[659]: Watching system buttons on /dev/input/event3 (QEMU Virtio Keyboard)
+vm-test-run-solem-ai-audit-strict> machine # [   11.321961] [drm] Initialized bochs-drm 1.0.0 20130925 for 0000:00:02.0 on minor 0
+vm-test-run-solem-ai-audit-strict> machine # [   10.986518] systemd[1]: Finished Permit User Sessions.
+vm-test-run-solem-ai-audit-strict> machine # [   11.002893] systemd[1]: Started Getty on tty1.
+vm-test-run-solem-ai-audit-strict> machine # [   11.008154] systemd[1]: Reached target Login Prompts.
+vm-test-run-solem-ai-audit-strict> machine # [   11.605438] dhcpcd[757]: eth0: soliciting a DHCP lease
+vm-test-run-solem-ai-audit-strict> machine # [   11.639207] dhcpcd[757]: eth0: offered 10.0.2.15 from 10.0.2.2
+vm-test-run-solem-ai-audit-strict> machine # [   11.642439] dhcpcd[757]: eth0: probing address 10.0.2.15/24
+vm-test-run-solem-ai-audit-strict> machine # [   11.412285] fbcon: bochs-drmdrmfb (fb0) is primary device
+vm-test-run-solem-ai-audit-strict> machine # [   11.979476] NET: Registered PF_PACKET protocol family
+vm-test-run-solem-ai-audit-strict> machine # [   12.221177] Console: switching to colour frame buffer device 160x50
+vm-test-run-solem-ai-audit-strict> machine # [   12.375145] bochs-drm 0000:00:02.0: [drm] fb0: bochs-drmdrmfb frame buffer device
+vm-test-run-solem-ai-audit-strict> machine # [   12.039523] systemd[1]: systemd-vconsole-setup.service: Deactivated successfully.
+vm-test-run-solem-ai-audit-strict> machine # [   12.054243] systemd[1]: Stopped Virtual Console Setup.
+vm-test-run-solem-ai-audit-strict> machine # [   12.073210] systemd[1]: run-credentials-systemd\x2dvconsole\x2dsetup.service.mount: Deactivated successfully.
+vm-test-run-solem-ai-audit-strict> machine # [   12.083163] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-ai-audit-strict> machine # [   12.443682] kvm_amd: TSC scaling supported
+vm-test-run-solem-ai-audit-strict> machine # [   12.445337] kvm_amd: Nested Virtualization enabled
+vm-test-run-solem-ai-audit-strict> machine # [   12.447119] kvm_amd: Nested Paging enabled
+vm-test-run-solem-ai-audit-strict> machine # [   12.452426] kvm_amd: Virtual VMLOAD VMSAVE supported
+vm-test-run-solem-ai-audit-strict> machine # [   12.454347] kvm_amd: PMU virtualization is disabled
+vm-test-run-solem-ai-audit-strict> machine # [   12.493343] EDAC MC: Ver: 3.0.0
+vm-test-run-solem-ai-audit-strict> machine # [   12.590559] systemd[1]: Finished Virtual Console Setup.
+vm-test-run-solem-ai-audit-strict> machine # [   13.550931] dhcpcd[757]: eth0: soliciting an IPv6 router
+vm-test-run-solem-ai-audit-strict> machine # [   13.554401] dhcpcd[757]: eth0: Router Advertisement from fe80::2
+vm-test-run-solem-ai-audit-strict> machine # [   13.557439] dhcpcd[757]: eth0: adding address fec0::5054:ff:fe12:3456/64
+vm-test-run-solem-ai-audit-strict> machine # [   13.560582] dhcpcd[757]: eth0: adding route to fec0::/64
+vm-test-run-solem-ai-audit-strict> machine # [   13.563334] dhcpcd[757]: eth0: adding default route via fe80::2
+vm-test-run-solem-ai-audit-strict> machine # [   16.616985] dhcpcd[757]: eth0: leased 10.0.2.15 for 86400 seconds
+vm-test-run-solem-ai-audit-strict> machine # [   16.619609] dhcpcd[757]: eth0: adding route to 10.0.2.0/24
+vm-test-run-solem-ai-audit-strict> machine # [   16.622518] dhcpcd[757]: eth0: adding default route via 10.0.2.2
+vm-test-run-solem-ai-audit-strict> machine # [   16.757621] systemd[1]: Started DHCP Client.
+vm-test-run-solem-ai-audit-strict> machine # [   16.884873] systemd[1]: Reached target Network is Online.
+vm-test-run-solem-ai-audit-strict> machine # [   16.887592] systemd[1]: Reached target Multi-User System.
+vm-test-run-solem-ai-audit-strict> machine # [   16.889817] systemd[1]: Startup finished in 4.114s (kernel) + 12.648s (userspace) = 16.762s.
+vm-test-run-solem-ai-audit-strict> (finished: waiting for unit multi-user.target, in 18.43 seconds)
+vm-test-run-solem-ai-audit-strict> machine: waiting for unit auditd.service
+vm-test-run-solem-ai-audit-strict> (finished: waiting for unit auditd.service, in 0.07 seconds)
+vm-test-run-solem-ai-audit-strict> machine: must succeed: sleep 3
+vm-test-run-solem-ai-audit-strict> (finished: must succeed: sleep 3, in 3.04 seconds)
+vm-test-run-solem-ai-audit-strict> machine: must succeed: auditctl -s 2>&1 | head -5
+vm-test-run-solem-ai-audit-strict> (finished: must succeed: auditctl -s 2>&1 | head -5, in 0.04 seconds)
+vm-test-run-solem-ai-audit-strict> machine: must succeed: auditctl -l 2>&1
+vm-test-run-solem-ai-audit-strict> (finished: must succeed: auditctl -l 2>&1, in 0.03 seconds)
+vm-test-run-solem-ai-audit-strict> Rules count out:
+vm-test-run-solem-ai-audit-strict> -a always,exit -F arch=b64 -S execve -F auid=970 -F key=ai_execve
+vm-test-run-solem-ai-audit-strict> -a always,exit -F arch=b32 -S execve -F auid=970 -F key=ai_execve
+vm-test-run-solem-ai-audit-strict> -a always,exit -F arch=b64 -S execve -F uid=970 -F key=ai_execve
+vm-test-run-solem-ai-audit-strict> -a always,exit -F arch=b32 -S execve -F uid=970 -F key=ai_execve
+vm-test-run-solem-ai-audit-strict> -a always,exit -F arch=b64 -S openat -F uid=970 -F a2&=0x40 -F key=ai_open_create
+vm-test-run-solem-ai-audit-strict> -a always,exit -F arch=b64 -S connect -F uid=970 -F key=ai_connect
+vm-test-run-solem-ai-audit-strict> -a always,exit -F arch=b32 -S connect -F uid=970 -F key=ai_connect
+vm-test-run-solem-ai-audit-strict> -a always,exit -F arch
+vm-test-run-solem-ai-audit-strict> cleanup
+vm-test-run-solem-ai-audit-strict> kill machine (pid 9)
+vm-test-run-solem-ai-audit-strict> qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+vm-test-run-solem-ai-audit-strict> kill vlan (pid 7)
+vm-test-run-solem-ai-audit-strict> (finished: cleanup, in 0.01 seconds)
+vm-test-run-solem-ai-audit-strict> Traceback (most recent call last):
+vm-test-run-solem-ai-audit-strict>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+vm-test-run-solem-ai-audit-strict>     sys.exit(main())
+vm-test-run-solem-ai-audit-strict>              ^^^^^^
+vm-test-run-solem-ai-audit-strict>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+vm-test-run-solem-ai-audit-strict>     driver.run_tests()
+vm-test-run-solem-ai-audit-strict>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+vm-test-run-solem-ai-audit-strict>     self.test_script()
+vm-test-run-solem-ai-audit-strict>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+vm-test-run-solem-ai-audit-strict>     exec(self.tests, symbols, None)
+vm-test-run-solem-ai-audit-strict>   File "<string>", line 13, in <module>
+vm-test-run-solem-ai-audit-strict> AssertionError: FAIL: rule key 'kernel_module' non caricata
+error: builder for '/nix/store/65k37wnzgd27ylvxynwrg5ghvf107s84-vm-test-run-solem-ai-audit-strict.drv' failed with exit code 1;
+       last 25 log lines:
+       > -a always,exit -F arch=b64 -S execve -F auid=970 -F key=ai_execve
+       > -a always,exit -F arch=b32 -S execve -F auid=970 -F key=ai_execve
+       > -a always,exit -F arch=b64 -S execve -F uid=970 -F key=ai_execve
+       > -a always,exit -F arch=b32 -S execve -F uid=970 -F key=ai_execve
+       > -a always,exit -F arch=b64 -S openat -F uid=970 -F a2&=0x40 -F key=ai_open_create
+       > -a always,exit -F arch=b64 -S connect -F uid=970 -F key=ai_connect
+       > -a always,exit -F arch=b32 -S connect -F uid=970 -F key=ai_connect
+       > -a always,exit -F arch
+       > cleanup
+       > kill machine (pid 9)
+       > qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+       > kill vlan (pid 7)
+       > (finished: cleanup, in 0.01 seconds)
+       > Traceback (most recent call last):
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+       >     sys.exit(main())
+       >              ^^^^^^
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+       >     driver.run_tests()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+       >     self.test_script()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+       >     exec(self.tests, symbols, None)
+       >   File "<string>", line 13, in <module>
+       > AssertionError: FAIL: rule key 'kernel_module' non caricata
+       For full logs, run 'nix log /nix/store/65k37wnzgd27ylvxynwrg5ghvf107s84-vm-test-run-solem-ai-audit-strict.drv'.
