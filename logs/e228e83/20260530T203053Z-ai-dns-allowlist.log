@@ -1,0 +1,202 @@
+# VM test ai-dns-allowlist FAIL — commit e228e83 @ 20260530T203053Z
+
+vm-test-run-solem-ai-dns-allowlist> machine # [    5.740118] systemd[1]: Finished Update is Completed.
+vm-test-run-solem-ai-dns-allowlist> machine # [    5.760094] systemd[1]: systemd-vconsole-setup.service: Deactivated successfully.
+vm-test-run-solem-ai-dns-allowlist> machine # [    5.767308] systemd[1]: Stopped Virtual Console Setup.
+vm-test-run-solem-ai-dns-allowlist> machine # [    5.774459] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-ai-dns-allowlist> machine # [    5.784841] systemd[1]: suid-sgid-wrappers.service: Deactivated successfully.
+vm-test-run-solem-ai-dns-allowlist> machine # [    5.788829] systemd[1]: Finished Create SUID/SGID Wrappers.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.246461] Key type encrypted registered
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.279402] EDAC MC: Ver: 3.0.0
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.132711] bda4zqmbxbw6s2p726xf1vivklisa6ca-mount-pstore.sh[392]: Persistent Storage backend was not registered in time.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.141227] systemd[1]: Finished mount-pstore.service.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.143397] systemd[1]: Platform Persistent Storage Archival was skipped because of an unmet condition check (ConditionDirectoryNotEmpty=/sys/fs/pstore).
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.255600] systemd[1]: Finished Virtual Console Setup.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.258230] systemd[1]: Reached target System Initialization.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.261108] systemd[1]: Started Discard unused filesystem blocks once a week.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.263327] systemd[1]: Started nix-gc.timer.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.265137] systemd[1]: Started Daily Cleanup of Temporary Directories.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.268593] systemd[1]: Reached target Timer Units.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.270868] systemd[1]: Listening on D-Bus System Message Bus Socket.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.275197] systemd[1]: Listening on Nix Daemon Socket.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.280406] systemd[1]: Listening on Hostname Service Socket.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.283566] systemd[1]: Reached target Socket Units.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.287248] systemd[1]: Reached target Basic System.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.292877] systemd[1]: System is tainted: support-ended
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.300157] systemd[1]: Starting Kernel Auditing...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.306237] systemd[1]: Started backdoor.service.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.317114] systemd[1]: Starting nftables firewall...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.327145] systemd[1]: Starting Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.328713] systemd[1]: Started Reset console on configuration changes.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.333638] systemd[1]: Starting resolvconf update...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.342850] systemd[1]: Starting D-Bus System Message Bus...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.379868] 42m8vzags3w669djhcs5bbm7jf10phdb-audit-disable[585]: No rules
+vm-test-run-solem-ai-dns-allowlist> machine # connecting to host...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.401839] systemd[1]: Finished Kernel Auditing.
+vm-test-run-solem-ai-dns-allowlist> machine: Guest shell says: b'Spawning backdoor root shell...\n'
+vm-test-run-solem-ai-dns-allowlist> machine: connected to guest root shell
+vm-test-run-solem-ai-dns-allowlist> machine: (connecting took 7.28 seconds)
+vm-test-run-solem-ai-dns-allowlist> (finished: waiting for the VM to finish booting, in 7.38 seconds)
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.443388] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.451224] nsncd[581]: May 30 20:30:42.096 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.454914] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.459354] systemd[1]: Starting User Login Management...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.487924] dbus-daemon[584]: dbus[584]: Unknown username "systemd-timesync" in message bus configuration file
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.533421] systemd[1]: Started D-Bus System Message Bus.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.633779] systemd-logind[607]: New seat seat0.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.645557] systemd-logind[607]: Watching system buttons on /dev/input/event2 (Power Button)
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.653354] systemd-logind[607]: Watching system buttons on /dev/input/event3 (QEMU Virtio Keyboard)
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.660478] systemd-logind[607]: Watching system buttons on /dev/input/event0 (AT Translated Set 2 keyboard)
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.665872] systemd[1]: Started User Login Management.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.677626] systemd[1]: Stopped target User and Group Name Lookups.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.687496] systemd[1]: Stopping User and Group Name Lookups...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.697194] systemd[1]: Stopping Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.702338] systemd[1]: nscd.service: Deactivated successfully.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.710708] systemd[1]: Stopped Name Service Cache Daemon (nsncd).
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.718363] systemd[1]: Starting Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.790953] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.795615] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.798838] nsncd[660]: May 30 20:30:42.447 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.824348] systemd[1]: Finished resolvconf update.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.828126] systemd[1]: Finished nftables firewall.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.831639] systemd[1]: Reached target Preparation for Network.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.837763] systemd[1]: Starting DHCP Client...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.842774] systemd[1]: Starting Address configuration of eth1...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.922841] network-addresses-eth1-start[691]: adding address 192.168.1.1/24... done
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.936338] network-addresses-eth1-start[691]: adding address 2001:db8:1::1/64... done
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.955963] systemd[1]: Finished Address configuration of eth1.
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.962547] systemd[1]: Starting Networking Setup...
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.981656] dhcpcd[695]: dhcpcd-10.1.0 starting
+vm-test-run-solem-ai-dns-allowlist> machine # [    6.994757] dhcpcd[706]: dev: loaded udev
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.263782] 8021q: 802.1Q VLAN Support v1.8
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.264873] 8021q: adding VLAN 0 to HW filter on device eth1
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.050944] systemd[1]: Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.377126] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.142915] systemd[1]: Finished Networking Setup.
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.150283] systemd[1]: Starting Extra networking commands....
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.408566] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.409948] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.413137] platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.415410] cfg80211: failed to load regulatory.db
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.193751] systemd[1]: Finished Extra networking commands..
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.196469] systemd[1]: Reached target Network.
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.201572] systemd[1]: Starting Permit User Sessions...
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.206781] systemd[1]: Starting Unbound recursive Domain Name Server...
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.507340] 8021q: adding VLAN 0 to HW filter on device eth0
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.261784] dhcpcd[706]: eth0: waiting for carrier
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.263421] dhcpcd[706]: eth0: carrier acquired
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.267422] systemd[1]: Finished Permit User Sessions.
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.275108] systemd[1]: Started Getty on tty1.
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.276412] systemd[1]: Reached target Login Prompts.
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.292152] dhcpcd[706]: DUID 00:01:00:01:31:ae:05:72:52:54:00:12:34:56
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.295166] dhcpcd[706]: eth0: IAID 00:12:34:56
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.297420] dhcpcd[706]: eth0: adding address fe80::5054:ff:fe12:3456
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.436375] unbound[771]: [771:0] notice: init module 0: validator
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.439373] unbound[771]: [771:0] notice: init module 1: iterator
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.468982] systemd[1]: Started Unbound recursive Domain Name Server.
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.472651] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.474204] unbound[771]: [771:0] info: start of service (unbound 1.22.0).
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.723219] dhcpcd[706]: eth0: soliciting a DHCP lease
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.988973] NET: Registered PF_PACKET protocol family
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.746392] dhcpcd[706]: eth0: offered 10.0.2.15 from 10.0.2.2
+vm-test-run-solem-ai-dns-allowlist> machine # [    7.750890] dhcpcd[706]: eth0: probing address 10.0.2.15/24
+vm-test-run-solem-ai-dns-allowlist> machine # [    8.873277] dhcpcd[706]: eth0: soliciting an IPv6 router
+vm-test-run-solem-ai-dns-allowlist> machine # [    8.875470] dhcpcd[706]: eth0: Router Advertisement from fe80::2
+vm-test-run-solem-ai-dns-allowlist> machine # [    8.877626] dhcpcd[706]: eth0: adding address fec0::5054:ff:fe12:3456/64
+vm-test-run-solem-ai-dns-allowlist> machine # [    8.880076] dhcpcd[706]: eth0: adding route to fec0::/64
+vm-test-run-solem-ai-dns-allowlist> machine # [    8.882128] dhcpcd[706]: eth0: adding default route via fe80::2
+vm-test-run-solem-ai-dns-allowlist> machine # [   13.074202] dhcpcd[706]: eth0: leased 10.0.2.15 for 86400 seconds
+vm-test-run-solem-ai-dns-allowlist> machine # [   13.076585] dhcpcd[706]: eth0: adding route to 10.0.2.0/24
+vm-test-run-solem-ai-dns-allowlist> machine # [   13.079241] dhcpcd[706]: eth0: adding default route via 10.0.2.2
+vm-test-run-solem-ai-dns-allowlist> machine # [   13.148469] systemd[1]: Started DHCP Client.
+vm-test-run-solem-ai-dns-allowlist> machine # [   13.152844] systemd[1]: Reached target Network is Online.
+vm-test-run-solem-ai-dns-allowlist> machine # [   13.155520] systemd[1]: Reached target Multi-User System.
+vm-test-run-solem-ai-dns-allowlist> machine # [   13.159393] systemd[1]: Startup finished in 2.713s (kernel) + 10.441s (userspace) = 13.154s.
+vm-test-run-solem-ai-dns-allowlist> (finished: waiting for unit multi-user.target, in 14.16 seconds)
+vm-test-run-solem-ai-dns-allowlist> machine: waiting for unit unbound.service
+vm-test-run-solem-ai-dns-allowlist> (finished: waiting for unit unbound.service, in 0.04 seconds)
+vm-test-run-solem-ai-dns-allowlist> machine: must succeed: sleep 3
+vm-test-run-solem-ai-dns-allowlist> (finished: must succeed: sleep 3, in 3.02 seconds)
+vm-test-run-solem-ai-dns-allowlist> machine: must succeed: ss -tlnp 2>/dev/null | grep -E ':5353|unbound' || echo NONE
+vm-test-run-solem-ai-dns-allowlist> (finished: must succeed: ss -tlnp 2>/dev/null | grep -E ':5353|unbound' || echo NONE, in 0.06 seconds)
+vm-test-run-solem-ai-dns-allowlist> unbound socket: LISTEN 0      256        127.0.0.1:5353      0.0.0.0:*    users:(("unbound",pid=771,fd=4))
+vm-test-run-solem-ai-dns-allowlist> machine: must succeed: ss -ulnp 2>/dev/null | grep 5353 || echo NONE
+vm-test-run-solem-ai-dns-allowlist> (finished: must succeed: ss -ulnp 2>/dev/null | grep 5353 || echo NONE, in 0.04 seconds)
+vm-test-run-solem-ai-dns-allowlist> unbound UDP: UNCONN 0      0          127.0.0.1:5353      0.0.0.0:*    users:(("unbound",pid=771,fd=3))
+vm-test-run-solem-ai-dns-allowlist> dig evil.attacker.tld:
+vm-test-run-solem-ai-dns-allowlist> ; <<>> DiG 9.18.33 <<>> +time=3 +tries=1 @127.0.0.1 -p 5353 evil.attacker.tld
+vm-test-run-solem-ai-dns-allowlist> ; (1 server found)
+vm-test-run-solem-ai-dns-allowlist> ;; global options: +cmd
+vm-test-run-solem-ai-dns-allowlist> ;; Got answer:
+vm-test-run-solem-ai-dns-allowlist> ;; ->>HEADER<<- opcode: QUERY, status: REFUSED, id: 6221
+vm-test-run-solem-ai-dns-allowlist> ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 1
+vm-test-run-solem-ai-dns-allowlist> ;; OPT PSEUDOSECTION:
+vm-test-run-solem-ai-dns-allowlist> ; EDNS: version: 0, flags:; udp: 1232
+vm-test-run-solem-ai-dns-allowlist> ;; QUESTION SECTION:
+vm-test-run-solem-ai-dns-allowlist> ;evil.attacker.tld.         IN      A
+vm-test-run-solem-ai-dns-allowlist> ;; Query time: 0 msec
+vm-test-run-solem-ai-dns-allowlist> ;; SERVER: 127.0.0.1#5353(127.0.0.1) (UDP)
+vm-test-run-solem-ai-dns-allowlist> ;; WHEN: Sat May 30 20:30:52 UTC 2026
+vm-test-run-solem-ai-dns-allowlist> ;; MSG SIZE  rcvd: 46
+vm-test-run-solem-ai-dns-allowlist>   ✓ evil.attacker.tld REFUSED
+vm-test-run-solem-ai-dns-allowlist> cleanup
+vm-test-run-solem-ai-dns-allowlist> kill machine (pid 9)
+vm-test-run-solem-ai-dns-allowlist> qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+vm-test-run-solem-ai-dns-allowlist> kill vlan (pid 7)
+vm-test-run-solem-ai-dns-allowlist> (finished: cleanup, in 0.01 seconds)
+vm-test-run-solem-ai-dns-allowlist> Traceback (most recent call last):
+vm-test-run-solem-ai-dns-allowlist>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+vm-test-run-solem-ai-dns-allowlist>     sys.exit(main())
+vm-test-run-solem-ai-dns-allowlist>              ^^^^^^
+vm-test-run-solem-ai-dns-allowlist>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+vm-test-run-solem-ai-dns-allowlist>     driver.run_tests()
+vm-test-run-solem-ai-dns-allowlist>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+vm-test-run-solem-ai-dns-allowlist>     self.test_script()
+vm-test-run-solem-ai-dns-allowlist>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+vm-test-run-solem-ai-dns-allowlist>     exec(self.tests, symbols, None)
+vm-test-run-solem-ai-dns-allowlist>   File "<string>", line 20, in <module>
+vm-test-run-solem-ai-dns-allowlist> AssertionError: FAIL: c2payload.malware.test NON refused:
+vm-test-run-solem-ai-dns-allowlist> ; <<>> DiG 9.18.33 <<>> +time=3 +tries=1 @127.0.0.1 -p 5353 c2payload.malware.test
+vm-test-run-solem-ai-dns-allowlist> ; (1 server found)
+vm-test-run-solem-ai-dns-allowlist> ;; global options: +cmd
+vm-test-run-solem-ai-dns-allowlist> ;; Got answer:
+vm-test-run-solem-ai-dns-allowlist> ;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 61775
+vm-test-run-solem-ai-dns-allowlist> ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+vm-test-run-solem-ai-dns-allowlist> ;; OPT PSEUDOSECTION:
+vm-test-run-solem-ai-dns-allowlist> ; EDNS: version: 0, flags:; udp: 1232
+vm-test-run-solem-ai-dns-allowlist> ;; QUESTION SECTION:
+vm-test-run-solem-ai-dns-allowlist> ;c2payload.malware.test.            IN      A
+vm-test-run-solem-ai-dns-allowlist> ;; AUTHORITY SECTION:
+vm-test-run-solem-ai-dns-allowlist> test.                       10800   IN      SOA     localhost. nobody.invalid. 1 3600 1200 604800 10800
+vm-test-run-solem-ai-dns-allowlist> ;; Query time: 0 msec
+vm-test-run-solem-ai-dns-allowlist> ;; SERVER: 127.0.0.1#5353(127.0.0.1) (UDP)
+vm-test-run-solem-ai-dns-allowlist> ;; WHEN: Sat May 30 20:30:52 UTC 2026
+vm-test-run-solem-ai-dns-allowlist> ;; MSG SIZE  rcvd: 110
+error: builder for '/nix/store/40160via16r9rv4bz8ga7al2cgzmx9b7-vm-test-run-solem-ai-dns-allowlist.drv' failed with exit code 1;
+       last 25 log lines:
+       >     exec(self.tests, symbols, None)
+       >   File "<string>", line 20, in <module>
+       > AssertionError: FAIL: c2payload.malware.test NON refused:
+       >
+       > ; <<>> DiG 9.18.33 <<>> +time=3 +tries=1 @127.0.0.1 -p 5353 c2payload.malware.test
+       > ; (1 server found)
+       > ;; global options: +cmd
+       > ;; Got answer:
+       > ;; ->>HEADER<<- opcode: QUERY, status: NXDOMAIN, id: 61775
+       > ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 0, AUTHORITY: 1, ADDITIONAL: 1
+       >
+       > ;; OPT PSEUDOSECTION:
+       > ; EDNS: version: 0, flags:; udp: 1232
+       > ;; QUESTION SECTION:
+       > ;c2payload.malware.test.               IN      A
+       >
+       > ;; AUTHORITY SECTION:
+       > test.                        10800   IN      SOA     localhost. nobody.invalid. 1 3600 1200 604800 10800
+       >
+       > ;; Query time: 0 msec
+       > ;; SERVER: 127.0.0.1#5353(127.0.0.1) (UDP)
+       > ;; WHEN: Sat May 30 20:30:52 UTC 2026
+       > ;; MSG SIZE  rcvd: 110
+       >
+       >
+       For full logs, run 'nix log /nix/store/40160via16r9rv4bz8ga7al2cgzmx9b7-vm-test-run-solem-ai-dns-allowlist.drv'.
