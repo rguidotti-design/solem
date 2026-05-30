@@ -1,0 +1,202 @@
+# VM test hardened-kernel FAIL — commit 3d83dde @ 20260530T182639Z
+
+vm-test-run-solem-hardened-kernel> machine # [    8.916783] systemd[1]: Started Userspace Out-Of-Memory (OOM) Killer.
+vm-test-run-solem-hardened-kernel> machine # [    8.926779] systemd[1]: Finished Update is Completed.
+vm-test-run-solem-hardened-kernel> machine # [    8.960821] systemd[1]: Found device /dev/hvc0.
+vm-test-run-solem-hardened-kernel> machine # [    8.985688] systemd[1]: Found device /dev/ttyS0.
+vm-test-run-solem-hardened-kernel> machine # [    9.088771] (udev-worker)[468]: Network interface NamePolicy= disabled on kernel command line.
+vm-test-run-solem-hardened-kernel> machine # [    9.113283] (udev-worker)[488]: eth1: Config file /etc/systemd/network/40-eth1.link is applied to device based on potentially unpredictable interface name.
+vm-test-run-solem-hardened-kernel> machine # [    9.121755] (udev-worker)[488]: Network interface NamePolicy= disabled on kernel command line.
+vm-test-run-solem-hardened-kernel> machine # [    9.324389] systemd[1]: suid-sgid-wrappers.service: Deactivated successfully.
+vm-test-run-solem-hardened-kernel> machine # [    9.330643] systemd[1]: Finished Create SUID/SGID Wrappers.
+vm-test-run-solem-hardened-kernel> machine # [    9.399808] systemd[1]: Found device Virtio network device.
+vm-test-run-solem-hardened-kernel> machine # [    9.422877] bda4zqmbxbw6s2p726xf1vivklisa6ca-mount-pstore.sh[390]: Persistent Storage backend was not registered in time.
+vm-test-run-solem-hardened-kernel> machine # [    9.433404] systemd[1]: Finished mount-pstore.service.
+vm-test-run-solem-hardened-kernel> machine # [    9.438541] systemd[1]: Platform Persistent Storage Archival was skipped because of an unmet condition check (ConditionDirectoryNotEmpty=/sys/fs/pstore).
+vm-test-run-solem-hardened-kernel> machine # [    9.447417] systemd[1]: Reached target System Initialization.
+vm-test-run-solem-hardened-kernel> machine # [    9.453463] systemd[1]: Started Discard unused filesystem blocks once a week.
+vm-test-run-solem-hardened-kernel> machine # [    9.458809] systemd[1]: Started nix-gc.timer.
+vm-test-run-solem-hardened-kernel> machine # [    9.464967] systemd[1]: Started Daily Cleanup of Temporary Directories.
+vm-test-run-solem-hardened-kernel> machine # [    9.472836] systemd[1]: Reached target Timer Units.
+vm-test-run-solem-hardened-kernel> machine # [    9.483316] systemd[1]: Listening on D-Bus System Message Bus Socket.
+vm-test-run-solem-hardened-kernel> machine # [    9.490728] systemd[1]: Listening on Nix Daemon Socket.
+vm-test-run-solem-hardened-kernel> machine # [    9.497762] systemd[1]: Listening on Hostname Service Socket.
+vm-test-run-solem-hardened-kernel> machine # [    9.514098] systemd[1]: Reached target Socket Units.
+vm-test-run-solem-hardened-kernel> machine # [    9.524400] systemd[1]: Reached target Basic System.
+vm-test-run-solem-hardened-kernel> machine # [    9.533484] systemd[1]: System is tainted: support-ended
+vm-test-run-solem-hardened-kernel> machine # [    9.543960] systemd[1]: Starting Kernel Auditing...
+vm-test-run-solem-hardened-kernel> machine # [    9.555327] systemd[1]: Started backdoor.service.
+vm-test-run-solem-hardened-kernel> machine # [    9.562976] systemd[1]: Starting Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-hardened-kernel> machine # [    9.574878] systemd[1]: Started Reset console on configuration changes.
+vm-test-run-solem-hardened-kernel> machine # [    9.588484] systemd[1]: Starting resolvconf update...
+vm-test-run-solem-hardened-kernel> machine # [    9.601299] systemd[1]: Starting D-Bus System Message Bus...
+vm-test-run-solem-hardened-kernel> machine # connecting to host...
+vm-test-run-solem-hardened-kernel> machine # [    9.680313] 42m8vzags3w669djhcs5bbm7jf10phdb-audit-disable[623]: No rules
+vm-test-run-solem-hardened-kernel> machine # [    9.720677] systemd[1]: Finished Kernel Auditing.
+vm-test-run-solem-hardened-kernel> machine: Guest shell says: b'Spawning backdoor root shell...\n'
+vm-test-run-solem-hardened-kernel> machine: connected to guest root shell
+vm-test-run-solem-hardened-kernel> machine: (connecting took 10.96 seconds)
+vm-test-run-solem-hardened-kernel> (finished: waiting for the VM to finish booting, in 11.06 seconds)
+vm-test-run-solem-hardened-kernel> machine # [    9.785906] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-hardened-kernel> machine # [    9.794858] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-hardened-kernel> machine # [    9.803843] nsncd[614]: May 30 18:26:28.918 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-hardened-kernel> machine # [    9.814533] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-hardened-kernel> machine # [    9.821542] systemd[1]: Starting User Login Management...
+vm-test-run-solem-hardened-kernel> machine # [    9.897775] dbus-daemon[618]: dbus[618]: Unknown username "systemd-timesync" in message bus configuration file
+vm-test-run-solem-hardened-kernel> machine # [   10.305140] mousedev: PS/2 mouse device common for all mice
+vm-test-run-solem-hardened-kernel> machine # [    9.999570] systemd[1]: Started D-Bus System Message Bus.
+vm-test-run-solem-hardened-kernel> machine # [   10.128857] systemd[1]: Stopped target Host and Network Name Lookups.
+vm-test-run-solem-hardened-kernel> machine # [   10.134842] systemd[1]: Stopping Host and Network Name Lookups...
+vm-test-run-solem-hardened-kernel> machine # [   10.141786] systemd[1]: Stopped target User and Group Name Lookups.
+vm-test-run-solem-hardened-kernel> machine # [   10.147627] systemd[1]: Stopping User and Group Name Lookups...
+vm-test-run-solem-hardened-kernel> machine # [   10.159609] systemd[1]: Stopping Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-hardened-kernel> machine # [   10.164699] systemd[1]: nscd.service: Deactivated successfully.
+vm-test-run-solem-hardened-kernel> machine # [   10.175236] systemd[1]: Stopped Name Service Cache Daemon (nsncd).
+vm-test-run-solem-hardened-kernel> machine # [   10.216674] systemd-logind[647]: New seat seat0.
+vm-test-run-solem-hardened-kernel> machine # [   10.285257] systemd[1]: Started User Login Management.
+vm-test-run-solem-hardened-kernel> machine # [   10.307675] systemd[1]: Starting Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-hardened-kernel> machine # [   10.685850] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input3
+vm-test-run-solem-hardened-kernel> machine # [   10.389259] systemd[1]: Finished resolvconf update.
+vm-test-run-solem-hardened-kernel> machine # [   10.401203] systemd[1]: Starting DHCP Client...
+vm-test-run-solem-hardened-kernel> machine # [   10.811964] ACPI: button: Power Button [PWRF]
+vm-test-run-solem-hardened-kernel> machine # [   10.470504] nsncd[703]: May 30 18:26:29.600 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-hardened-kernel> machine # [   10.482515] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-hardened-kernel> machine # [   10.489743] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-hardened-kernel> machine # [   10.493671] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-hardened-kernel> machine # [   10.563146] systemd[1]: Finished Firewall.
+vm-test-run-solem-hardened-kernel> machine # [   10.566739] systemd[1]: Reached target Preparation for Network.
+vm-test-run-solem-hardened-kernel> machine # [   10.573434] systemd[1]: Starting Address configuration of eth1...
+vm-test-run-solem-hardened-kernel> machine # [   10.944802] Floppy drive(s): fd0 is 2.88M AMI BIOS
+vm-test-run-solem-hardened-kernel> machine # [   10.958979] parport_pc 00:03: reported by Plug and Play ACPI
+vm-test-run-solem-hardened-kernel> machine # [   11.020675] parport0: PC-style at 0x378, irq 7 [PCSPP(,...)]
+vm-test-run-solem-hardened-kernel> machine # [   11.031662] FDC 0 is a S82078B
+vm-test-run-solem-hardened-kernel> machine # [   10.728482] network-addresses-eth1-start[734]: adding address 192.168.1.1/24... done
+vm-test-run-solem-hardened-kernel> machine # [   10.759491] network-addresses-eth1-start[734]: adding address 2001:db8:1::1/64... done
+vm-test-run-solem-hardened-kernel> machine # [   10.779712] dhcpcd[732]: dhcpcd-10.1.0 starting
+vm-test-run-solem-hardened-kernel> machine # [   10.804304] systemd[1]: Finished Address configuration of eth1.
+vm-test-run-solem-hardened-kernel> machine # [   10.810616] systemd[1]: Starting Networking Setup...
+vm-test-run-solem-hardened-kernel> machine # [   10.818452] dhcpcd[745]: dev: loaded udev
+vm-test-run-solem-hardened-kernel> machine # [   11.210296] 8021q: 802.1Q VLAN Support v1.8
+vm-test-run-solem-hardened-kernel> machine # [   11.215534] 8021q: adding VLAN 0 to HW filter on device eth1
+vm-test-run-solem-hardened-kernel> machine # [   11.220671] piix4_smbus 0000:00:01.3: SMBus Host Controller at 0x700, revision 0
+vm-test-run-solem-hardened-kernel> machine # [   11.344937] input: QEMU Virtio Keyboard as /devices/pci0000:00/0000:00:0a.0/virtio7/input/input4
+vm-test-run-solem-hardened-kernel> machine # [   11.469060] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+vm-test-run-solem-hardened-kernel> machine # [   11.482576] cryptd: max_cpu_qlen set to 1000
+vm-test-run-solem-hardened-kernel> machine # [   11.490768] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input6
+vm-test-run-solem-hardened-kernel> machine # [   11.498861] input: VirtualPS/2 VMware VMMouse as /devices/platform/i8042/serio1/input/input5
+vm-test-run-solem-hardened-kernel> machine # [   11.531617] bochs-drm 0000:00:02.0: vgaarb: deactivate vga console
+vm-test-run-solem-hardened-kernel> machine # [   11.535636] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+vm-test-run-solem-hardened-kernel> machine # [   11.539894] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+vm-test-run-solem-hardened-kernel> machine # [   11.550301] platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
+vm-test-run-solem-hardened-kernel> machine # [   11.557002] cfg80211: failed to load regulatory.db
+vm-test-run-solem-hardened-kernel> machine # [   11.665077] AVX2 version of gcm_enc/dec engaged.
+vm-test-run-solem-hardened-kernel> machine # [   11.666529] AES CTR mode by8 optimization enabled
+vm-test-run-solem-hardened-kernel> machine # [   11.697702] 8021q: adding VLAN 0 to HW filter on device eth0
+vm-test-run-solem-hardened-kernel> machine # [   11.722763] Console: switching to colour dummy device 80x25
+vm-test-run-solem-hardened-kernel> machine # [   11.783353] [drm] Found bochs VGA, ID 0xb0c5.
+vm-test-run-solem-hardened-kernel> machine # [   11.784572] [drm] Framebuffer size 16384 kB @ 0xfd000000, mmio @ 0xfebd0000.
+vm-test-run-solem-hardened-kernel> machine # [   11.868815] [drm] Found EDID data blob.
+vm-test-run-solem-hardened-kernel> machine # [   11.912008] [drm] Initialized bochs-drm 1.0.0 20130925 for 0000:00:02.0 on minor 0
+vm-test-run-solem-hardened-kernel> machine # [   12.010047] fbcon: bochs-drmdrmfb (fb0) is primary device
+vm-test-run-solem-hardened-kernel> machine # [   12.530727] ppdev: user-space parallel port driver
+vm-test-run-solem-hardened-kernel> machine # [   12.542910] NET: Registered PF_PACKET protocol family
+vm-test-run-solem-hardened-kernel> machine # [   12.836721] Console: switching to colour frame buffer device 160x50
+vm-test-run-solem-hardened-kernel> machine # [   13.090746] bochs-drm 0000:00:02.0: [drm] fb0: bochs-drmdrmfb frame buffer device
+vm-test-run-solem-hardened-kernel> machine # [   12.746831] dhcpcd[745]: eth0: waiting for carrier
+vm-test-run-solem-hardened-kernel> machine # [   12.753437] systemd[1]: Finished Networking Setup.
+vm-test-run-solem-hardened-kernel> machine # [   12.758340] dhcpcd[745]: eth0: carrier acquired
+vm-test-run-solem-hardened-kernel> machine # [   12.763653] systemd[1]: Starting Extra networking commands....
+vm-test-run-solem-hardened-kernel> machine # [   12.772847] dhcpcd[745]: DUID 00:01:00:01:31:ad:e8:56:52:54:00:12:34:56
+vm-test-run-solem-hardened-kernel> machine # [   12.777862] systemd-logind[647]: Watching system buttons on /dev/input/event0 (AT Translated Set 2 keyboard)
+vm-test-run-solem-hardened-kernel> machine # [   12.786796] dhcpcd[745]: eth0: IAID 00:12:34:56
+vm-test-run-solem-hardened-kernel> machine # [   12.791500] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-hardened-kernel> machine # [   12.795219] dhcpcd[745]: eth0: adding address fe80::5054:ff:fe12:3456
+vm-test-run-solem-hardened-kernel> machine # [   12.799373] systemd[1]: Finished Extra networking commands..
+vm-test-run-solem-hardened-kernel> machine # [   12.802671] dhcpcd[745]: eth0: soliciting a DHCP lease
+vm-test-run-solem-hardened-kernel> machine # [   12.805645] systemd[1]: Reached target Network.
+vm-test-run-solem-hardened-kernel> machine # [   12.808374] dhcpcd[745]: eth0: offered 10.0.2.15 from 10.0.2.2
+vm-test-run-solem-hardened-kernel> machine # [   12.812630] systemd[1]: Starting Permit User Sessions...
+vm-test-run-solem-hardened-kernel> machine # [   12.814687] dhcpcd[745]: eth0: probing address 10.0.2.15/24
+vm-test-run-solem-hardened-kernel> machine # [   12.817603] systemd[1]: Finished Permit User Sessions.
+vm-test-run-solem-hardened-kernel> machine # [   12.819700] systemd-logind[647]: Watching system buttons on /dev/input/event2 (Power Button)
+vm-test-run-solem-hardened-kernel> machine # [   12.823772] systemd[1]: Started Getty on tty1.
+vm-test-run-solem-hardened-kernel> machine # [   12.825783] systemd[1]: Reached target Login Prompts.
+vm-test-run-solem-hardened-kernel> machine # [   12.829550] systemd[1]: Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
+vm-test-run-solem-hardened-kernel> machine # [   12.832773] systemd-logind[647]: Watching system buttons on /dev/input/event3 (QEMU Virtio Keyboard)
+vm-test-run-solem-hardened-kernel> machine # [   12.838753] systemd[1]: systemd-vconsole-setup.service: Deactivated successfully.
+vm-test-run-solem-hardened-kernel> machine # [   12.843959] systemd[1]: Stopped Virtual Console Setup.
+vm-test-run-solem-hardened-kernel> machine # [   12.848485] systemd[1]: run-credentials-systemd\x2dvconsole\x2dsetup.service.mount: Deactivated successfully.
+vm-test-run-solem-hardened-kernel> machine # [   12.852638] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-hardened-kernel> machine # [   13.242145] kvm_amd: TSC scaling supported
+vm-test-run-solem-hardened-kernel> machine # [   13.243348] kvm_amd: Nested Virtualization enabled
+vm-test-run-solem-hardened-kernel> machine # [   13.244612] kvm_amd: Nested Paging enabled
+vm-test-run-solem-hardened-kernel> machine # [   13.249860] kvm_amd: Virtual VMLOAD VMSAVE supported
+vm-test-run-solem-hardened-kernel> machine # [   13.251224] kvm_amd: PMU virtualization is disabled
+vm-test-run-solem-hardened-kernel> machine # [   13.333512] EDAC MC: Ver: 3.0.0
+vm-test-run-solem-hardened-kernel> machine # [   13.418573] systemd[1]: Finished Virtual Console Setup.
+vm-test-run-solem-hardened-kernel> machine # [   13.978762] dhcpcd[745]: eth0: soliciting an IPv6 router
+vm-test-run-solem-hardened-kernel> machine # [   13.980897] dhcpcd[745]: eth0: Router Advertisement from fe80::2
+vm-test-run-solem-hardened-kernel> machine # [   13.983594] dhcpcd[745]: eth0: adding address fec0::5054:ff:fe12:3456/64
+vm-test-run-solem-hardened-kernel> machine # [   13.986001] dhcpcd[745]: eth0: adding route to fec0::/64
+vm-test-run-solem-hardened-kernel> machine # [   13.988314] dhcpcd[745]: eth0: adding default route via fe80::2
+vm-test-run-solem-hardened-kernel> machine # [   17.272682] dhcpcd[745]: eth0: leased 10.0.2.15 for 86400 seconds
+vm-test-run-solem-hardened-kernel> machine # [   17.275878] dhcpcd[745]: eth0: adding route to 10.0.2.0/24
+vm-test-run-solem-hardened-kernel> machine # [   17.278875] dhcpcd[745]: eth0: adding default route via 10.0.2.2
+vm-test-run-solem-hardened-kernel> machine # [   17.416098] systemd[1]: Started DHCP Client.
+vm-test-run-solem-hardened-kernel> machine # [   17.420905] systemd[1]: Reached target Network is Online.
+vm-test-run-solem-hardened-kernel> machine # [   17.538779] systemd[1]: Reached target Multi-User System.
+vm-test-run-solem-hardened-kernel> machine # [   17.540794] systemd[1]: Startup finished in 4.631s (kernel) + 12.788s (userspace) = 17.420s.
+vm-test-run-solem-hardened-kernel> (finished: waiting for unit multi-user.target, in 19.18 seconds)
+vm-test-run-solem-hardened-kernel> machine: must succeed: sleep 2
+vm-test-run-solem-hardened-kernel> (finished: must succeed: sleep 2, in 2.04 seconds)
+vm-test-run-solem-hardened-kernel> machine: must succeed: uname -r
+vm-test-run-solem-hardened-kernel> (finished: must succeed: uname -r, in 0.03 seconds)
+vm-test-run-solem-hardened-kernel> Kernel running: 6.6.83-hardened1
+vm-test-run-solem-hardened-kernel>   ✓ kernel hardened attivo
+vm-test-run-solem-hardened-kernel> cleanup
+vm-test-run-solem-hardened-kernel> kill machine (pid 9)
+vm-test-run-solem-hardened-kernel> qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+vm-test-run-solem-hardened-kernel> kill vlan (pid 7)
+vm-test-run-solem-hardened-kernel> (finished: cleanup, in 0.01 seconds)
+vm-test-run-solem-hardened-kernel> Traceback (most recent call last):
+vm-test-run-solem-hardened-kernel>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+vm-test-run-solem-hardened-kernel>     sys.exit(main())
+vm-test-run-solem-hardened-kernel>              ^^^^^^
+vm-test-run-solem-hardened-kernel>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+vm-test-run-solem-hardened-kernel>     driver.run_tests()
+vm-test-run-solem-hardened-kernel>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+vm-test-run-solem-hardened-kernel>     self.test_script()
+vm-test-run-solem-hardened-kernel>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+vm-test-run-solem-hardened-kernel>     exec(self.tests, symbols, None)
+vm-test-run-solem-hardened-kernel>   File "<string>", line 14, in <module>
+vm-test-run-solem-hardened-kernel> Exception: FAIL: kernel hardened ha panic/oops:
+vm-test-run-solem-hardened-kernel> [    0.000000] Command line: console=ttyS0 console=tty0 panic=1 boot.panic_on_fail clocksource=acpi_pm loglevel=7 net.ifnames=0 init=/nix/store/kcb429h7zzn6nflzlzsav98l49y3p5y3-nixos-system-machine-test/init regInfo=/nix/store/10lybkrxzni6fzkh4dpk9lqmcv1d5xvl-closure-info/registration console=ttyS0
+vm-test-run-solem-hardened-kernel> [    0.011161] Kernel command line: console=ttyS0 console=tty0 panic=1 boot.panic_on_fail clocksource=acpi_pm loglevel=7 net.ifnames=0 init=/nix/store/kcb429h7zzn6nflzlzsav98l49y3p5y3-nixos-system-machine-test/init regInfo=/nix/store/10lybkrxzni6fzkh4dpk9lqmcv1d5xvl-closure-info/registration console=ttyS0
+error: builder for '/nix/store/8852myd7y79p5sbr028y9yqc2xvs78mp-vm-test-run-solem-hardened-kernel.drv' failed with exit code 1;
+       last 25 log lines:
+       > (finished: must succeed: sleep 2, in 2.04 seconds)
+       > machine: must succeed: uname -r
+       > (finished: must succeed: uname -r, in 0.03 seconds)
+       > Kernel running: 6.6.83-hardened1
+       >   ✓ kernel hardened attivo
+       > cleanup
+       > kill machine (pid 9)
+       > qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+       > kill vlan (pid 7)
+       > (finished: cleanup, in 0.01 seconds)
+       > Traceback (most recent call last):
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+       >     sys.exit(main())
+       >              ^^^^^^
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+       >     driver.run_tests()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+       >     self.test_script()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+       >     exec(self.tests, symbols, None)
+       >   File "<string>", line 14, in <module>
+       > Exception: FAIL: kernel hardened ha panic/oops:
+       > [    0.000000] Command line: console=ttyS0 console=tty0 panic=1 boot.panic_on_fail clocksource=acpi_pm loglevel=7 net.ifnames=0 init=/nix/store/kcb429h7zzn6nflzlzsav98l49y3p5y3-nixos-system-machine-test/init regInfo=/nix/store/10lybkrxzni6fzkh4dpk9lqmcv1d5xvl-closure-info/registration console=ttyS0
+       > [    0.011161] Kernel command line: console=ttyS0 console=tty0 panic=1 boot.panic_on_fail clocksource=acpi_pm loglevel=7 net.ifnames=0 init=/nix/store/kcb429h7zzn6nflzlzsav98l49y3p5y3-nixos-system-machine-test/init regInfo=/nix/store/10lybkrxzni6fzkh4dpk9lqmcv1d5xvl-closure-info/registration console=ttyS0
+       >
+       For full logs, run 'nix log /nix/store/8852myd7y79p5sbr028y9yqc2xvs78mp-vm-test-run-solem-hardened-kernel.drv'.
