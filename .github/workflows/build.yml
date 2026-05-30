@@ -165,7 +165,30 @@ jobs:
         run: nix flake update || true
 
       - name: Run VM test ${{ matrix.test }}
-        run: nix build .#checks.x86_64-linux.${{ matrix.test }} --show-trace --print-build-logs
+        run: |
+          set -o pipefail
+          nix build .#checks.x86_64-linux.${{ matrix.test }} \
+            --show-trace --print-build-logs 2>&1 | tee /tmp/vmtest-${{ matrix.test }}.log
+
+      - name: Dump VM test log on failure
+        if: failure()
+        run: |
+          echo "## VM test ${{ matrix.test }} — FAIL log (tail 200)" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          tail -200 /tmp/vmtest-${{ matrix.test }}.log >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || echo "no log file" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          # Anche stampa su stdout (visibile in job log)
+          echo "===== TAIL 200 LOG ====="
+          tail -200 /tmp/vmtest-${{ matrix.test }}.log 2>/dev/null || true
+
+      - name: Upload VM test log artifact
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vmtest-log-${{ matrix.test }}
+          path: /tmp/vmtest-${{ matrix.test }}.log
+          retention-days: 7
+          if-no-files-found: ignore
 
   # ─────────────────────────────────────────────────────────────────
   # 5. Backend pytest (GAVIO Python)
