@@ -10,7 +10,7 @@ on:
 # Permessi: serve write su issues per pubblicare log fail come comment
 # (visibili pubblicamente, niente auth richiesta per lettura).
 permissions:
-  contents: read
+  contents: write  # push branch ci-logs per debug fail VM test
   issues: write
   checks: write
   actions: read
@@ -227,15 +227,29 @@ jobs:
           fi
 
           cd solem-ci-logs
+          echo "DEBUG: pwd=$(pwd), git status:"
+          git status 2>&1 || echo "no git repo"
           mkdir -p "logs/${SHA_SHORT}"
           echo "# VM test ${TEST_NAME} FAIL — commit ${SHA_SHORT} @ ${TIMESTAMP}" > "${LOG_FILE}"
           echo "" >> "${LOG_FILE}"
           echo "${LOG_TAIL}" >> "${LOG_FILE}"
 
-          git add "${LOG_FILE}"
-          git commit -m "log: ${TEST_NAME} fail @ ${SHA_SHORT}" || true
-          git push origin ci-logs 2>&1 | tail -5
-          echo "Log committed to ci-logs branch: ${LOG_FILE}"
+          # Race-condition: piu' job paralleli pushano allo stesso branch.
+          # Pull --rebase per evitare non-fast-forward, retry su conflitto.
+          for attempt in 1 2 3 4 5; do
+            git fetch origin ci-logs 2>&1 | head -3 || true
+            git pull --rebase origin ci-logs 2>&1 | head -5 || true
+            git add "${LOG_FILE}"
+            git commit -m "log: ${TEST_NAME} fail @ ${SHA_SHORT}" 2>&1 | head -3 || true
+            PUSH_OUT=$(git push origin "HEAD:ci-logs" 2>&1)
+            echo "PUSH attempt $attempt: $PUSH_OUT" | head -10
+            if echo "$PUSH_OUT" | grep -qE "^To |new branch|->"; then
+              echo "✓ push success on attempt $attempt"
+              break
+            fi
+            sleep $((attempt * 2))
+          done
+          echo "Log path: ${LOG_FILE}"
           set -e
 
       - name: Upload VM test log artifact
