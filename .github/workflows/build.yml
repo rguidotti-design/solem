@@ -7,6 +7,14 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Permessi: serve write su issues per pubblicare log fail come comment
+# (visibili pubblicamente, niente auth richiesta per lettura).
+permissions:
+  contents: read
+  issues: write
+  checks: write
+  actions: read
+
 # Cancella build precedenti se viene pushato nuovo commit sullo stesso branch
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -172,14 +180,38 @@ jobs:
 
       - name: Dump VM test log on failure
         if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          echo "## VM test ${{ matrix.test }} — FAIL log (tail 200)" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          tail -200 /tmp/vmtest-${{ matrix.test }}.log >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || echo "no log file" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          # Anche stampa su stdout (visibile in job log)
+          # Estrai tail 200 del log
+          LOG_TAIL=$(tail -200 /tmp/vmtest-${{ matrix.test }}.log 2>/dev/null || echo "(no log)")
+
+          # 1. Markdown summary visibile UI GitHub
+          {
+            echo "## VM test ${{ matrix.test }} — FAIL log (tail 200)"
+            echo '```'
+            echo "$LOG_TAIL"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          # 2. Stdout (visibile in job log con accesso admin)
           echo "===== TAIL 200 LOG ====="
-          tail -200 /tmp/vmtest-${{ matrix.test }}.log 2>/dev/null || true
+          echo "$LOG_TAIL"
+
+          # 3. Crea GitHub Issue comment (visibile pubblicamente senza auth)
+          # Trova issue "CI fail logs" (creo se non esiste) e aggiungo comment.
+          # NB: github.token ha permessi default (write su issues per workflow).
+          set +e
+          ISSUE_NUM=$(gh issue list --search "CI fail logs in:title" --json number --jq '.[0].number' 2>/dev/null)
+          if [ -z "$ISSUE_NUM" ] || [ "$ISSUE_NUM" = "null" ]; then
+            ISSUE_NUM=$(gh issue create --title "CI fail logs" --body "Auto-populated by workflow on VM test failure." --label "ci" 2>/dev/null | grep -oE '/issues/[0-9]+' | grep -oE '[0-9]+')
+          fi
+          if [ -n "$ISSUE_NUM" ]; then
+            BODY=$(printf '### VM test %s FAIL (commit %s)\n\n```\n%s\n```\n' \
+              "${{ matrix.test }}" "${GITHUB_SHA:0:7}" "$LOG_TAIL")
+            gh issue comment "$ISSUE_NUM" --body "$BODY" 2>&1 | head -3
+          fi
+          set -e
 
       - name: Upload VM test log artifact
         if: failure()
