@@ -62,8 +62,9 @@ let
       /etc/hosts r,
 
       # ── Home AI: read/write SOLO la propria ──────────────────────
+      # "ix" su venv/bin/* per execute Python con inherit profile.
       ${aiHome}/ r,
-      ${aiHome}/** rwk,
+      ${aiHome}/** rwkix,
 
       # ── Codice GAVIO: readonly ───────────────────────────────────
       /opt/gavio/ r,
@@ -140,12 +141,13 @@ let
       deny capability setuid,
       deny capability setgid,
 
-      # ── exec child: Pix = try profile, fallback inherit ──────────
-      # Pix evita il fail di Px quando non esiste un profilo dedicato
-      # per il binary child (es. cat, sed, jq).
-      /run/current-system/sw/bin/* Pix,
-      /usr/bin/* Pix,
-      ${aiHome}/venv/bin/* Pix,
+      # ── exec child ───────────────────────────────────────────────
+      # NB: regole /usr/** mrix, /run/current-system/** mrix, /nix/store/** mrix
+      # sopra GIA' coprono execute con inherit (`ix`). Le precedenti
+      # regole Pix specifiche (/usr/bin/*, /run/current-system/sw/bin/*)
+      # creavano "conflicting x modifiers" perche' sono subset dei wildcard
+      # con modifier diverso (ix vs Pix). Rimosse — il wildcard ix basta.
+      # Per il venv di gavio-ai: vedi /var/lib/gavio-ai/** rwkix sopra.
 
       # ── Signal: puo' inviare a se stesso, non ad altri ───────────
       signal (send) peer=solem-gavio-ai,
