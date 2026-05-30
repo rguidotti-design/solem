@@ -71,8 +71,11 @@ let
     -w /etc/audit/auditd.conf -p wa -k tamper_audit
 
     # ─── 7. Watch kernel modules load/unload ─────────────────────────
+    # NB: rule b32 init_module/delete_module su kernel x86_64 produce
+    # warning "Syscall name unknown: finit_module" → rule b32 dropped
+    # → la chiave 'kernel_module' non viene caricata interamente.
+    # Solo b64 (sufficiente su sistemi x86_64 moderni).
     -a always,exit -F arch=b64 -S init_module -S finit_module -S delete_module -k kernel_module
-    -a always,exit -F arch=b32 -S init_module -S finit_module -S delete_module -k kernel_module
 
     # ─── 8. ptrace tentativi (anti-debugger sniffing) ────────────────
     -a always,exit -F arch=b64 -S ptrace -k ptrace_try

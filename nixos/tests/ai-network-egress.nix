@@ -65,7 +65,7 @@ pkgs.nixosTest {
     # ── TEST 2: chain ai_egress contiene DROP ──────────────────────
     out = machine.succeed("nft list chain inet solem-ai ai_egress 2>&1")
     print(f"chain ai_egress:\n{out}")
-    assert "drop" in out.lower(), f"FAIL: chain ai_egress NON ha regola DROP"
+    assert "drop" in out.lower(), "FAIL: chain ai_egress NON ha regola DROP"
     assert "skuid" in out or "970" in out, "FAIL: chain non filtra per UID gavio-ai"
 
     # ── TEST 3: gavio-ai puo' raggiungere LOOPBACK (whitelist) ─────
@@ -119,7 +119,7 @@ pkgs.nixosTest {
     print(f"Drop counter AFTER gavio-ai attempts: {after_ai}")
     assert after_ai > before, \
         f"FAIL: drop counter NON aumentato per gavio-ai ({before} -> {after_ai}). " \
-        f"Significa che la regola skuid 970 ... drop NON sta matchando."
+        "Significa che la regola skuid 970 ... drop NON sta matchando."
 
     # gavio (umano) tenta lo stesso. NON deve incrementare il counter
     # (skuid != 970 → return early, no drop).
@@ -130,7 +130,7 @@ pkgs.nixosTest {
     print(f"Drop counter after gavio (human) attempts: pre={pre_human} post={post_human}")
     assert post_human == pre_human, \
         f"FAIL: drop counter aumentato anche per gavio umano ({pre_human} -> {post_human}). " \
-        f"La regola dovrebbe filtrare SOLO UID 970."
+        "La regola dovrebbe filtrare SOLO UID 970."
 
     # ── TEST 5: CLI solem-ai-net status non crasha ─────────────────
     machine.succeed("/run/current-system/sw/bin/solem-ai-net status 2>&1 || true")

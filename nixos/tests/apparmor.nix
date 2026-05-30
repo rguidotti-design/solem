@@ -92,9 +92,9 @@ pkgs.nixosTest {
     print(f"AppArmor self attr: rc={rc} out={out!r}")
     if "solem-gavio-ai" not in out:
         raise Exception(
-            f"FAIL: il binary /var/lib/gavio-ai/venv/bin/python3 NON e' confinato "
+            "FAIL: il binary /var/lib/gavio-ai/venv/bin/python3 NON e' confinato "
             f"da AppArmor profile solem-gavio-ai (out={out!r}). I test DENY "
-            f"sotto darebbero falso positivo via DAC."
+            "sotto darebbero falso positivo via DAC."
         )
     print(f"  ✓ processo confinato da: {out.strip()}")
 

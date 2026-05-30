@@ -62,7 +62,7 @@ pkgs.nixosTest {
     # Anche se non c'e' su tcp, deve essere su udp
     out_udp = machine.succeed("ss -ulnp 2>/dev/null | grep 5353 || echo NONE")
     print(f"unbound UDP: {out_udp}")
-    assert "5353" in (out + out_udp), f"FAIL: unbound non listening su 5353"
+    assert "5353" in (out + out_udp), "FAIL: unbound non listening su 5353"
 
     # ── TEST 2: dig dominio NON in allowlist → REFUSED ─────────────
     rc, out = machine.execute("dig +time=3 +tries=1 @127.0.0.1 -p 5353 evil.attacker.tld 2>&1")

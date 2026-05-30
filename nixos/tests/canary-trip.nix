@@ -89,7 +89,7 @@ pkgs.nixosTest {
     # ── TEST 6: log canary contiene il trip ────────────────────────
     out = machine.succeed("cat /var/log/solem/canary.log")
     print(f"canary log:\n{out}")
-    assert "TRIP" in out or "KILL SWITCH" in out, f"FAIL: log canary non contiene trip event"
+    assert "TRIP" in out or "KILL SWITCH" in out, "FAIL: log canary non contiene trip event"
 
     # ── TEST 7: snapshot ps esiste ─────────────────────────────────
     rc, _ = machine.execute("ls /var/log/solem/canary-ps-*.snap 2>/dev/null")

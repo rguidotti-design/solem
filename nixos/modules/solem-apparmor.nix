@@ -47,9 +47,12 @@ let
       include <abstractions/ssl_certs>
 
       # ── Filesystem: read-only quasi tutto ─────────────────────────
-      /usr/** r,
-      /run/current-system/** r,
-      /nix/store/** r,
+      # NB: "mr" = mmap + read. Le librerie shared (libreadline, libc,
+      # libpython, ...) richiedono "m" (mmap) per essere caricate.
+      # Solo "r" produce apparmor=DENIED su file_mmap di .so file.
+      /usr/** mr,
+      /run/current-system/** mr,
+      /nix/store/** mr,
       /etc/ssl/** r,
       /etc/resolv.conf r,
       /etc/nsswitch.conf r,
@@ -161,10 +164,10 @@ let
       /var/lib/ollama/ r,
       /var/lib/ollama/** rwk,
 
-      # Read-only system + nix store
-      /usr/** r,
-      /run/current-system/** r,
-      /nix/store/** r,
+      # Read-only system + nix store (mr = mmap+read per shared libs)
+      /usr/** mr,
+      /run/current-system/** mr,
+      /nix/store/** mr,
       /etc/ssl/** r,
       /etc/resolv.conf r,
       /etc/hosts r,

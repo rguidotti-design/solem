@@ -36,25 +36,20 @@ let
         type ipv4_addr
         flags interval
         elements = {
-          127.0.0.0/8,         # localhost
-          ${lib.concatStringsSep ", " cfg.allowedV4}
+          ${lib.concatStringsSep ", " ([ "127.0.0.0/8" ] ++ cfg.allowedV4)}
         }
       }
       set ai_allowed_v6 {
         type ipv6_addr
         flags interval
         elements = {
-          ::1/128,             # localhost v6
-          ${lib.concatStringsSep ", " cfg.allowedV6}
+          ${lib.concatStringsSep ", " ([ "::1/128" ] ++ cfg.allowedV6)}
         }
       }
       set ai_allowed_ports {
         type inet_service
         elements = {
-          53,    # DNS
-          123,   # NTP
-          443,   # HTTPS (per Ollama remoto / API GAVIO)
-          ${lib.concatStringsSep ", " (map toString cfg.allowedPorts)}
+          ${lib.concatStringsSep ", " (map toString ([ 53 123 443 ] ++ cfg.allowedPorts))}
         }
       }
 
