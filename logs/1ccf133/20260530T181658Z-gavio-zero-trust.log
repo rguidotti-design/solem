@@ -1,0 +1,202 @@
+# VM test gavio-zero-trust FAIL — commit 1ccf133 @ 20260530T181658Z
+
+vm-test-run-solem-gavio-zero-trust> machine # [   10.427220] cfg80211: failed to load regulatory.db
+vm-test-run-solem-gavio-zero-trust> machine # [   10.452986] [drm] Found EDID data blob.
+vm-test-run-solem-gavio-zero-trust> machine # [   10.510801] [drm] Initialized bochs-drm 1.0.0 20130925 for 0000:00:02.0 on minor 0
+vm-test-run-solem-gavio-zero-trust> machine # [   10.542369] ppdev: user-space parallel port driver
+vm-test-run-solem-gavio-zero-trust> machine # [   10.224609] dhcpcd[765]: /nix/store/9d73cccl3j40winsdfxl765l3vjlhg9y-openresolv-3.13.2/sbin/.resolvconf-wrapped: line 888: kill: (752) - Operation not permitted
+vm-test-run-solem-gavio-zero-trust> machine # [   10.237352] dhcpcd[765]: clearing stale lock pid 752
+vm-test-run-solem-gavio-zero-trust> machine # [   10.825724] dhcpcd[747]: eth0: waiting for carrier
+vm-test-run-solem-gavio-zero-trust> machine # [   10.830578] dhcpcd[747]: eth0: carrier acquired
+vm-test-run-solem-gavio-zero-trust> machine # [   10.852842] systemd[1]: Finished Networking Setup.
+vm-test-run-solem-gavio-zero-trust> machine # [   10.862199] systemd[1]: Starting Extra networking commands....
+vm-test-run-solem-gavio-zero-trust> machine # [   10.879961] dhcpcd[747]: DUID 00:01:00:01:31:ad:e6:0d:52:54:00:12:34:56
+vm-test-run-solem-gavio-zero-trust> machine # [   10.884946] dhcpcd[747]: eth0: IAID 00:12:34:56
+vm-test-run-solem-gavio-zero-trust> machine # [   10.890810] dhcpcd[747]: eth0: adding address fe80::5054:ff:fe12:3456
+vm-test-run-solem-gavio-zero-trust> machine # [   10.599176] fbcon: bochs-drmdrmfb (fb0) is primary device
+vm-test-run-solem-gavio-zero-trust> machine # [   11.172023] 8021q: adding VLAN 0 to HW filter on device eth0
+vm-test-run-solem-gavio-zero-trust> machine # [   11.547350] Console: switching to colour frame buffer device 160x50
+vm-test-run-solem-gavio-zero-trust> machine # [   11.745723] bochs-drm 0000:00:02.0: [drm] fb0: bochs-drmdrmfb frame buffer device
+vm-test-run-solem-gavio-zero-trust> machine # [   10.961134] systemd-logind[647]: Watching system buttons on /dev/input/event3 (QEMU Virtio Keyboard)
+vm-test-run-solem-gavio-zero-trust> machine # [   11.409324] systemd[1]: Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
+vm-test-run-solem-gavio-zero-trust> machine # [   11.425870] systemd[1]: systemd-vconsole-setup.service: Deactivated successfully.
+vm-test-run-solem-gavio-zero-trust> machine # [   11.432145] systemd[1]: Stopped Virtual Console Setup.
+vm-test-run-solem-gavio-zero-trust> machine # [   11.442208] systemd[1]: run-credentials-systemd\x2dvconsole\x2dsetup.service.mount: Deactivated successfully.
+vm-test-run-solem-gavio-zero-trust> machine # [   11.453305] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-gavio-zero-trust> machine # [   11.482341] systemd[1]: Finished Extra networking commands..
+vm-test-run-solem-gavio-zero-trust> machine # [   11.484596] systemd[1]: Reached target Network.
+vm-test-run-solem-gavio-zero-trust> machine # [   11.490251] systemd[1]: Starting Permit User Sessions...
+vm-test-run-solem-gavio-zero-trust> machine # [   11.857454] kvm_amd: TSC scaling supported
+vm-test-run-solem-gavio-zero-trust> machine # [   11.858665] kvm_amd: Nested Virtualization enabled
+vm-test-run-solem-gavio-zero-trust> machine # [   11.860208] kvm_amd: Nested Paging enabled
+vm-test-run-solem-gavio-zero-trust> machine # [   11.866114] kvm_amd: Virtual VMLOAD VMSAVE supported
+vm-test-run-solem-gavio-zero-trust> machine # [   11.867891] kvm_amd: PMU virtualization is disabled
+vm-test-run-solem-gavio-zero-trust> machine # [   11.579855] systemd[1]: Finished Permit User Sessions.
+vm-test-run-solem-gavio-zero-trust> machine # [   11.930157] EDAC MC: Ver: 3.0.0
+vm-test-run-solem-gavio-zero-trust> machine # [   11.589913] systemd[1]: Started Getty on tty1.
+vm-test-run-solem-gavio-zero-trust> machine # [   11.591790] systemd[1]: Reached target Login Prompts.
+vm-test-run-solem-gavio-zero-trust> machine # [   11.929966] systemd[1]: Finished Virtual Console Setup.
+vm-test-run-solem-gavio-zero-trust> machine # [   12.361492] dhcpcd[747]: eth0: soliciting a DHCP lease
+vm-test-run-solem-gavio-zero-trust> machine # [   12.729422] NET: Registered PF_PACKET protocol family
+vm-test-run-solem-gavio-zero-trust> machine # [   12.392301] dhcpcd[747]: eth0: offered 10.0.2.15 from 10.0.2.2
+vm-test-run-solem-gavio-zero-trust> machine # [   12.395418] dhcpcd[747]: eth0: probing address 10.0.2.15/24
+vm-test-run-solem-gavio-zero-trust> machine # [   13.200985] dhcpcd[747]: eth0: soliciting an IPv6 router
+vm-test-run-solem-gavio-zero-trust> machine # [   13.203700] dhcpcd[747]: eth0: Router Advertisement from fe80::2
+vm-test-run-solem-gavio-zero-trust> machine # [   13.206921] dhcpcd[747]: eth0: adding address fec0::5054:ff:fe12:3456/64
+vm-test-run-solem-gavio-zero-trust> machine # [   13.210431] dhcpcd[747]: eth0: adding route to fec0::/64
+vm-test-run-solem-gavio-zero-trust> machine # [   13.213846] dhcpcd[747]: eth0: adding default route via fe80::2
+vm-test-run-solem-gavio-zero-trust> machine # [   17.102133] dhcpcd[747]: eth0: leased 10.0.2.15 for 86400 seconds
+vm-test-run-solem-gavio-zero-trust> machine # [   17.104616] dhcpcd[747]: eth0: adding route to 10.0.2.0/24
+vm-test-run-solem-gavio-zero-trust> machine # [   17.107480] dhcpcd[747]: eth0: adding default route via 10.0.2.2
+vm-test-run-solem-gavio-zero-trust> machine # [   17.237693] systemd[1]: Started DHCP Client.
+vm-test-run-solem-gavio-zero-trust> machine # [   17.243444] systemd[1]: Reached target Network is Online.
+vm-test-run-solem-gavio-zero-trust> machine # [   17.248848] systemd[1]: Starting Docker Application Container Engine...
+vm-test-run-solem-gavio-zero-trust> machine # [   18.032349] dockerd[931]: time="2026-05-30T18:16:52.365386800Z" level=info msg="Starting up"
+vm-test-run-solem-gavio-zero-trust> machine # [   18.037941] dockerd[931]: time="2026-05-30T18:16:52.372301645Z" level=info msg="containerd not running, starting managed containerd"
+vm-test-run-solem-gavio-zero-trust> machine # [   18.066714] dockerd[931]: time="2026-05-30T18:16:52.401101953Z" level=info msg="started new containerd process" address=/var/run/docker/containerd/containerd.sock module=libcontainerd pid=948
+vm-test-run-solem-gavio-zero-trust> machine # [   18.411582] dockerd[948]: time="2026-05-30T18:16:52.744580803Z" level=info msg="starting containerd" revision=v1.7.23 version=v1.7.23
+vm-test-run-solem-gavio-zero-trust> machine # [   18.438992] dockerd[948]: time="2026-05-30T18:16:52.773473023Z" level=info msg="loading plugin \"io.containerd.snapshotter.v1.aufs\"..." type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.465873] dockerd[948]: time="2026-05-30T18:16:52.799785585Z" level=info msg="skip loading plugin \"io.containerd.snapshotter.v1.aufs\"..." error="aufs is not supported (modprobe aufs failed: exit status 1 \"modprobe: FATAL: Module aufs not found in directory /run/booted-system/kernel-modules/lib/modules/6.6.94\\n\"): skip plugin" type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.478598] dockerd[948]: time="2026-05-30T18:16:52.799960747Z" level=info msg="loading plugin \"io.containerd.event.v1.exchange\"..." type=io.containerd.event.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.485294] dockerd[948]: time="2026-05-30T18:16:52.800000975Z" level=info msg="loading plugin \"io.containerd.internal.v1.opt\"..." type=io.containerd.internal.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.491338] dockerd[948]: time="2026-05-30T18:16:52.800216925Z" level=info msg="loading plugin \"io.containerd.warning.v1.deprecations\"..." type=io.containerd.warning.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.498442] dockerd[948]: time="2026-05-30T18:16:52.800264417Z" level=info msg="loading plugin \"io.containerd.snapshotter.v1.blockfile\"..." type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.505872] dockerd[948]: time="2026-05-30T18:16:52.800358283Z" level=info msg="skip loading plugin \"io.containerd.snapshotter.v1.blockfile\"..." error="no scratch file generator: skip plugin" type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.513338] dockerd[948]: time="2026-05-30T18:16:52.800394601Z" level=info msg="loading plugin \"io.containerd.snapshotter.v1.btrfs\"..." type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.517973] dockerd[948]: time="2026-05-30T18:16:52.831818148Z" level=info msg="skip loading plugin \"io.containerd.snapshotter.v1.btrfs\"..." error="path /var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.btrfs (ext4) must be a btrfs filesystem to be used with the btrfs snapshotter: skip plugin" type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.527497] dockerd[948]: time="2026-05-30T18:16:52.831868433Z" level=info msg="loading plugin \"io.containerd.snapshotter.v1.devmapper\"..." type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.532535] dockerd[948]: time="2026-05-30T18:16:52.831907265Z" level=info msg="skip loading plugin \"io.containerd.snapshotter.v1.devmapper\"..." error="devmapper not configured: skip plugin" type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.538923] dockerd[948]: time="2026-05-30T18:16:52.831940510Z" level=info msg="loading plugin \"io.containerd.snapshotter.v1.native\"..." type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.544831] dockerd[948]: time="2026-05-30T18:16:52.832079075Z" level=info msg="loading plugin \"io.containerd.snapshotter.v1.overlayfs\"..." type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.550464] dockerd[948]: time="2026-05-30T18:16:52.866527308Z" level=info msg="loading plugin \"io.containerd.snapshotter.v1.zfs\"..." type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.556195] dockerd[948]: time="2026-05-30T18:16:52.873018635Z" level=info msg="skip loading plugin \"io.containerd.snapshotter.v1.zfs\"..." error="path /var/lib/docker/containerd/daemon/io.containerd.snapshotter.v1.zfs must be a zfs filesystem to be used with the zfs snapshotter: skip plugin" type=io.containerd.snapshotter.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.565751] dockerd[948]: time="2026-05-30T18:16:52.873169772Z" level=info msg="loading plugin \"io.containerd.content.v1.content\"..." type=io.containerd.content.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.570689] dockerd[948]: time="2026-05-30T18:16:52.878683881Z" level=info msg="loading plugin \"io.containerd.metadata.v1.bolt\"..." type=io.containerd.metadata.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.575378] dockerd[948]: time="2026-05-30T18:16:52.878926090Z" level=info msg="metadata content store policy set" policy=shared
+vm-test-run-solem-gavio-zero-trust> machine # [   18.587443] dockerd[948]: time="2026-05-30T18:16:52.922018438Z" level=info msg="loading plugin \"io.containerd.gc.v1.scheduler\"..." type=io.containerd.gc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.593242] dockerd[948]: time="2026-05-30T18:16:52.927294249Z" level=info msg="loading plugin \"io.containerd.differ.v1.walking\"..." type=io.containerd.differ.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.599085] dockerd[948]: time="2026-05-30T18:16:52.927389791Z" level=info msg="loading plugin \"io.containerd.lease.v1.manager\"..." type=io.containerd.lease.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.604661] dockerd[948]: time="2026-05-30T18:16:52.927432255Z" level=info msg="loading plugin \"io.containerd.streaming.v1.manager\"..." type=io.containerd.streaming.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.609922] dockerd[948]: time="2026-05-30T18:16:52.927604903Z" level=info msg="loading plugin \"io.containerd.runtime.v1.linux\"..." type=io.containerd.runtime.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.615306] dockerd[948]: time="2026-05-30T18:16:52.932978491Z" level=info msg="loading plugin \"io.containerd.monitor.v1.cgroups\"..." type=io.containerd.monitor.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.620251] dockerd[948]: time="2026-05-30T18:16:52.937950910Z" level=info msg="loading plugin \"io.containerd.runtime.v2.task\"..." type=io.containerd.runtime.v2
+vm-test-run-solem-gavio-zero-trust> machine # [   18.625319] dockerd[948]: time="2026-05-30T18:16:52.948967394Z" level=info msg="loading plugin \"io.containerd.runtime.v2.shim\"..." type=io.containerd.runtime.v2
+vm-test-run-solem-gavio-zero-trust> machine # [   18.629690] dockerd[948]: time="2026-05-30T18:16:52.949017121Z" level=info msg="loading plugin \"io.containerd.sandbox.store.v1.local\"..." type=io.containerd.sandbox.store.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.635250] dockerd[948]: time="2026-05-30T18:16:52.949062099Z" level=info msg="loading plugin \"io.containerd.sandbox.controller.v1.local\"..." type=io.containerd.sandbox.controller.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.640447] dockerd[948]: time="2026-05-30T18:16:52.949100093Z" level=info msg="loading plugin \"io.containerd.service.v1.containers-service\"..." type=io.containerd.service.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.645635] dockerd[948]: time="2026-05-30T18:16:52.949138086Z" level=info msg="loading plugin \"io.containerd.service.v1.content-service\"..." type=io.containerd.service.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.652892] dockerd[948]: time="2026-05-30T18:16:52.949173286Z" level=info msg="loading plugin \"io.containerd.service.v1.diff-service\"..." type=io.containerd.service.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.658206] dockerd[948]: time="2026-05-30T18:16:52.949210162Z" level=info msg="loading plugin \"io.containerd.service.v1.images-service\"..." type=io.containerd.service.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.663798] dockerd[948]: time="2026-05-30T18:16:52.949247877Z" level=info msg="loading plugin \"io.containerd.service.v1.introspection-service\"..." type=io.containerd.service.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.670436] dockerd[948]: time="2026-05-30T18:16:52.949284194Z" level=info msg="loading plugin \"io.containerd.service.v1.namespaces-service\"..." type=io.containerd.service.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.675975] dockerd[948]: time="2026-05-30T18:16:52.949330289Z" level=info msg="loading plugin \"io.containerd.service.v1.snapshots-service\"..." type=io.containerd.service.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.681651] dockerd[948]: time="2026-05-30T18:16:52.949368563Z" level=info msg="loading plugin \"io.containerd.service.v1.tasks-service\"..." type=io.containerd.service.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.687313] dockerd[948]: time="2026-05-30T18:16:52.959551421Z" level=info msg="loading plugin \"io.containerd.grpc.v1.containers\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.692767] dockerd[948]: time="2026-05-30T18:16:52.959615116Z" level=info msg="loading plugin \"io.containerd.grpc.v1.content\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.697777] dockerd[948]: time="2026-05-30T18:16:52.959655065Z" level=info msg="loading plugin \"io.containerd.grpc.v1.diff\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.702910] dockerd[948]: time="2026-05-30T18:16:52.959692500Z" level=info msg="loading plugin \"io.containerd.grpc.v1.events\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.707964] dockerd[948]: time="2026-05-30T18:16:52.968937251Z" level=info msg="loading plugin \"io.containerd.grpc.v1.images\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.712881] dockerd[948]: time="2026-05-30T18:16:52.969102635Z" level=info msg="loading plugin \"io.containerd.grpc.v1.introspection\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.717850] dockerd[948]: time="2026-05-30T18:16:52.969239524Z" level=info msg="loading plugin \"io.containerd.grpc.v1.leases\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.722749] dockerd[948]: time="2026-05-30T18:16:52.974516451Z" level=info msg="loading plugin \"io.containerd.grpc.v1.namespaces\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.727921] dockerd[948]: time="2026-05-30T18:16:52.974556401Z" level=info msg="loading plugin \"io.containerd.grpc.v1.sandbox-controllers\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.733233] dockerd[948]: time="2026-05-30T18:16:52.974595512Z" level=info msg="loading plugin \"io.containerd.grpc.v1.sandboxes\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.737658] dockerd[948]: time="2026-05-30T18:16:52.974630712Z" level=info msg="loading plugin \"io.containerd.grpc.v1.snapshots\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.742628] dockerd[948]: time="2026-05-30T18:16:52.974665632Z" level=info msg="loading plugin \"io.containerd.grpc.v1.streaming\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.747774] dockerd[948]: time="2026-05-30T18:16:52.974707258Z" level=info msg="loading plugin \"io.containerd.grpc.v1.tasks\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.754203] dockerd[948]: time="2026-05-30T18:16:52.979881379Z" level=info msg="loading plugin \"io.containerd.transfer.v1.local\"..." type=io.containerd.transfer.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.759478] dockerd[948]: time="2026-05-30T18:16:52.985689100Z" level=info msg="loading plugin \"io.containerd.grpc.v1.transfer\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.765491] dockerd[948]: time="2026-05-30T18:16:52.986029926Z" level=info msg="loading plugin \"io.containerd.grpc.v1.version\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.771484] dockerd[948]: time="2026-05-30T18:16:52.986072110Z" level=info msg="loading plugin \"io.containerd.internal.v1.restart\"..." type=io.containerd.internal.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.778432] dockerd[948]: time="2026-05-30T18:16:52.991895196Z" level=info msg="loading plugin \"io.containerd.tracing.processor.v1.otlp\"..." type=io.containerd.tracing.processor.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.785455] dockerd[948]: time="2026-05-30T18:16:52.991951349Z" level=info msg="skip loading plugin \"io.containerd.tracing.processor.v1.otlp\"..." error="skip plugin: tracing endpoint not configured" type=io.containerd.tracing.processor.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.794602] dockerd[948]: time="2026-05-30T18:16:52.991987108Z" level=info msg="loading plugin \"io.containerd.internal.v1.tracing\"..." type=io.containerd.internal.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.799469] dockerd[948]: time="2026-05-30T18:16:52.992025381Z" level=info msg="skip loading plugin \"io.containerd.internal.v1.tracing\"..." error="skip plugin: tracing endpoint not configured" type=io.containerd.internal.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.806243] dockerd[948]: time="2026-05-30T18:16:52.992060022Z" level=info msg="loading plugin \"io.containerd.grpc.v1.healthcheck\"..." type=io.containerd.grpc.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.811121] dockerd[948]: time="2026-05-30T18:16:52.992104720Z" level=info msg="loading plugin \"io.containerd.nri.v1.nri\"..." type=io.containerd.nri.v1
+vm-test-run-solem-gavio-zero-trust> machine # [   18.817224] dockerd[948]: time="2026-05-30T18:16:53.015411593Z" level=info msg="NRI interface is disabled by configuration."
+vm-test-run-solem-gavio-zero-trust> machine # [   18.821747] dockerd[948]: time="2026-05-30T18:16:53.067378254Z" level=info msg=serving... address=/var/run/docker/containerd/containerd-debug.sock
+vm-test-run-solem-gavio-zero-trust> machine # [   18.826954] dockerd[948]: time="2026-05-30T18:16:53.067502851Z" level=info msg=serving... address=/var/run/docker/containerd/containerd.sock.ttrpc
+vm-test-run-solem-gavio-zero-trust> machine # [   18.832903] dockerd[948]: time="2026-05-30T18:16:53.067616273Z" level=info msg=serving... address=/var/run/docker/containerd/containerd.sock
+vm-test-run-solem-gavio-zero-trust> machine # [   18.838470] dockerd[948]: time="2026-05-30T18:16:53.067674660Z" level=info msg="containerd successfully booted in 0.326345s"
+vm-test-run-solem-gavio-zero-trust> machine # [   19.114958] dockerd[931]: time="2026-05-30T18:16:53.449152474Z" level=info msg="OTEL tracing is not configured, using no-op tracer provider"
+vm-test-run-solem-gavio-zero-trust> machine # [   19.342228] systemd[1]: var-lib-docker-metacopy\x2dcheck3348203379-merged.mount: Deactivated successfully.
+vm-test-run-solem-gavio-zero-trust> machine # [   19.353100] dockerd[931]: time="2026-05-30T18:16:53.687348389Z" level=info msg="Loading containers: start."
+vm-test-run-solem-gavio-zero-trust> machine # [   20.655797] Initializing XFRM netlink socket
+vm-test-run-solem-gavio-zero-trust> machine # [   20.322864] (udev-worker)[873]: Network interface NamePolicy= disabled on kernel command line.
+vm-test-run-solem-gavio-zero-trust> machine # [   20.882495] dockerd[931]: time="2026-05-30T18:16:55.216357523Z" level=info msg="Loading containers: done."
+vm-test-run-solem-gavio-zero-trust> machine # [   20.941441] dockerd[931]: time="2026-05-30T18:16:55.275384299Z" level=info msg="Docker daemon" commit=v27.5.1 containerd-snapshotter=false storage-driver=overlay2 version=27.5.1
+vm-test-run-solem-gavio-zero-trust> machine # [   20.949162] dockerd[931]: time="2026-05-30T18:16:55.283294243Z" level=info msg="Daemon has completed initialization"
+vm-test-run-solem-gavio-zero-trust> machine # [   21.154936] dockerd[931]: time="2026-05-30T18:16:55.487930586Z" level=info msg="API listen on /run/docker.sock"
+vm-test-run-solem-gavio-zero-trust> machine # [   21.163209] systemd[1]: Started Docker Application Container Engine.
+vm-test-run-solem-gavio-zero-trust> machine # [   21.168271] dockerd[931]: time="2026-05-30T18:16:55.494034435Z" level=info msg="API listen on /run/docker.sock"
+vm-test-run-solem-gavio-zero-trust> machine # [   21.172568] systemd[1]: Reached target Multi-User System.
+vm-test-run-solem-gavio-zero-trust> machine # [   21.175520] systemd[1]: Startup finished in 3.984s (kernel) + 17.176s (userspace) = 21.160s.
+vm-test-run-solem-gavio-zero-trust> (finished: waiting for unit multi-user.target, in 22.48 seconds)
+vm-test-run-solem-gavio-zero-trust> machine: must succeed: sleep 2
+vm-test-run-solem-gavio-zero-trust> (finished: must succeed: sleep 2, in 2.04 seconds)
+vm-test-run-solem-gavio-zero-trust> machine: must succeed: systemctl cat gavio.service 2>&1 | head -50
+vm-test-run-solem-gavio-zero-trust> (finished: must succeed: systemctl cat gavio.service 2>&1 | head -50, in 0.06 seconds)
+vm-test-run-solem-gavio-zero-trust> machine: must succeed: systemctl show gavio.service -p User --value
+vm-test-run-solem-gavio-zero-trust> (finished: must succeed: systemctl show gavio.service -p User --value, in 0.10 seconds)
+vm-test-run-solem-gavio-zero-trust> gavio.service User = 'gavio-ai'
+vm-test-run-solem-gavio-zero-trust> machine: must succeed: systemctl show gavio.service -p NoNewPrivileges --value
+vm-test-run-solem-gavio-zero-trust> (finished: must succeed: systemctl show gavio.service -p NoNewPrivileges --value, in 0.10 seconds)
+vm-test-run-solem-gavio-zero-trust> NoNewPrivileges = 'yes'
+vm-test-run-solem-gavio-zero-trust> machine: must succeed: systemctl show gavio.service -p CapabilityBoundingSet --value
+vm-test-run-solem-gavio-zero-trust> (finished: must succeed: systemctl show gavio.service -p CapabilityBoundingSet --value, in 0.10 seconds)
+vm-test-run-solem-gavio-zero-trust> CapabilityBoundingSet = ''
+vm-test-run-solem-gavio-zero-trust> machine: must succeed: systemctl show gavio.service -p PrivateDevices --value
+vm-test-run-solem-gavio-zero-trust> (finished: must succeed: systemctl show gavio.service -p PrivateDevices --value, in 0.10 seconds)
+vm-test-run-solem-gavio-zero-trust> PrivateDevices = 'yes'
+vm-test-run-solem-gavio-zero-trust> machine: must succeed: systemctl show gavio.service -p ProtectSystem --value
+vm-test-run-solem-gavio-zero-trust> (finished: must succeed: systemctl show gavio.service -p ProtectSystem --value, in 0.10 seconds)
+vm-test-run-solem-gavio-zero-trust> ProtectSystem = 'strict'
+vm-test-run-solem-gavio-zero-trust> machine: must succeed: systemctl show gavio.service -p SystemCallFilter --value
+vm-test-run-solem-gavio-zero-trust> (finished: must succeed: systemctl show gavio.service -p SystemCallFilter --value, in 0.11 seconds)
+vm-test-run-solem-gavio-zero-trust> SystemCallFilter = '_llseek _newselect accept accept4 access alarm arch_prctl arm_fadvise64_64 bind brk cacheflush capget chdir chmod clock_getres clock_getres_time64 clock_gettime clock_gettime64 clock_nanosleep clock_n...'
+vm-test-run-solem-gavio-zero-trust> cleanup
+vm-test-run-solem-gavio-zero-trust> kill machine (pid 9)
+vm-test-run-solem-gavio-zero-trust> qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+vm-test-run-solem-gavio-zero-trust> kill vlan (pid 7)
+vm-test-run-solem-gavio-zero-trust> (finished: cleanup, in 0.01 seconds)
+vm-test-run-solem-gavio-zero-trust> Traceback (most recent call last):
+vm-test-run-solem-gavio-zero-trust>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+vm-test-run-solem-gavio-zero-trust>     sys.exit(main())
+vm-test-run-solem-gavio-zero-trust>              ^^^^^^
+vm-test-run-solem-gavio-zero-trust>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+vm-test-run-solem-gavio-zero-trust>     driver.run_tests()
+vm-test-run-solem-gavio-zero-trust>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+vm-test-run-solem-gavio-zero-trust>     self.test_script()
+vm-test-run-solem-gavio-zero-trust>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+vm-test-run-solem-gavio-zero-trust>     exec(self.tests, symbols, None)
+vm-test-run-solem-gavio-zero-trust>   File "<string>", line 39, in <module>
+vm-test-run-solem-gavio-zero-trust> AssertionError: FAIL: SystemCallFilter manca tag 'privileged': _llseek _newselect accept accept4 access alarm arch_prctl arm_fadvise64_64 bind brk cacheflush capget chdir chmod clock_getres clock_getres_time64 clock_gettime clock_gettime64 clock_nanosleep clock_nanosleep_time64 clone clone3 close close_range connect copy_file_range creat dup dup2 dup3 epoll_create epoll_create1 epoll_ctl epoll_ctl_old epoll_pwait epoll_pwait2 epoll_wait epoll_wait_old eventfd eventfd2 execve execveat exit exit_group faccessat faccessat2 fadvise64 fadvise64_64 fallocate fchdir fchmod fchmodat fchmodat2 fcntl fcntl64 fdatasync fgetxattr flistxattr flock fork fremovexattr fsetxattr fstat fstat64 fstatat64 fstatfs fstatfs64 fsync ftruncate ftruncate64 futex futex_time64 futex_waitv futimesat get_mempolicy get_robust_list get_thread_area getcpu getcwd getdents getdents64 getegid getegid32 geteuid geteuid32 getgid getgid32 getgroups getgroups32 getitimer getpeername getpgid getpgrp getpid getppid getpriority getrandom getresgid getresgid32 getresuid getresuid32 getrlimit getrusage getsid getsockname getsockopt gettid gettimeofday getuid getuid32 getxattr inotify_add_watch inotify_init inotify_init1 inotify_rm_watch io_cancel io_destroy io_getevents io_pgetevents io_pgetevents_time64 io_setup io_submit io_uring_enter io_uring_register io_uring_setup ioctl ioprio_get ipc kcmp kill landlock_add_rule landlock_create_ruleset landlock_restrict_self lgetxattr link linkat listen listxattr llistxattr lremovexattr lseek lsetxattr lstat lstat64 madvise membarrier memfd_create mkdir mkdirat mknod mknodat mlock mlock2 mlockall mmap mmap2 mprotect mq_getsetattr mq_notify mq_open mq_timedreceive mq_timedreceive_time64 mq_timedsend mq_timedsend_time64 mq_unlink mremap msgctl msgget msgrcv msgsnd msync munlock munlockall munmap name_to_handle_at nanosleep newfstatat oldfstat oldlstat oldolduname oldstat olduname open openat openat2 pause personality pidfd_open pidfd_send_signal pipe pipe2 poll ppoll ppoll_time64 prctl pread64 preadv preadv2 prlimit64 process_madvise process_vm_readv process_vm_writev pselect6 pselect6_time64 pwrite64 pwritev pwritev2 read readahead readdir readlink readlinkat readv recv recvfrom recvmmsg recvmmsg_time64 recvmsg remap_file_pages removexattr rename renameat renameat2 restart_syscall riscv_flush_icache rmdir rseq rt_sigaction rt_sigpending rt_sigprocmask rt_sigqueueinfo rt_sigreturn rt_sigsuspend rt_sigtimedwait rt_sigtimedwait_time64 rt_tgsigqueueinfo sched_get_priority_max sched_get_priority_min sched_getaffinity sched_getattr sched_getparam sched_getscheduler sched_rr_get_interval sched_rr_get_interval_time64 sched_yield seccomp select semctl semget semop semtimedop semtimedop_time64 send sendfile sendfile64 sendmmsg sendmsg sendto set_robust_list set_thread_area set_tid_address set_tls setfsgid setfsgid32 setgid setgid32 setitimer setns setpgid setregid setregid32 setresgid setresgid32 setsid setsockopt setxattr shmat shmctl shmdt shmget shutdown sigaction sigaltstack signal signalfd signalfd4 sigpending sigprocmask sigreturn sigsuspend socket socketcall socketpair splice stat stat64 statfs statfs64 statx swapcontext symlink symlinkat sync sync_file_range sync_file_range2 syncfs sysinfo tee tgkill time timer_create timer_delete timer_getoverrun timer_gettime timer_gettime64 timer_settime timer_settime64 timerfd_create timerfd_gettime timerfd_gettime64 timerfd_settime timerfd_settime64 times tkill truncate truncate64 ugetrlimit umask uname unlink unlinkat unshare userfaultfd utime utimensat utimensat_time64 utimes vfork vmsplice wait4 waitid waitpid write writev
+error: builder for '/nix/store/zd77nfrb30w61ly0jg8slk470qx5w421-vm-test-run-solem-gavio-zero-trust.drv' failed with exit code 1;
+       last 25 log lines:
+       > PrivateDevices = 'yes'
+       > machine: must succeed: systemctl show gavio.service -p ProtectSystem --value
+       > (finished: must succeed: systemctl show gavio.service -p ProtectSystem --value, in 0.10 seconds)
+       > ProtectSystem = 'strict'
+       > machine: must succeed: systemctl show gavio.service -p SystemCallFilter --value
+       > (finished: must succeed: systemctl show gavio.service -p SystemCallFilter --value, in 0.11 seconds)
+       > SystemCallFilter = '_llseek _newselect accept accept4 access alarm arch_prctl arm_fadvise64_64 bind brk cacheflush capget chdir chmod clock_getres clock_getres_time64 clock_gettime clock_gettime64 clock_nanosleep clock_n...'
+       > cleanup
+       > kill machine (pid 9)
+       > qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+       > kill vlan (pid 7)
+       > (finished: cleanup, in 0.01 seconds)
+       > Traceback (most recent call last):
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+       >     sys.exit(main())
+       >              ^^^^^^
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+       >     driver.run_tests()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+       >     self.test_script()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+       >     exec(self.tests, symbols, None)
+       >   File "<string>", line 39, in <module>
+       > AssertionError: FAIL: SystemCallFilter manca tag 'privileged': _llseek _newselect accept accept4 access alarm arch_prctl arm_fadvise64_64 bind brk cacheflush capget chdir chmod clock_getres clock_getres_time64 clock_gettime clock_gettime64 clock_nanosleep clock_nanosleep_time64 clone clone3 close close_range connect copy_file_range creat dup dup2 dup3 epoll_create epoll_create1 epoll_ctl epoll_ctl_old epoll_pwait epoll_pwait2 epoll_wait epoll_wait_old eventfd eventfd2 execve execveat exit exit_group faccessat faccessat2 fadvise64 fadvise64_64 fallocate fchdir fchmod fchmodat fchmodat2 fcntl fcntl64 fdatasync fgetxattr flistxattr flock fork fremovexattr fsetxattr fstat fstat64 fstatat64 fstatfs fstatfs64 fsync ftruncate ftruncate64 futex futex_time64 futex_waitv futimesat get_mempolicy get_robust_list get_thread_area getcpu getcwd getdents getdents64 getegid getegid32 geteuid geteuid32 getgid getgid32 getgroups getgroups32 getitimer getpeername getpgid getpgrp getpid getppid getpriority getrandom getresgid getresgid32 getresuid getresuid32 getrlimit getrusage getsid getsockname getsockopt gettid gettimeofday getuid getuid32 getxattr inotify_add_watch inotify_init inotify_init1 inotify_rm_watch io_cancel io_destroy io_getevents io_pgetevents io_pgetevents_time64 io_setup io_submit io_uring_enter io_uring_register io_uring_setup ioctl ioprio_get ipc kcmp kill landlock_add_rule landlock_create_ruleset landlock_restrict_self lgetxattr link linkat listen listxattr llistxattr lremovexattr lseek lsetxattr lstat lstat64 madvise membarrier memfd_create mkdir mkdirat mknod mknodat mlock mlock2 mlockall mmap mmap2 mprotect mq_getsetattr mq_notify mq_open mq_timedreceive mq_timedreceive_time64 mq_timedsend mq_timedsend_time64 mq_unlink mremap msgctl msgget msgrcv msgsnd msync munlock munlockall munmap name_to_handle_at nanosleep newfstatat oldfstat oldlstat oldolduname oldstat olduname open openat openat2 pause personality pidfd_open pidfd_send_signal pipe pipe2 poll ppoll ppoll_time64 prctl pread64 preadv preadv2 prlimit64 process_madvise process_vm_readv process_vm_writev pselect6 pselect6_time64 pwrite64 pwritev pwritev2 read readahead readdir readlink readlinkat readv recv recvfrom recvmmsg recvmmsg_time64 recvmsg remap_file_pages removexattr rename renameat renameat2 restart_syscall riscv_flush_icache rmdir rseq rt_sigaction rt_sigpending rt_sigprocmask rt_sigqueueinfo rt_sigreturn rt_sigsuspend rt_sigtimedwait rt_sigtimedwait_time64 rt_tgsigqueueinfo sched_get_priority_max sched_get_priority_min sched_getaffinity sched_getattr sched_getparam sched_getscheduler sched_rr_get_interval sched_rr_get_interval_time64 sched_yield seccomp select semctl semget semop semtimedop semtimedop_time64 send sendfile sendfile64 sendmmsg sendmsg sendto set_robust_list set_thread_area set_tid_address set_tls setfsgid setfsgid32 setgid setgid32 setitimer setns setpgid setregid setregid32 setresgid setresgid32 setsid setsockopt setxattr shmat shmctl shmdt shmget shutdown sigaction sigaltstack signal signalfd signalfd4 sigpending sigprocmask sigreturn sigsuspend socket socketcall socketpair splice stat stat64 statfs statfs64 statx swapcontext symlink symlinkat sync sync_file_range sync_file_range2 syncfs sysinfo tee tgkill time timer_create timer_delete timer_getoverrun timer_gettime timer_gettime64 timer_settime timer_settime64 timerfd_create timerfd_gettime timerfd_gettime64 timerfd_settime timerfd_settime64 times tkill truncate truncate64 ugetrlimit umask uname unlink unlinkat unshare userfaultfd utime utimensat utimensat_time64 utimes vfork vmsplice wait4 waitid waitpid write writev
+       >
+       For full logs, run 'nix log /nix/store/zd77nfrb30w61ly0jg8slk470qx5w421-vm-test-run-solem-gavio-zero-trust.drv'.
