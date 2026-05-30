@@ -47,13 +47,8 @@ pkgs.nixosTest {
     machine.wait_for_unit("multi-user.target", timeout=60)
     machine.sleep(3)
 
-    # ── TEST 1: AppArmor LSM disponibile ──────────────────────────
-    rc, out = machine.execute("ls /sys/module/apparmor 2>&1")
-    print(f"AppArmor module: rc={rc}")
-    if rc != 0:
-        # Skip test se kernel non ha AppArmor (CI può variare)
-        print("WARNING: AppArmor LSM non disponibile in questo kernel, skip test")
-        return
+    # ── TEST 1: AppArmor LSM disponibile (NixOS std kernel HA AppArmor) ──
+    machine.succeed("ls /sys/module/apparmor 2>&1")
 
     # /sys/kernel/security/apparmor deve esistere
     machine.succeed("ls /sys/kernel/security/apparmor 2>&1 || true")
