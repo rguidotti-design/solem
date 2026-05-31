@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B1426">
+  <title>SOLEM — AI-native OS</title>
+  <meta name="description" content="OS NixOS-based AI-native con 53+ step di sicurezza zero-trust. 100% FOSS, 0 €.">
+  <meta property="og:title" content="SOLEM — AI-native OS">
+  <meta property="og:description" content="53+ step di sicurezza zero-trust per ospitare la tua AI (GAVIO). Friday/JARVIS style.">
+  <meta property="og:type" content="website">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font:16px/1.7 system-ui,-apple-system,sans-serif;background:#0B1426;color:#F5F5F5;overflow-x:hidden}
+    .container{max-width:1100px;margin:0 auto;padding:40px 24px}
+    header{padding:60px 24px 40px;text-align:center}
+    h1{font-size:80px;font-weight:200;letter-spacing:12px;color:#D4A24A;margin-bottom:8px;line-height:1}
+    .sub{font-size:18px;color:#888;margin-bottom:48px;letter-spacing:2px}
+    h2{font-size:32px;font-weight:300;color:#D4A24A;margin:64px 0 24px;letter-spacing:3px;text-align:center}
+    h3{font-size:18px;font-weight:500;margin:24px 0 8px;color:#F5F5F5}
+    p{margin-bottom:16px;color:#CCC}
+    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin:32px 0}
+    .feature{background:rgba(212,162,74,.08);border:1px solid rgba(212,162,74,.2);border-radius:12px;padding:24px;transition:transform .2s,border-color .2s}
+    .feature:hover{transform:translateY(-2px);border-color:rgba(212,162,74,.5)}
+    .feature h3{color:#D4A24A;font-size:14px;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+    .feature p{font-size:14px;color:#AAA;line-height:1.6}
+    code{background:rgba(0,0,0,.4);padding:2px 8px;border-radius:4px;font:14px monospace;color:#D4A24A}
+    pre{background:#000;padding:24px;border-radius:8px;overflow-x:auto;border:1px solid rgba(212,162,74,.2);margin:16px 0}
+    pre code{background:none;padding:0;color:#F5F5F5;display:block;line-height:1.6;font-size:13px}
+    .btn{display:inline-block;background:#D4A24A;color:#0B1426;padding:16px 36px;border-radius:8px;text-decoration:none;font-weight:600;letter-spacing:1px;margin:8px;transition:all .2s}
+    .btn:hover{background:#E0B864;transform:translateY(-2px)}
+    .btn.secondary{background:transparent;border:1px solid #D4A24A;color:#D4A24A}
+    .btn.secondary:hover{background:rgba(212,162,74,.1)}
+    .center{text-align:center}
+    .stats{display:flex;gap:24px;margin:32px 0;flex-wrap:wrap;justify-content:center}
+    .stat{padding:20px 28px;background:rgba(212,162,74,.05);border-radius:12px;text-align:center;min-width:120px}
+    .stat-num{font-size:42px;font-weight:200;color:#D4A24A;line-height:1}
+    .stat-lbl{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:6px}
+    .warning{background:rgba(255,152,0,.1);border:1px solid #ff9800;border-radius:8px;padding:16px;margin:24px 0;color:#ffb74d;font-size:14px}
+    ul{margin-left:24px;color:#CCC}
+    li{margin-bottom:8px}
+    a{color:#D4A24A;text-decoration:none}
+    a:hover{text-decoration:underline}
+    .hero-actions{margin-top:32px}
+    footer{margin-top:80px;padding:40px 24px;border-top:1px solid #1A2540;color:#555;text-align:center;font-size:13px}
+    .nav{position:sticky;top:0;background:rgba(11,20,38,.95);backdrop-filter:blur(10px);border-bottom:1px solid #1A2540;padding:14px 24px;z-index:10}
+    .nav-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+    .nav-brand{font-size:14px;letter-spacing:6px;color:#D4A24A;font-weight:500}
+    .nav-links a{margin-left:20px;font-size:13px;color:#888}
+    .nav-links a:hover{color:#D4A24A}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <span class="nav-brand">SOLEM</span>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#try">Try it</a>
+        <a href="#download">Download</a>
+        <a href="https://github.com/rguidotti-design/solem">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <h1>SOLEM</h1>
+    <div class="sub">AI-native OS · zero-trust · FOSS · 0 €</div>
+    <div class="hero-actions">
+      <a href="#try" class="btn">🚀 Provalo subito</a>
+      <a href="https://github.com/rguidotti-design/solem" class="btn secondary">⌗ GitHub</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="stats">
+      <div class="stat"><div class="stat-num">53+</div><div class="stat-lbl">Step Security</div></div>
+      <div class="stat"><div class="stat-num">100+</div><div class="stat-lbl">Moduli Nix</div></div>
+      <div class="stat"><div class="stat-num">15/15</div><div class="stat-lbl">VM Test verdi</div></div>
+      <div class="stat"><div class="stat-num">0 €</div><div class="stat-lbl">Licenze</div></div>
+    </div>
+
+    <h2 id="features">Cosa rende SOLEM diverso</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>Zero-Trust per AI</h3>
+        <p>GAVIO (l'AI personale) gira ingabbiata: utente isolato UID 970, firewall egress whitelist, AppArmor MAC, canary kill switch, DNS allowlist.</p>
+      </div>
+      <div class="feature">
+        <h3>Auto Red-Team Notturno</h3>
+        <p>Ogni notte SOLEM si auto-attacca con 18+ scenari. Se trova buchi, applica fix safe automatici. Self-improving.</p>
+      </div>
+      <div class="feature">
+        <h3>Friday Mode</h3>
+        <p>Comando unico <code>solem</code>: status, ask GAVIO (testo/voce), security run. Stile JARVIS — il sistema TI PARLA.</p>
+      </div>
+      <div class="feature">
+        <h3>FOSS Forever</h3>
+        <p>Nessun cloud proprietario. Nessuna telemetria. Stack: NixOS hardened, Linux LTS, age, WireGuard, Tor, Suricata, ClamAV.</p>
+      </div>
+      <div class="feature">
+        <h3>Backup & Recovery</h3>
+        <p>borg + age encryption + rclone offsite. USB recovery builder integrato. Generation rollback nativo NixOS.</p>
+      </div>
+      <div class="feature">
+        <h3>Mobile Companion</h3>
+        <p>PWA per phone/glass via WireGuard mesh. Voice command, status live, lockdown remoto.</p>
+      </div>
+      <div class="feature">
+        <h3>Privacy Hardware</h3>
+        <p>TPM measured boot + Secure Boot signed kernel + dm-verity readonly /nix/store + IOMMU strict (anti DMA evil maid).</p>
+      </div>
+      <div class="feature">
+        <h3>Hardened Kernel</h3>
+        <p>linuxPackages_hardened (KSPP) + sysctl strict + lockdown LSM + module blacklist obsoleti. CVE storici chiusi.</p>
+      </div>
+      <div class="feature">
+        <h3>Multi-tenant Family</h3>
+        <p>Account familiari + guest session ephemeral + parental controls (TODO). Più utenti, isolamento per-user.</p>
+      </div>
+    </div>
+
+    <h2 id="try">Provalo subito</h2>
+    <p class="center">SOLEM è in <strong>fase di sviluppo attivo</strong>. Non c'è ancora ISO ufficiale hostata. Per provare:</p>
+
+    <h3>Opzione A — Build VM in WSL/Linux (richiede Nix)</h3>
+    <pre><code># Su Linux/WSL con Nix installato:
+curl --proto '=https' --tlsv1.2 -sSf https://nixos.org/nix/install | sh
+
+# Clone repo
+git clone https://github.com/rguidotti-design/solem
+cd solem
+
+# Build + run VM
+nix build .#vm
+./result/bin/run-solem-vm-vm
+
+# Si apre QEMU. Login: user=gavio pass=gavio
+# Dentro la VM:
+solem-welcome              # wizard primo setup
+solem-localhost            # dashboard endpoint
+solem-demo                 # walkthrough 10 capability</code></pre>
+
+    <h3>Opzione B — Build ISO + boot in VirtualBox</h3>
+    <pre><code># Su Linux/WSL:
+git clone https://github.com/rguidotti-design/solem
+cd solem
+nix build .#iso
+
+# Trova la ISO:
+ls result/iso/*.iso
+
+# Crea VirtualBox VM:
+# - Type: Linux
+# - Version: Other Linux 64-bit
+# - RAM: 4GB+
+# - Storage: 20GB+
+# - Mount ISO come live CD
+# - Boot → installer Calamares</code></pre>
+
+    <h3>Opzione C — Solo leggi il codice</h3>
+    <pre><code>git clone https://github.com/rguidotti-design/solem
+cd solem
+ls nixos/modules/    # 100+ moduli SOLEM
+cat docs/GAPS-VERO-OS.md   # analisi onesta cosa manca</code></pre>
+
+    <h2 id="download">Download ISO</h2>
+    <div class="warning">
+      ⚠️ <strong>ISO non ancora hostata su CDN ufficiale.</strong> Per ora la build è locale via comandi sopra. Hosting ISO + GPG signing in roadmap (Step 50 scaffolding pronto).
+    </div>
+    <p class="center">Quando disponibile, install Calamares: <strong>boot ISO → doppio-click "Installa" → 5-15 min → reboot</strong>.</p>
+
+    <h2>Layer di sicurezza (selezione)</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>1-3. Isolamento AI</h3>
+        <p>UID 970 dedicato, nftables egress UID-based, systemd hardening override (NoNewPrivileges, caps drop, syscall filter).</p>
+      </div>
+      <div class="feature">
+        <h3>4. Canary Honey Tokens</h3>
+        <p>File esca in /etc/solem/canary/. Qualsiasi lettura → kill GAVIO immediato + notify desktop critical.</p>
+      </div>
+      <div class="feature">
+        <h3>6, 10. Kernel hardening</h3>
+        <p>Sysctl strict (BPF, ptrace, lockdown), linuxPackages_hardened (KSPP), module blacklist (cramfs, dccp, firewire, ...).</p>
+      </div>
+      <div class="feature">
+        <h3>7. DNS allowlist</h3>
+        <p>Unbound locale con local-zone "." refuse. Solo domini whitelist risolvono. Anti DNS tunneling.</p>
+      </div>
+      <div class="feature">
+        <h3>8. AppArmor MAC</h3>
+        <p>Profilo kernel-enforced per /var/lib/gavio-ai/venv/bin/python3. Deny esplicito /etc/shadow, /home/gavio, /dev/mem.</p>
+      </div>
+      <div class="feature">
+        <h3>22-23. Self red-team + heal</h3>
+        <p>Daemon notturno attacca il proprio sistema, identifica buchi, applica fix safe automatici. Auto-improving.</p>
+      </div>
+    </div>
+
+    <h2>Per chi è</h2>
+    <ul>
+      <li><strong>Developer</strong> che vogliono un workstation sicuro</li>
+      <li><strong>AI researcher</strong> paranoid sui propri model + dati</li>
+      <li><strong>Sysadmin</strong> che cercano OS server-grade hardenato</li>
+      <li><strong>Privacy-conscious user</strong> che non si fidano del vendor</li>
+    </ul>
+
+    <h2>Roadmap onesta</h2>
+    <p class="center">
+      Vedi <a href="https://github.com/rguidotti-design/solem/blob/main/docs/GAPS-VERO-OS.md"><strong>GAPS-VERO-OS.md</strong></a> per analisi onesta di cosa manca e effort restante (~12-18 mesi per mass-market full).
+    </p>
+
+    <h2>Risorse</h2>
+    <ul>
+      <li><a href="https://github.com/rguidotti-design/solem">Source code GitHub</a></li>
+      <li><a href="https://github.com/rguidotti-design/solem/blob/main/docs/GAPS-VERO-OS.md">Roadmap onesta</a></li>
+      <li><a href="https://github.com/rguidotti-design/solem/issues">Bug reports & issues</a></li>
+      <li><a href="https://github.com/rguidotti-design/solem/blob/main/README.md">README</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    SOLEM · Apache-2.0 · Made with care<br>
+    No telemetry · No vendor lock-in · 100% FOSS · 0 € licenses
+  </footer>
+</body>
+</html>
