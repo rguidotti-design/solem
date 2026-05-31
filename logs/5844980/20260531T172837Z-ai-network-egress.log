@@ -1,0 +1,202 @@
+# VM test ai-network-egress FAIL — commit 5844980 @ 20260531T172837Z
+
+vm-test-run-solem-ai-network-egress> machine # [    8.938774] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-ai-network-egress> machine # [    8.950943] nsncd[557]: May 31 17:28:18.170 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-ai-network-egress> machine # [    8.960620] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-ai-network-egress> machine # [    8.974858] systemd[1]: Starting User Login Management...
+vm-test-run-solem-ai-network-egress> machine # [    9.344132] [drm] Initialized bochs-drm 1.0.0 20130925 for 0000:00:02.0 on minor 0
+vm-test-run-solem-ai-network-egress> machine # [    9.004839] dbus-daemon[560]: dbus[560]: Unknown username "systemd-timesync" in message bus configuration file
+vm-test-run-solem-ai-network-egress> machine # [    9.378536] ppdev: user-space parallel port driver
+vm-test-run-solem-ai-network-egress> machine # [    9.084925] systemd[1]: Started D-Bus System Message Bus.
+vm-test-run-solem-ai-network-egress> machine # [    9.767883] systemd[1]: Stopped target Host and Network Name Lookups.
+vm-test-run-solem-ai-network-egress> machine # [    9.770897] systemd[1]: Stopping Host and Network Name Lookups...
+vm-test-run-solem-ai-network-egress> machine # [    9.773913] systemd[1]: Stopped target User and Group Name Lookups.
+vm-test-run-solem-ai-network-egress> machine # [    9.776537] systemd[1]: Stopping User and Group Name Lookups...
+vm-test-run-solem-ai-network-egress> machine # [    9.785532] systemd[1]: Stopping Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-ai-network-egress> machine # [    9.799628] systemd[1]: nscd.service: Deactivated successfully.
+vm-test-run-solem-ai-network-egress> machine # [    9.808301] systemd[1]: Stopped Name Service Cache Daemon (nsncd).
+vm-test-run-solem-ai-network-egress> machine # [    9.820415] systemd[1]: Starting Name Service Cache Daemon (nsncd)...
+vm-test-run-solem-ai-network-egress> machine # [    9.538741] fbcon: bochs-drmdrmfb (fb0) is primary device
+vm-test-run-solem-ai-network-egress> machine # [   10.446798] Console: switching to colour frame buffer device 160x50
+vm-test-run-solem-ai-network-egress> machine # [   10.851850] bochs-drm 0000:00:02.0: [drm] fb0: bochs-drmdrmfb frame buffer device
+vm-test-run-solem-ai-network-egress> machine # [    9.909543] systemd-logind[594]: Watching system buttons on /dev/input/event2 (Power Button)
+vm-test-run-solem-ai-network-egress> machine # [   10.534544] systemd-logind[594]: Watching system buttons on /dev/input/event0 (AT Translated Set 2 keyboard)
+vm-test-run-solem-ai-network-egress> machine # [   10.562555] systemd[1]: Finished resolvconf update.
+vm-test-run-solem-ai-network-egress> machine # [   10.578300] systemd[1]: Starting DHCP Client...
+vm-test-run-solem-ai-network-egress> machine # [   10.584737] systemd-logind[594]: New seat seat0.
+vm-test-run-solem-ai-network-egress> machine # [   10.593429] systemd[1]: systemd-vconsole-setup.service: Deactivated successfully.
+vm-test-run-solem-ai-network-egress> machine # [   10.599349] systemd[1]: Stopped Virtual Console Setup.
+vm-test-run-solem-ai-network-egress> machine # [   10.605359] systemd[1]: run-credentials-systemd\x2dvconsole\x2dsetup.service.mount: Deactivated successfully.
+vm-test-run-solem-ai-network-egress> machine # [   10.615797] systemd[1]: Starting Virtual Console Setup...
+vm-test-run-solem-ai-network-egress> machine # [   10.620660] systemd[1]: Started User Login Management.
+vm-test-run-solem-ai-network-egress> machine # [   10.623868] systemd-logind[594]: Watching system buttons on /dev/input/event5 (QEMU Virtio Keyboard)
+vm-test-run-solem-ai-network-egress> machine # [   10.664514] systemd[1]: Started Name Service Cache Daemon (nsncd).
+vm-test-run-solem-ai-network-egress> machine # [   10.667589] systemd[1]: Reached target Host and Network Name Lookups.
+vm-test-run-solem-ai-network-egress> machine # [   10.677697] nsncd[629]: May 31 17:28:19.910 INFO started, config: Config { ignored_request_types: {}, worker_count: 8, handoff_timeout: 3s }, path: "/var/run/nscd/socket"
+vm-test-run-solem-ai-network-egress> machine # [   10.684353] systemd[1]: Reached target User and Group Name Lookups.
+vm-test-run-solem-ai-network-egress> machine # [   10.728458] systemd[1]: Finished nftables firewall.
+vm-test-run-solem-ai-network-egress> machine # [   10.730934] systemd[1]: Reached target Preparation for Network.
+vm-test-run-solem-ai-network-egress> machine # [   10.741727] systemd[1]: Starting Address configuration of eth1...
+vm-test-run-solem-ai-network-egress> machine # [   11.155239] kvm_amd: TSC scaling supported
+vm-test-run-solem-ai-network-egress> machine # [   11.156492] kvm_amd: Nested Virtualization enabled
+vm-test-run-solem-ai-network-egress> machine # [   11.158337] kvm_amd: Nested Paging enabled
+vm-test-run-solem-ai-network-egress> machine # [   11.170906] kvm_amd: Virtual VMLOAD VMSAVE supported
+vm-test-run-solem-ai-network-egress> machine # [   11.172875] kvm_amd: PMU virtualization is disabled
+vm-test-run-solem-ai-network-egress> machine # [   10.895530] dhcpcd[663]: dhcpcd-10.1.0 starting
+vm-test-run-solem-ai-network-egress> machine # [   11.275211] EDAC MC: Ver: 3.0.0
+vm-test-run-solem-ai-network-egress> machine # [   11.276577] SOLEM-AI-BLOCK: IN= OUT=eth1 SRC=0000:0000:0000:0000:0000:0000:0000:0000 DST=ff02:0000:0000:0000:0000:0000:0000:0016 LEN=76 TC=0 HOPLIMIT=1 FLOWLBL=0 OPT ( ) PROTO=ICMPv6 TYPE=143 CODE=0 MARK=0xc4
+vm-test-run-solem-ai-network-egress> machine # [   10.965811] dhcpcd[690]: dev: loaded udev
+vm-test-run-solem-ai-network-egress> machine # [   10.990966] network-addresses-eth1-start[685]: adding address 192.168.1.1/24... done
+vm-test-run-solem-ai-network-egress> machine # [   11.368087] 8021q: 802.1Q VLAN Support v1.8
+vm-test-run-solem-ai-network-egress> machine # [   11.372297] 8021q: adding VLAN 0 to HW filter on device eth1
+vm-test-run-solem-ai-network-egress> machine # [   11.387486] SOLEM-AI-BLOCK: IN= OUT=eth1 SRC=0000:0000:0000:0000:0000:0000:0000:0000 DST=ff02:0000:0000:0000:0000:0000:0000:0016 LEN=96 TC=0 HOPLIMIT=1 FLOWLBL=0 OPT ( ) PROTO=ICMPv6 TYPE=143 CODE=0 MARK=0xc4
+vm-test-run-solem-ai-network-egress> machine # [   11.043317] network-addresses-eth1-start[685]: adding address 2001:db8:1::1/64... done
+vm-test-run-solem-ai-network-egress> machine # [   11.096322] systemd[1]: Finished Address configuration of eth1.
+vm-test-run-solem-ai-network-egress> machine # [   11.103757] systemd[1]: Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
+vm-test-run-solem-ai-network-egress> machine # [   11.112314] systemd[1]: Starting Networking Setup...
+vm-test-run-solem-ai-network-egress> machine # [   11.556677] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+vm-test-run-solem-ai-network-egress> machine # [   11.605255] Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+vm-test-run-solem-ai-network-egress> machine # [   11.611262] Loaded X.509 cert 'wens: 61c038651aabdcf94bd0ac7ff06c7248db18c600'
+vm-test-run-solem-ai-network-egress> machine # [   11.623258] platform regulatory.0: Direct firmware load for regulatory.db failed with error -2
+vm-test-run-solem-ai-network-egress> machine # [   11.628097] cfg80211: failed to load regulatory.db
+vm-test-run-solem-ai-network-egress> machine # [   11.397541] dhcpcd[717]: /nix/store/9d73cccl3j40winsdfxl765l3vjlhg9y-openresolv-3.13.2/sbin/.resolvconf-wrapped: line 888: kill: (704) - Operation not permitted
+vm-test-run-solem-ai-network-egress> machine # [   11.405363] dhcpcd[717]: clearing stale lock pid 704
+vm-test-run-solem-ai-network-egress> machine # [   11.779478] SOLEM-AI-BLOCK: IN= OUT=eth1 SRC=0000:0000:0000:0000:0000:0000:0000:0000 DST=ff02:0000:0000:0000:0000:0000:0000:0016 LEN=96 TC=0 HOPLIMIT=1 FLOWLBL=0 OPT ( ) PROTO=ICMPv6 TYPE=143 CODE=0 MARK=0xc4
+vm-test-run-solem-ai-network-egress> machine # [   11.844224] 8021q: adding VLAN 0 to HW filter on device eth0
+vm-test-run-solem-ai-network-egress> machine # [   11.498798] dhcpcd[690]: eth0: waiting for carrier
+vm-test-run-solem-ai-network-egress> machine # [   11.502774] dhcpcd[690]: eth0: carrier acquired
+vm-test-run-solem-ai-network-egress> machine # [   11.537517] dhcpcd[690]: DUID 00:01:00:01:31:af:2c:34:52:54:00:12:34:56[   11.898684] SOLEM-AI-BLOCK: IN= OUT=eth0 SRC=0000:0000:0000:0000:0000:0000:0000:0000 DST=ff02:0000:0000:0000:0000:0000:0000:0016 LEN=76 TC=0 HOPLIMIT=1 FLOWLBL=0 OPT ( ) PROTO=ICMPv6 TYPE=143 CODE=0 MARK=0xc4
+vm-test-run-solem-ai-network-egress> machine # 
+vm-test-run-solem-ai-network-egress> machine # [   11.544829] dhcpcd[690]: eth0: IAID 00:12:34:56
+vm-test-run-solem-ai-network-egress> machine # [   11.547820] dhcpcd[690]: eth0: adding address fe80::5054:ff:fe12:3456
+vm-test-run-solem-ai-network-egress> machine # [   11.569359] systemd[1]: Finished Networking Setup.
+vm-test-run-solem-ai-network-egress> machine # [   11.585712] systemd[1]: Starting Extra networking commands....
+vm-test-run-solem-ai-network-egress> machine # [   11.640518] systemd[1]: Finished Virtual Console Setup.
+vm-test-run-solem-ai-network-egress> machine # [   12.003478] SOLEM-AI-BLOCK: IN= OUT=eth1 SRC=0000:0000:0000:0000:0000:0000:0000:0000 DST=ff02:0000:0000:0000:0000:0001:ff00:0001 LEN=72 TC=0 HOPLIMIT=255 FLOWLBL=0 PROTO=ICMPv6 TYPE=135 CODE=0
+vm-test-run-solem-ai-network-egress> machine # [   11.653581] systemd[1]: Finished Extra networking commands..
+vm-test-run-solem-ai-network-egress> machine # [   11.659606] systemd[1]: Reached target Network.
+vm-test-run-solem-ai-network-egress> machine # [   11.784959] systemd[1]: Starting Permit User Sessions...
+vm-test-run-solem-ai-network-egress> machine # [   11.818657] dhcpcd[690]: eth0: soliciting a DHCP lease
+vm-test-run-solem-ai-network-egress> machine # [   11.837893] systemd[1]: Finished Permit User Sessions.
+vm-test-run-solem-ai-network-egress> machine # [   11.849317] systemd[1]: Started Getty on tty1.
+vm-test-run-solem-ai-network-egress> machine # [   11.853737] systemd[1]: Reached target Login Prompts.[   12.215528] NET: Registered PF_PACKET protocol family
+vm-test-run-solem-ai-network-egress> machine # 
+vm-test-run-solem-ai-network-egress> machine # [   11.988695] dhcpcd[690]: eth0: offered 10.0.2.15 from 10.0.2.2
+vm-test-run-solem-ai-network-egress> machine # [   11.992481] dhcpcd[690]: eth0: probing address 10.0.2.15/24
+vm-test-run-solem-ai-network-egress> machine # [   14.192313] dhcpcd[690]: eth0: soliciting an IPv6 router
+vm-test-run-solem-ai-network-egress> machine # [   14.194771] dhcpcd[690]: eth0: Router Advertisement from fe80::2
+vm-test-run-solem-ai-network-egress> machine # [   14.197677] dhcpcd[690]: eth0: adding address fec0::5054:ff:fe12:3456/64
+vm-test-run-solem-ai-network-egress> machine # [   14.200719] dhcpcd[690]: eth0: adding route to fec0::/64
+vm-test-run-solem-ai-network-egress> machine # [   14.203409] dhcpcd[690]: eth0: adding default route via fe80::2
+vm-test-run-solem-ai-network-egress> machine # [   16.712846] dhcpcd[690]: eth0: leased 10.0.2.15 for 86400 seconds
+vm-test-run-solem-ai-network-egress> machine # [   16.715355] dhcpcd[690]: eth0: adding route to 10.0.2.0/24
+vm-test-run-solem-ai-network-egress> machine # [   16.718283] dhcpcd[690]: eth0: adding default route via 10.0.2.2
+vm-test-run-solem-ai-network-egress> machine # [   16.848703] systemd[1]: Started DHCP Client.
+vm-test-run-solem-ai-network-egress> machine # [   16.856679] systemd[1]: Reached target Network is Online.
+vm-test-run-solem-ai-network-egress> machine # [   16.858859] systemd[1]: Reached target Multi-User System.
+vm-test-run-solem-ai-network-egress> machine # [   16.981534] systemd[1]: Startup finished in 4.085s (kernel) + 12.768s (userspace) = 16.854s.
+vm-test-run-solem-ai-network-egress> (finished: waiting for unit multi-user.target, in 18.40 seconds)
+vm-test-run-solem-ai-network-egress> machine: must succeed: sleep 3
+vm-test-run-solem-ai-network-egress> machine # [   17.763630] SOLEM-AI-BLOCK: IN= OUT=eth1 SRC=fe80:0000:0000:0000:5054:00ff:fe12:0101 DST=ff02:0000:0000:0000:0000:0000:0000:0002 LEN=56 TC=0 HOPLIMIT=255 FLOWLBL=0 PROTO=ICMPv6 TYPE=133 CODE=0
+vm-test-run-solem-ai-network-egress> (finished: must succeed: sleep 3, in 3.04 seconds)
+vm-test-run-solem-ai-network-egress> machine: must succeed: nft list tables 2>&1
+vm-test-run-solem-ai-network-egress> (finished: must succeed: nft list tables 2>&1, in 0.04 seconds)
+vm-test-run-solem-ai-network-egress> nft tables:
+vm-test-run-solem-ai-network-egress> table inet solem-ai
+vm-test-run-solem-ai-network-egress> machine: must succeed: nft list chain inet solem-ai ai_egress 2>&1
+vm-test-run-solem-ai-network-egress> (finished: must succeed: nft list chain inet solem-ai ai_egress 2>&1, in 0.04 seconds)
+vm-test-run-solem-ai-network-egress> chain ai_egress:
+vm-test-run-solem-ai-network-egress> table inet solem-ai {
+vm-test-run-solem-ai-network-egress>    chain ai_egress {
+vm-test-run-solem-ai-network-egress>            type filter hook output priority filter; policy drop;
+vm-test-run-solem-ai-network-egress>            meta skuid != 970 accept
+vm-test-run-solem-ai-network-egress>            oif "lo" accept
+vm-test-run-solem-ai-network-egress>            ip daddr @ai_allowed_v4 tcp dport @ai_allowed_ports accept
+vm-test-run-solem-ai-network-egress>            ip daddr @ai_allowed_v4 udp dport @ai_allowed_ports accept
+vm-test-run-solem-ai-network-egress>            ip6 daddr @ai_allowed_v6 tcp dport @ai_allowed_ports accept
+vm-test-run-solem-ai-network-egress>            ip6 daddr @ai_allowed_v6 udp dport @ai_allowed_ports accept
+vm-test-run-solem-ai-network-egress>            limit rate 10/minute burst 5 packets log prefix "SOLEM-AI-BLOCK: " flags all
+vm-test-run-solem-ai-network-egress>            counter packets 18 bytes 1428 drop
+vm-test-run-solem-ai-network-egress>    }
+vm-test-run-solem-ai-network-egress> }
+vm-test-run-solem-ai-network-egress> machine: must succeed: sleep 2
+vm-test-run-solem-ai-network-egress> (finished: must succeed: sleep 2, in 2.04 seconds)
+vm-test-run-solem-ai-network-egress> machine # [   22.363458] sudo[890]:     root : TTY=hvc0 ; PWD=/tmp ; USER=gavio ; COMMAND=/run/current-system/sw/bin/timeout 3 curl -sf -o /dev/null http://127.0.0.1:8080/
+vm-test-run-solem-ai-network-egress> machine # [   22.386830] sudo[890]: pam_unix(sudo:session): session opened for user gavio(uid=1000) by (uid=0)
+vm-test-run-solem-ai-network-egress> machine # [   22.468870] sudo[890]: pam_unix(sudo:session): session closed for user gavio
+vm-test-run-solem-ai-network-egress> gavio -> loopback: rc=0
+vm-test-run-solem-ai-network-egress> machine # [   22.535587] sudo[899]:     root : TTY=hvc0 ; PWD=/tmp ; USER=gavio-ai ; COMMAND=/run/current-system/sw/bin/timeout 3 curl -sf -o /dev/null http://127.0.0.1:8080/
+vm-test-run-solem-ai-network-egress> machine # [   22.555633] sudo[899]: pam_unix(sudo:session): session opened for user gavio-ai(uid=970) by (uid=0)
+vm-test-run-solem-ai-network-egress> machine # [   22.603450] sudo[899]: pam_unix(sudo:session): session closed for user gavio-ai
+vm-test-run-solem-ai-network-egress> gavio-ai -> loopback: rc=0
+vm-test-run-solem-ai-network-egress> machine: must succeed: nft -a list chain inet solem-ai ai_egress
+vm-test-run-solem-ai-network-egress> (finished: must succeed: nft -a list chain inet solem-ai ai_egress, in 0.03 seconds)
+vm-test-run-solem-ai-network-egress> Drop counter BEFORE: 18
+vm-test-run-solem-ai-network-egress> machine # [   22.700097] sudo[912]:     root : TTY=hvc0 ; PWD=/tmp ; USER=gavio-ai ; COMMAND=/run/current-system/sw/bin/timeout 2 curl -sS --connect-timeout 1 http://192.0.2.99:9999/
+vm-test-run-solem-ai-network-egress> machine # [   22.722244] sudo[912]: pam_unix(sudo:session): session opened for user gavio-ai(uid=970) by (uid=0)
+vm-test-run-solem-ai-network-egress> machine # [   23.766740] sudo[912]: pam_unix(sudo:session): session closed for user gavio-ai
+vm-test-run-solem-ai-network-egress> machine # [   23.835566] sudo[921]:     root : TTY=hvc0 ; PWD=/tmp ; USER=gavio-ai ; COMMAND=/run/current-system/sw/bin/timeout 2 curl -s --connect-timeout 1 http://203.0.113.10:8080/
+vm-test-run-solem-ai-network-egress> machine # [   23.858953] sudo[921]: pam_unix(sudo:session): session opened for user gavio-ai(uid=970) by (uid=0)
+vm-test-run-solem-ai-network-egress> machine # [   24.254215] SOLEM-AI-BLOCK: IN= OUT=eth0 SRC=10.0.2.15 DST=203.0.113.10 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=4925 DF PROTO=TCP SPT=36724 DPT=8080 SEQ=1109482455 ACK=0 WINDOW=64240 RES=0x00 SYN URGP=0 OPT (020405B40402080AFDE9AAB10000000001030307) UID=970 GID=970
+vm-test-run-solem-ai-network-egress> machine # [   24.906831] sudo[921]: pam_unix(sudo:session): session closed for user gavio-ai
+vm-test-run-solem-ai-network-egress> machine: must succeed: sleep 1
+vm-test-run-solem-ai-network-egress> (finished: must succeed: sleep 1, in 1.03 seconds)
+vm-test-run-solem-ai-network-egress> machine: must succeed: nft -a list chain inet solem-ai ai_egress
+vm-test-run-solem-ai-network-egress> (finished: must succeed: nft -a list chain inet solem-ai ai_egress, in 0.04 seconds)
+vm-test-run-solem-ai-network-egress> Drop counter AFTER gavio-ai: 20, curl rc=28
+vm-test-run-solem-ai-network-egress>   ✓ DROP nftables matchato (+2 packets)
+vm-test-run-solem-ai-network-egress> machine: must succeed: nft -a list chain inet solem-ai ai_egress
+vm-test-run-solem-ai-network-egress> (finished: must succeed: nft -a list chain inet solem-ai ai_egress, in 0.04 seconds)
+vm-test-run-solem-ai-network-egress> machine # [   26.080937] sudo[940]:     root : TTY=hvc0 ; PWD=/tmp ; USER=gavio ; COMMAND=/run/current-system/sw/bin/timeout 2 curl -s --connect-timeout 1 http://192.0.2.99:9999/
+vm-test-run-solem-ai-network-egress> machine # [   26.102650] sudo[940]: pam_unix(sudo:session): session opened for user gavio(uid=1000) by (uid=0)
+vm-test-run-solem-ai-network-egress> machine # [   26.143571] sudo[940]: pam_unix(sudo:session): session closed for user gavio
+vm-test-run-solem-ai-network-egress> machine: must succeed: sleep 1
+vm-test-run-solem-ai-network-egress> (finished: must succeed: sleep 1, in 1.04 seconds)
+vm-test-run-solem-ai-network-egress> machine: must succeed: nft -a list chain inet solem-ai ai_egress
+vm-test-run-solem-ai-network-egress> (finished: must succeed: nft -a list chain inet solem-ai ai_egress, in 0.04 seconds)
+vm-test-run-solem-ai-network-egress> Drop counter after gavio (human): pre=20 post=21
+vm-test-run-solem-ai-network-egress> cleanup
+vm-test-run-solem-ai-network-egress> kill machine (pid 9)
+vm-test-run-solem-ai-network-egress> qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+vm-test-run-solem-ai-network-egress> kill vlan (pid 7)
+vm-test-run-solem-ai-network-egress> (finished: cleanup, in 0.01 seconds)
+vm-test-run-solem-ai-network-egress> Traceback (most recent call last):
+vm-test-run-solem-ai-network-egress>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+vm-test-run-solem-ai-network-egress>     sys.exit(main())
+vm-test-run-solem-ai-network-egress>              ^^^^^^
+vm-test-run-solem-ai-network-egress>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+vm-test-run-solem-ai-network-egress>     driver.run_tests()
+vm-test-run-solem-ai-network-egress>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+vm-test-run-solem-ai-network-egress>     self.test_script()
+vm-test-run-solem-ai-network-egress>   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+vm-test-run-solem-ai-network-egress>     exec(self.tests, symbols, None)
+vm-test-run-solem-ai-network-egress>   File "<string>", line 93, in <module>
+vm-test-run-solem-ai-network-egress> AssertionError: FAIL: drop counter aumentato anche per gavio umano (20→21). La regola dovrebbe filtrare SOLO UID 970.
+error: builder for '/nix/store/mfzfx4m1syv1c7zkyamgag741yv0mq5k-vm-test-run-solem-ai-network-egress.drv' failed with exit code 1;
+       last 25 log lines:
+       > machine # [   26.080937] sudo[940]:     root : TTY=hvc0 ; PWD=/tmp ; USER=gavio ; COMMAND=/run/current-system/sw/bin/timeout 2 curl -s --connect-timeout 1 http://192.0.2.99:9999/
+       > machine # [   26.102650] sudo[940]: pam_unix(sudo:session): session opened for user gavio(uid=1000) by (uid=0)
+       > machine # [   26.143571] sudo[940]: pam_unix(sudo:session): session closed for user gavio
+       > machine: must succeed: sleep 1
+       > (finished: must succeed: sleep 1, in 1.04 seconds)
+       > machine: must succeed: nft -a list chain inet solem-ai ai_egress
+       > (finished: must succeed: nft -a list chain inet solem-ai ai_egress, in 0.04 seconds)
+       > Drop counter after gavio (human): pre=20 post=21
+       > cleanup
+       > kill machine (pid 9)
+       > qemu-kvm: terminating on signal 15 from pid 6 (/nix/store/dksjvr69ckglyw1k2ss1qgshhcix73p8-python3-3.12.8/bin/python3.12)
+       > kill vlan (pid 7)
+       > (finished: cleanup, in 0.01 seconds)
+       > Traceback (most recent call last):
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/bin/.nixos-test-driver-wrapped", line 9, in <module>
+       >     sys.exit(main())
+       >              ^^^^^^
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/__init__.py", line 146, in main
+       >     driver.run_tests()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 173, in run_tests
+       >     self.test_script()
+       >   File "/nix/store/v87ngzjjfhfw8kpcg4ii401mscx8pg9g-nixos-test-driver-1.1/lib/python3.12/site-packages/test_driver/driver.py", line 165, in test_script
+       >     exec(self.tests, symbols, None)
+       >   File "<string>", line 93, in <module>
+       > AssertionError: FAIL: drop counter aumentato anche per gavio umano (20→21). La regola dovrebbe filtrare SOLO UID 970.
+       For full logs, run 'nix log /nix/store/mfzfx4m1syv1c7zkyamgag741yv0mq5k-vm-test-run-solem-ai-network-egress.drv'.
