@@ -161,7 +161,7 @@ pkgs.nixosTest {
 
     if not counter_increased and not curl_failed:
         fails.append(
-            f"ATK3: gavio-ai HA raggiunto 192.0.2.99 senza essere bloccato "
+            "ATK3: gavio-ai HA raggiunto 192.0.2.99 senza essere bloccato "
             f"(counter {before}→{after}, curl rc={rc_ai})"
         )
     elif counter_increased:

@@ -124,13 +124,13 @@ pkgs.nixosTest {
     counter_increased = after_ai > before
     curl_failed = rc_ai != 0
     assert counter_increased or curl_failed, (
-        f"FAIL: gavio-ai HA raggiunto TEST-NET senza blocco "
+        "FAIL: gavio-ai HA raggiunto TEST-NET senza blocco "
         f"(counter {before}→{after_ai}, curl rc={rc_ai})"
     )
     if counter_increased:
         print(f"  ✓ DROP nftables matchato (+{after_ai-before} packets)")
     else:
-        print(f"  ✓ curl bloccato a livello routing (no TEST-NET route)")
+        print("  ✓ curl bloccato a livello routing (no TEST-NET route)")
 
     # gavio (umano): la regola NON deve filtrarlo (skuid != 970 → accept early).
     # Verifica che il counter non aumenta SPECIFICAMENTE per traffic di gavio.
