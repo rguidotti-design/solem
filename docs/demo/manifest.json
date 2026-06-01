@@ -1,0 +1,10 @@
+{
+  "name": "SOLEM Friday HUD Demo",
+  "short_name": "SOLEM",
+  "start_url": "/solem/demo/",
+  "display": "standalone",
+  "background_color": "#0B1426",
+  "theme_color": "#D4A24A",
+  "description": "Friday HUD mobile demo (mockup interattivo)",
+  "icons": []
+}

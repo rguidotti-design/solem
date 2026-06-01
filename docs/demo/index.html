@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" content="#0B1426">
+  <title>SOLEM Friday HUD — Demo</title>
+  <meta name="description" content="Demo interattivo Friday HUD SOLEM. Navigabile da mobile/desktop.">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    body{font:14px/1.6 system-ui,-apple-system,sans-serif;background:linear-gradient(135deg,#0B1426 0%,#1A2540 100%);color:#F5F5F5;min-height:100vh;padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);background-attachment:fixed}
+    .header{text-align:center;padding:24px 0 16px}
+    h1{font-size:42px;font-weight:200;letter-spacing:10px;color:#D4A24A;margin-bottom:4px}
+    .sub{font-size:11px;color:#666;letter-spacing:3px;text-transform:uppercase}
+    .demo-banner{background:rgba(255,152,0,.15);border:1px solid #ff9800;border-radius:8px;padding:10px 14px;margin:0 0 20px;font-size:12px;color:#ffb74d;text-align:center}
+    .ts{color:#888;font-size:11px;text-align:center;margin-bottom:16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+    .card{background:rgba(212,162,74,.08);border:1px solid rgba(212,162,74,.2);border-radius:10px;padding:14px;cursor:pointer;transition:transform .15s,border-color .15s}
+    .card:active{transform:scale(.97)}
+    .card.full{grid-column:1/-1}
+    .card h2{color:#D4A24A;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+    .stat{font-size:28px;font-weight:200;line-height:1.1}
+    .stat-lbl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+    .bar{width:100%;height:3px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:8px;overflow:hidden}
+    .bar-fill{height:100%;background:#D4A24A;transition:width .5s}
+    .bar-fill.warn{background:#ff9800}
+    .bar-fill.danger{background:#f44336}
+    .svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:11px}
+    .svc-item{padding:4px 0;display:flex;align-items:center;gap:6px}
+    .svc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+    .svc-dot.on{background:#4caf50;box-shadow:0 0 6px #4caf50}
+    .svc-dot.off{background:#444}
+    .alert{background:rgba(244,67,54,.2);border:1px solid #f44336;border-radius:6px;padding:10px;margin-bottom:12px;font-size:12px}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    .btn{background:#D4A24A;color:#0B1426;border:0;padding:12px;border-radius:8px;font-size:13px;font-weight:600;letter-spacing:.5px;cursor:pointer;text-decoration:none;text-align:center;display:block}
+    .btn:active{opacity:.8}
+    .btn.secondary{background:transparent;border:1px solid #D4A24A;color:#D4A24A}
+    .btn.danger{background:#f44336;color:#fff}
+    .ask-box{background:rgba(0,0,0,.4);border:1px solid #2A3540;border-radius:10px;padding:14px;margin-bottom:16px}
+    .ask-box h2{color:#D4A24A;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+    .ask-box textarea{width:100%;background:rgba(0,0,0,.3);color:#F5F5F5;border:1px solid #2A3540;border-radius:6px;padding:10px;font:13px monospace;resize:vertical;min-height:60px;margin-bottom:8px}
+    #ask-out{background:rgba(0,0,0,.3);padding:10px;border-radius:6px;min-height:60px;font:12px monospace;white-space:pre-wrap;color:#CCC;margin-top:8px;border:1px dashed #2A3540}
+    .ascii{font:11px/1.3 monospace;color:#D4A24A;white-space:pre;text-align:center;letter-spacing:1px}
+    footer{text-align:center;padding:24px 0;color:#444;font-size:11px;border-top:1px solid rgba(212,162,74,.1);margin-top:24px}
+    footer a{color:#D4A24A;text-decoration:none}
+    .pulse{animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>SOLEM</h1>
+    <div class="sub">Friday HUD Mobile Demo</div>
+  </div>
+
+  <div class="demo-banner">
+    DEMO INTERATTIVO - dati simulati per visualizzazione UX.<br>
+    Sistema reale: <a href="https://github.com/rguidotti-design/solem" style="color:#ffb74d">GitHub</a>
+  </div>
+
+  <div class="ts">Aggiornato: <span id="ts">--</span></div>
+
+  <div id="alerts"></div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>CPU</h2>
+      <div class="stat"><span id="cpu">0</span>%</div>
+      <div class="bar"><div class="bar-fill" id="cpu-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <h2>RAM</h2>
+      <div class="stat"><span id="mem">0</span>%</div>
+      <div class="bar"><div class="bar-fill" id="mem-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <h2>Disk</h2>
+      <div class="stat"><span id="disk">0</span>%</div>
+      <div class="bar"><div class="bar-fill" id="disk-bar" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <h2>Network</h2>
+      <div class="stat"><span id="net">0</span></div>
+      <div class="stat-lbl">MB/s out</div>
+    </div>
+
+    <div class="card full">
+      <h2>Security Status (53+ Step)</h2>
+      <div class="svc-grid" id="services"></div>
+    </div>
+
+    <div class="card full">
+      <h2>Last Red-Team Auto-Attack</h2>
+      <div style="display:flex;gap:16px;align-items:center;margin-top:6px">
+        <div><span style="font-size:24px;color:#4caf50;font-weight:300" id="rt-blocked">17</span><div class="stat-lbl">Blocked</div></div>
+        <div><span style="font-size:24px;color:#f44336;font-weight:300" id="rt-buchi">1</span><div class="stat-lbl">Buchi</div></div>
+        <div><span style="font-size:24px;color:#888;font-weight:300" id="rt-total">18</span><div class="stat-lbl">Total</div></div>
+      </div>
+      <div style="font-size:11px;color:#888;margin-top:8px">Next run: 03:00 (auto)</div>
+    </div>
+  </div>
+
+  <div class="ask-box">
+    <h2>Ask GAVIO (Friday voice bridge)</h2>
+    <textarea id="ask-q" placeholder="Es: 'stato sistema?' / 'cosa fa il modulo canary?' / 'spiega zero-trust'"></textarea>
+    <div class="actions">
+      <button class="btn" onclick="askGavio()">Invia</button>
+      <button class="btn secondary" onclick="recordVoice()">Voce 5s</button>
+    </div>
+    <div id="ask-out">(GAVIO risposta apparira qui - demo: testo locale)</div>
+  </div>
+
+  <div class="card full">
+    <h2>Quick Actions</h2>
+    <div class="actions">
+      <button class="btn" onclick="runAction('redteam')">Run Red-Team</button>
+      <button class="btn" onclick="runAction('heal')">Self Heal</button>
+      <button class="btn secondary" onclick="runAction('backup')">Backup Now</button>
+      <button class="btn danger" onclick="runAction('lockdown')">LOCKDOWN</button>
+    </div>
+    <div id="action-out" style="font-size:11px;color:#888;margin-top:10px;font-family:monospace"></div>
+  </div>
+
+  <div class="card full" style="margin-top:16px">
+    <h2>ASCII HUD</h2>
+    <div class="ascii">
++--------------------------------------+
+|     SOLEM Friday active     |
++--------------------------------------+
+| Layer 1-53     [v] Active   |
+| Auto-attack    03:00 daily  |
+| GAVIO          v) Confined   |
+| WireGuard      o) Inactive   |
+| Tor onion      o) Inactive   |
++--------------------------------------+
+    </div>
+  </div>
+
+  <footer>
+    SOLEM Friday Mobile Demo<br>
+    <a href="../">&larr; Landing</a> ·
+    <a href="https://github.com/rguidotti-design/solem">GitHub</a> ·
+    <a href="https://github.com/rguidotti-design/solem/blob/main/docs/GAPS-VERO-OS.md">Roadmap</a>
+  </footer>
+
+  <script>
+    const SERVICES = [
+      {name:"gavio.service", on:true, layer:"GAVIO AI core"},
+      {name:"ollama.service", on:true, layer:"LLM runtime"},
+      {name:"solem-prompt-filter", on:true, layer:"Step 21"},
+      {name:"solem-canary-watcher", on:true, layer:"Step 4"},
+      {name:"auditd", on:true, layer:"Step 9"},
+      {name:"fail2ban", on:true, layer:"Step 11"},
+      {name:"unbound (DNS)", on:true, layer:"Step 7"},
+      {name:"nftables", on:true, layer:"Step 2"},
+      {name:"suricata IDS", on:false, layer:"Step 25"},
+      {name:"wireguard mesh", on:false, layer:"Step 24"},
+      {name:"tor onion", on:false, layer:"Step 29"},
+      {name:"backup borg", on:true, layer:"Step 17"},
+      {name:"self-redteam.timer", on:true, layer:"Step 22"},
+      {name:"self-heal.timer", on:true, layer:"Step 23"},
+      {name:"nginx (web HUD)", on:true, layer:"Step 36"},
+    ];
+
+    function rnd(min, max) { return Math.round(Math.random() * (max - min) + min); }
+
+    function refresh() {
+      const cpu = rnd(15, 55);
+      const mem = rnd(35, 65);
+      const disk = rnd(40, 55);
+      const net = (Math.random() * 4 + 0.5).toFixed(1);
+
+      function set(id, val) {
+        document.getElementById(id).textContent = val;
+        const bar = document.getElementById(id + "-bar");
+        if (bar) {
+          bar.style.width = val + "%";
+          bar.className = "bar-fill" + (val > 80 ? " danger" : val > 60 ? " warn" : "");
+        }
+      }
+      set("cpu", cpu); set("mem", mem); set("disk", disk);
+      document.getElementById("net").textContent = net;
+      document.getElementById("ts").textContent = new Date().toLocaleTimeString("it-IT");
+
+      // Services
+      const svcEl = document.getElementById("services");
+      svcEl.innerHTML = SERVICES.map(s =>
+        '<div class="svc-item"><span class="svc-dot ' + (s.on ? 'on' : 'off') + '"></span>' +
+        s.name + '</div>'
+      ).join("");
+
+      // Random "buchi" change
+      if (Math.random() < 0.1) {
+        const b = rnd(0, 3);
+        document.getElementById("rt-buchi").textContent = b;
+        document.getElementById("rt-blocked").textContent = 18 - b;
+      }
+    }
+
+    function askGavio() {
+      const q = document.getElementById("ask-q").value.trim();
+      const out = document.getElementById("ask-out");
+      if (!q) { out.textContent = "(scrivi una domanda)"; return; }
+      out.textContent = "Bridge GAVIO via prompt-filter:8001 ...";
+      // Demo: risposte locali
+      setTimeout(() => {
+        const replies = {
+          "stato sistema": "Sistema OK. 53 layer attivi. Ultimo redteam: 17/18 blocked, 1 buco (apparmor profile complain). CPU 32%, RAM 47%. Nessun marker tampered.",
+          "zero trust": "Zero-trust SOLEM = 12 layer specifici per GAVIO: UID isolato 970, nftables egress, AppArmor MAC, audit strict, DNS allowlist, canary kill switch, prompt filter, model integrity, API shield TLS, gavio-zero-trust systemd override, hardened kernel, encrypted memory.",
+          "canary": "Canary = 4 file esca in /etc/solem/canary/ (api-keys, aws-credentials, ssh-id_rsa, vault-master). Watcher inotify monitora open(). Read = kill GAVIO immediato + alert critical desktop. Step 4.",
+        };
+        let reply = "Demo mode: GAVIO non connesso. Esempio risposta:\n\n";
+        const k = Object.keys(replies).find(k => q.toLowerCase().includes(k));
+        if (k) reply += replies[k];
+        else reply += "Domanda ricevuta: '" + q + "'\n\nNel sistema reale, GAVIO risponde via prompt-filter:8001 → gavio-api:8000 con processing LLM.";
+        out.textContent = reply;
+      }, 600);
+    }
+
+    function recordVoice() {
+      const out = document.getElementById("ask-out");
+      if (!navigator.mediaDevices) {
+        out.textContent = "Mic non disponibile (richiede HTTPS).";
+        return;
+      }
+      out.textContent = "Recording 5s... (demo: nessuna vera registrazione)";
+      setTimeout(() => {
+        document.getElementById("ask-q").value = "stato sistema?";
+        askGavio();
+      }, 1500);
+    }
+
+    function runAction(action) {
+      const out = document.getElementById("action-out");
+      const msgs = {
+        redteam: "Avvio solem-redteam run...\n  [BLOCKED] read /etc/shadow as gavio-ai\n  [BLOCKED] sudo as gavio-ai\n  [BLOCKED] ptrace cross-user\n  [BUCO] ai-network nft policy weak\n  ...\nTotal: 17 blocked, 1 buco. Report saved.",
+        heal: "Avvio solem-heal run...\n  [FIX] restart solem-canary-watcher\n  [FIX] apparmor_parser -r profiles\n  [SKIP] ai-network bug (manual review)\nApplied: 2, Skipped: 1.",
+        backup: "Avvio borg backup...\n  Archive: solem-2026-06-01T14:32\n  Compression zstd 9, dedupe ratio 4.2x\n  Size: 1.4GB -> 320MB after dedup\n  Sync nextcloud-personal: 100%",
+        lockdown: "LOCKDOWN ATTIVATO\n  systemctl stop gavio.service\n  nft flush ruleset\n  wg-quick down wg-solem\n  Sistema in stato paranoid. Reset: solem-recovery."
+      };
+      out.textContent = msgs[action] || "Azione: " + action;
+    }
+
+    refresh();
+    setInterval(refresh, 5000);
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>
