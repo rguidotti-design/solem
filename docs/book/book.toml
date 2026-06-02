@@ -1,0 +1,14 @@
+[book]
+authors = ["Ruben Guidotti"]
+language = "it"
+multilingual = false
+src = "src"
+title = "SOLEM Manual"
+description = "AI-native OS - 53+ zero-trust security layers - 100% FOSS"
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/rguidotti-design/solem"
+edit-url-template = "https://github.com/rguidotti-design/solem/edit/main/docs/book/{path}"
+site-url = "/solem/book/"

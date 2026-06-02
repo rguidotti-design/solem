@@ -12,9 +12,15 @@
     ./modules/solem-cli.nix
     ./modules/solem-motd.nix
     ./modules/solem-branding-gnome.nix
+    ./modules/solem-gtk-theme.nix
+    ./modules/solem-welcome-zenity.nix
+    ./modules/solem-gavio-chat-demo.nix
   ];
 
   solem.brandingGnome.enable = true;
+  solem.gtkTheme.enable = true;
+  solem.welcomeZenity.enable = true;
+  solem.gavioChatDemo.enable = true;
 
   # ── Desktop GNOME completo (Wayland + Xorg fallback) ──
   services.xserver.enable = true;
