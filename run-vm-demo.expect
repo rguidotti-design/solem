@@ -1,0 +1,49 @@
+#!/usr/bin/env -S expect -f
+# Boot SOLEM VM + auto-login + esegui demo commands
+
+set timeout 240
+set vm_script [lindex $argv 0]
+log_user 1
+
+spawn $vm_script -display none -serial mon:stdio -monitor null -no-reboot -m 2048
+
+expect {
+  "solem-vm login:" { send "gavio\r" }
+  timeout { puts "TIMEOUT waiting login"; exit 1 }
+}
+
+expect "Password:"
+send "gavio\r"
+
+# Aspetta primo prompt (qualsiasi cosa che termina con $ o ])
+expect -re {[#\$]\s*$} { }
+
+# Disabilita color/escape per output più leggibile
+send "export TERM=dumb; clear; echo READY-FOR-COMMANDS\r"
+expect "READY-FOR-COMMANDS"
+expect -re {[#\$]\s*$}
+
+# === COMANDI REALI ===
+send "echo '\\n===== solem status =====' && solem status 2>&1 | head -40\r"
+expect -re {[#\$]\s*$}
+
+send "echo '\\n===== solem layers =====' && solem layers 2>&1 | head -40\r"
+expect -re {[#\$]\s*$}
+
+send "echo '\\n===== systemctl list-units active 20 =====' && systemctl list-units --state=active --no-pager 2>&1 | head -25\r"
+expect -re {[#\$]\s*$}
+
+send "echo '\\n===== ls /etc/solem =====' && ls /etc/solem/ 2>&1 | head -30\r"
+expect -re {[#\$]\s*$}
+
+send "echo '\\n===== solem-localhost =====' && solem-localhost 2>&1 | head -30\r"
+expect -re {[#\$]\s*$}
+
+send "echo '\\n===== solem-demo head =====' && SOLEM_DEMO_NOPAUSE=1 timeout 30 solem-demo 2>&1 | head -50\r"
+expect -re {[#\$]\s*$}
+
+send "echo '\\n===== uname + uptime =====' && uname -a && uptime\r"
+expect -re {[#\$]\s*$}
+
+send "echo '\\nDEMO-DONE-POWEROFF' && sleep 1 && sudo poweroff\r"
+expect eof
