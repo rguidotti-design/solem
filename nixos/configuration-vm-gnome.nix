@@ -11,7 +11,10 @@
     ./modules/solem-core.nix
     ./modules/solem-cli.nix
     ./modules/solem-motd.nix
+    ./modules/solem-branding-gnome.nix
   ];
+
+  solem.brandingGnome.enable = true;
 
   # ── Desktop GNOME completo (Wayland + Xorg fallback) ──
   services.xserver.enable = true;
@@ -31,7 +34,42 @@
     gnome-system-monitor
     gnome-disk-utility
     gedit
+    imagemagick  # per generare wallpaper runtime
   ];
+
+  # Desktop files SOLEM/GAVIO visibili nel menu Activities
+  environment.etc."xdg/applications/solem-status.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=SOLEM Status
+    Comment=Friday HUD: stato sistema, security layers, GAVIO
+    Exec=gnome-terminal -- bash -c "solem status; read -p 'Premi Enter per chiudere...'"
+    Icon=preferences-system
+    Terminal=false
+    Categories=System;Monitor;
+  '';
+
+  environment.etc."xdg/applications/solem-demo.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=SOLEM Demo
+    Comment=Walkthrough 10 capability SOLEM (Friday-style)
+    Exec=gnome-terminal -- bash -c "solem-demo; read -p 'Premi Enter...'"
+    Icon=preferences-system
+    Terminal=false
+    Categories=System;
+  '';
+
+  environment.etc."xdg/applications/gavio-ai.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=GAVIO AI
+    Comment=Chat con GAVIO (l'AI personale di Ruben)
+    Exec=gnome-terminal -- bash -c "echo '╭───────────────────────────────────────────╮'; echo '│  GAVIO — AI personale                     │'; echo '│  Stato: scaffolding pronto                │'; echo '│  Step 30/51: src GAVIO Python richiesto   │'; echo '│  Quando packaged: chat via prompt-filter  │'; echo '╰───────────────────────────────────────────╯'; echo; echo 'Per provare GAVIO oggi: gavio.theoryholding.com (cloud)'; echo 'Per integrarlo in SOLEM: docs/GAPS-VERO-OS.md'; read -p 'Premi Enter...'"
+    Icon=face-smile
+    Terminal=false
+    Categories=AudioVideo;Education;
+  '';
 
   # Audio per QEMU
   services.pipewire = {
