@@ -42,6 +42,15 @@
           ];
         };
 
+        # VM GNOME x86_64 — `nix build .#vm-gnome` (desktop FUNZIONANTE in QEMU)
+        solem-vm-gnome = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./nixos/configuration-vm-gnome.nix
+            ./nixos/hardware-vm.nix
+          ];
+        };
+
         # ISO live x86_64 — `nix build .#iso`
         solem-iso = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -68,6 +77,7 @@
         default    = cfgs.solem-vm.config.system.build.vm;
         vm         = cfgs.solem-vm.config.system.build.vm;
         vm-desktop = cfgs.solem-vm-desktop.config.system.build.vm;
+        vm-gnome   = cfgs.solem-vm-gnome.config.system.build.vm;
         iso        = cfgs.solem-iso.config.system.build.isoImage;
       } else {
         # aarch64-linux: nessun package finché raspberry/jetson eval-clean
