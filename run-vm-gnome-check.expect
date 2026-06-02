@@ -1,0 +1,45 @@
+#!/usr/bin/env -S expect -f
+set timeout 240
+set vm_script [lindex $argv 0]
+log_user 1
+spawn $vm_script -display none -serial mon:stdio -monitor null -no-reboot -m 4096
+
+expect {
+  "login:" { send "gavio\r" }
+  timeout { puts "TIMEOUT login"; exit 1 }
+}
+expect "Password:"
+send "gavio\r"
+expect -re {[#\$]\s*$}
+
+send "export TERM=dumb; echo READY-FOR-CHECK\r"
+expect "READY-FOR-CHECK"
+expect -re {[#\$]\s*$}
+
+# Check GDM + GNOME service status
+send "systemctl status display-manager.service 2>&1 | head -15\r"
+expect -re {[#\$]\s*$}
+
+send "systemctl is-active display-manager.service\r"
+expect -re {[#\$]\s*$}
+
+send "systemctl is-active gdm.service\r"
+expect -re {[#\$]\s*$}
+
+send "echo '--- WHO IS LOGGED IN ---' && who\r"
+expect -re {[#\$]\s*$}
+
+send "echo '--- GRAPHICAL TARGET STATUS ---' && systemctl status graphical.target 2>&1 | head -8\r"
+expect -re {[#\$]\s*$}
+
+send "echo '--- SESSION LIST ---' && loginctl list-sessions\r"
+expect -re {[#\$]\s*$}
+
+send "echo '--- X/WAYLAND PROCESSES ---' && pgrep -af 'gnome-shell|gdm-x|gnome-session|Xwayland|gjs' | head -10\r"
+expect -re {[#\$]\s*$}
+
+send "echo '--- GNOME APPS DISPONIBILI ---' && ls /run/current-system/sw/share/applications/ | grep -i gnome | head -10\r"
+expect -re {[#\$]\s*$}
+
+send "echo DEMO-DONE-POWEROFF && sudo poweroff\r"
+expect eof

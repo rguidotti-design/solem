@@ -52,11 +52,10 @@
   i18n.defaultLocale = "it_IT.UTF-8";
   console.keyMap = "it";
 
-  # QEMU: GPU virtio + spazio sufficiente
+  # QEMU: GPU virtio + RAM/cores per desktop
   virtualisation.vmVariant.virtualisation = {
-    memorySize = 4096;
-    cores = 4;
-    diskSize = 8192;
+    memorySize = lib.mkForce 4096;
+    cores = lib.mkForce 4;
     qemu.options = [
       "-vga virtio"
       "-display gtk,gl=on"
