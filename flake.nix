@@ -33,6 +33,15 @@
           ];
         };
 
+        # VM DESKTOP x86_64 — `nix build .#vm-desktop` (Hyprland Wayland)
+        solem-vm-desktop = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./nixos/configuration-vm-desktop.nix
+            ./nixos/hardware-vm.nix
+          ];
+        };
+
         # ISO live x86_64 — `nix build .#iso`
         solem-iso = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -56,9 +65,10 @@
       packages = forAllSystems (system: let
         cfgs = self.nixosConfigurations;
       in (if system == "x86_64-linux" then {
-        default = cfgs.solem-vm.config.system.build.vm;
-        vm      = cfgs.solem-vm.config.system.build.vm;
-        iso     = cfgs.solem-iso.config.system.build.isoImage;
+        default    = cfgs.solem-vm.config.system.build.vm;
+        vm         = cfgs.solem-vm.config.system.build.vm;
+        vm-desktop = cfgs.solem-vm-desktop.config.system.build.vm;
+        iso        = cfgs.solem-iso.config.system.build.isoImage;
       } else {
         # aarch64-linux: nessun package finché raspberry/jetson eval-clean
       }));
