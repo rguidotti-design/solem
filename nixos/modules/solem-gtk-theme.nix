@@ -113,11 +113,15 @@ in {
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ solemThemeDir ];
 
-    # Override dconf branding: usa SOLEM-Navy invece di Adwaita-dark
-    environment.etc."dconf/db/local.d/01-solem-gtk-theme".text = ''
-      [org/gnome/desktop/interface]
-      gtk-theme='SOLEM-Navy'
-      color-scheme='prefer-dark'
-    '';
+    # Override gtk-theme a SOLEM-Navy via programs.dconf (NixOS-native).
+    programs.dconf = {
+      enable = true;
+      profiles.user.databases = [{
+        settings."org/gnome/desktop/interface" = {
+          gtk-theme = "SOLEM-Navy";
+          color-scheme = "prefer-dark";
+        };
+      }];
+    };
   };
 }

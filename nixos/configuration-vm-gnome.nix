@@ -97,12 +97,14 @@
   console.keyMap = "it";
 
   # QEMU: GPU virtio + RAM/cores per desktop
+  # graphics = true -> NO -nographic, abilita display window (WSLg/X11)
   virtualisation.vmVariant.virtualisation = {
     memorySize = lib.mkForce 4096;
     cores = lib.mkForce 4;
+    graphics = lib.mkForce true;
     qemu.options = [
       "-vga virtio"
-      "-display gtk,gl=on"
+      "-display gtk,gl=off"
     ];
   };
 
